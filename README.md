@@ -1,1 +1,3 @@
-Genuine_Posed_EmotionRecognition
+# Genuine_Posed_EmotionRecognition
+
+Master Thesis - Dimitrios Gagatsis
