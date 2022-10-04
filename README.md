@@ -33,3 +33,24 @@ The Data sources for this project are: SASE-FE Database and K-EmoCon Dataset
 | 3D-CNN | [paper](https://keras.io/examples/vision/3D_image_classification/#:~:text=A%203D%20CNN%20is%20simply,learning%20representations%20for%20volumetric%20data.) |
 | ResNet3D | [paper](https://paperswithcode.com/model/resnet-3d?variant=resnet-3d-18) |
 
+
+## Approach
+```mermaid
+graph TD
+    Input --> Classifier_Model_1
+	Classifier_Model_1 --> Anger
+	Classifier_Model_1 --> Disgust
+	Classifier_Model_1 --> Fear
+	Classifier_Model_1 --> Happiness
+	Classifier_Model_1 --> Sadness
+	Classifier_Model_1 --> Surprise
+	Anger --> Classifier_Model_2
+	Disgust --> Classifier_Model_2
+	Fear --> Classifier_Model_2
+	Happiness --> Classifier_Model_2
+	Sadness --> Classifier_Model_2
+	Surprise --> Classifier_Model_2
+	Classifier_Model_2 --> Genuine_emotion
+	Classifier_Model_2 --> Posed_emotion
+```
+
