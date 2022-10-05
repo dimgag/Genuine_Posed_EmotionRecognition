@@ -34,6 +34,24 @@ The Data sources for this project are: SASE-FE Dataset.
 | ResNet3D | [paper](https://paperswithcode.com/model/resnet-3d?variant=resnet-3d-18) |
 
 
+
+## Previous Approaches
+<!-- Generate table -->
+
+| Paper | Link |
+|  ---  |  ---  |
+| Real vs. Fake Emotion Challenge: Learning to Rank Authenticity From Facial Activity Descriptors | [paper](https://www.researchgate.net/publication/319316240_Real_vs_Fake_Emotion_Challenge_Learning_to_Rank_Authenticity_From_Facial_Activity_Descriptors) |
+|Real and fake emotion detection using enhanced boosted support vector machine algorithm|[paper](https://link.springer.com/article/10.1007/s11042-022-13210-6)|
+|Discrimination between genuine versus fake emotion using long-short term memory with parametric bias and facial landmarks|[paper](https://ieeexplore.ieee.org/document/8265573)|
+|Classifying posed and natural facial expressions with the help of Deep Learning|[paper](https://www.scss.tcd.ie/publications/theses/diss/2020/TCD-SCSS-DISSERTATION-2020-100.pdf)| 
+
+
+
+
+
+
+
+
 ## Approach
 ```mermaid
 graph TD
