@@ -47,11 +47,6 @@ The Data sources for this project are: SASE-FE Dataset.
 
 
 
-
-
-
-
-
 ## Approach
 ```mermaid
 graph TD
@@ -72,3 +67,4 @@ graph TD
 	Classifier_Model_2 --> Posed_emotion
 ```
 
+# Add more details based on the Thesis Proposal here. 
