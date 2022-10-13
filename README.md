@@ -1,7 +1,4 @@
 # Multi-Label, Multi-Task Deep Learning Approach Towards Detection The Differences Between Real And Fake Emotions
-
-<!-- Languages in this repo -->
-
 [![Python](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Tensorflow](https://img.shields.io/badge/tensorflow-1.14.0-green.svg)](https://www.tensorflow.org/)
 [![Keras](https://img.shields.io/badge/keras-2.2.4-green.svg)](https://keras.io/)
