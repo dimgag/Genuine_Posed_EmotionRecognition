@@ -186,3 +186,4 @@ def speed_up_training(model, train_generator, validation_generator, epochs, batc
     history = model.fit_generator(train_generator, steps_per_epoch=train_generator.samples // batch_size, epochs=epochs, validation_data=validation_generator, validation_steps=validation_generator.samples // batch_size, verbose=1)
     plot_learning_curve(history.history, history_name)
     return history
+
