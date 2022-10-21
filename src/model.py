@@ -40,8 +40,3 @@ print(resnet50)
 # Summarize the model
 from torchsummary import summary
 summary(resnet50, (3, 224, 224))
-
-
-
-# # # # # # # # # # 
-# Create a Xception model in pytorch
