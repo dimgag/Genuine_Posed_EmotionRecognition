@@ -1,5 +1,3 @@
-# Build a cnn model in pytorch
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
