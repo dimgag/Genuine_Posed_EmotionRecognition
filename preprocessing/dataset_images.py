@@ -70,5 +70,34 @@ parser.add_argument('--dataset', type=str, default='patches', help='Dataset to b
 
 
 
-
-    
+# Split the dataset into training and validation sets
+parser.add_argument('--split', type=float, default=0.8, help='Percentage of the dataset to be used for training')
+parser.add_argument('--dataset', type=str, default='patches', help='Dataset to be used')
+parser.add_argument('--classes', type=str, default='all', help='Classes to be used')
+parser.add_argument('--frames', type=int, default=16, help='Number of frames to be used')
+parser.add_argument('--size', type=int, default=224, help='Size of the images')
+parser.add_argument('--channels', type=int, default=3, help='Number of channels of the images')
+parser.add_argument('--seed', type=int, default=123, help='Seed for the random number generator')
+parser.add_argument('--verbose', type=bool, default=True, help='Print information about the dataset')
+parser.add_argument('--save', type=bool, default=True, help='Save the dataset')
+parser.add_argument('--save_path', type=str, default='..', help='Path to save the dataset')
+parser.add_argument('--save_name', type=str, default='dataset', help='Name to save the dataset')
+parser.add_argument('--save_format', type=str, default='npy', help='Format to save the dataset')
+parser.add_argument('--save_labels', type=bool, default=True, help='Save the labels')
+parser.add_argument('--save_labels_path', type=str, default='..', help='Path to save the labels')
+parser.add_argument('--save_labels_name', type=str, default='labels', help='Name to save the labels')
+parser.add_argument('--save_labels_format', type=str, default='npy', help='Format to save the labels')
+parser.add_argument('--save_classes', type=bool, default=True, help='Save the classes')
+parser.add_argument('--save_classes_path', type=str, default='..', help='Path to save the classes')
+parser.add_argument('--save_classes_name', type=str, default='classes', help='Name to save the classes')
+parser.add_argument('--save_classes_format', type=str, default='npy', help='Format to save the classes')
+parser.add_argument('--save_mean', type=bool, default=True, help='Save the mean')
+parser.add_argument('--save_mean_path', type=str, default='..', help='Path to save the mean')
+parser.add_argument('--save_mean_name', type=str, default='mean', help='Name to save the mean')
+parser.add_argument('--save_mean_format', type=str, default='npy', help='Format to save the mean')
+parser.add_argument('--save_std', type=bool, default=True, help='Save the standard deviation')
+parser.add_argument('--save_std_path', type=str, default='..', help='Path to save the standard deviation')
+parser.add_argument('--save_std_name', type=str, default='std', help='Name to save the standard deviation')
+parser.add_argument('--save_std_format', type=str, default='npy', help='Format to save the standard deviation')
+parser.add_argument('--save_min', type=bool, default=True, help='Save the minimum')
+parser.add_argument('--save_min_path', type=str, default='..', help='Path to save the minimum')
