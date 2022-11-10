@@ -1,0 +1,14 @@
+{
+"D2N2Sur.MP4":"Surprise",
+"H2N2A.MP4":"Angry",
+"H2N2C.MP4" :"Contempt",
+"H2N2D.MP4":"Disgust",
+"H2N2S.MP4":"Sad",
+"N2A.MP4":"Angry",
+"N2C.MP4":"Contempt",
+"N2D.MP4":"Disgust",
+"N2H.MP4":"Happy",
+"N2S.MP4":"Sad",
+"N2Sur.MP4":"Surprise",
+"S2N2H.MP4":"Happy"
+}
