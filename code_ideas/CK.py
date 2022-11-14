@@ -22,6 +22,8 @@ from keras.models import Sequential, Model # Types of model to be used
 from keras.layers import Dense, Dropout, Activation, Flatten # Dense layers of NN
 from keras.layers import Conv2D, MaxPooling2D # Convolution layers related of NN
 import keras.backend as K # Changing to channels_first input layout
+
+import os # OS library to use system commands
 K.set_image_data_format('channels_first')
 K.set_floatx('float32')
 print('Backend:        {}'.format(K.backend()))

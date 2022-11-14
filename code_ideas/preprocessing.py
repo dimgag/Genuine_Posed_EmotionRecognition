@@ -3,7 +3,7 @@ import json
 import cv2
 import re
 # Number of fps per minute that we want to take from a video
-DESIRED_FPS= 20
+DESIRED_FPS = 20
 
 """
 takes frames from a video and save them in the appropriate folder
