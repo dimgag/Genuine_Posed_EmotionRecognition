@@ -49,15 +49,6 @@ labels = np.load(data_dir + 'labels.npy')
 
 
 
-
-
-
-
-
-
-
-
-
 # Split data into training and validation sets
 from sklearn.model_selection import train_test_split
 train_data, val_data, train_labels, val_labels = train_test_split(data, labels, test_size=0.2, random_state=42)
