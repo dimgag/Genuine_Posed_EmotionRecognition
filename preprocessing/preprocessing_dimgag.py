@@ -1,11 +1,3 @@
-import torch.optim as optim
-
-from torch.utils.data import Dataset, DataLoader
-from torchvision import tramforms, utils
-
-# Ignore warnings
-
-
 import os 
 import json
 import cv2
