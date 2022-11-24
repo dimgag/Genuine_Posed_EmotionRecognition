@@ -2,6 +2,15 @@ import os
 import json
 import cv2
 
+# Create a new directory for the frames
+def create_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+        print("Created directory: ", dir)
+    else:
+        print("Directory already exists: ", dir)
+
+
 
 # Function to remove .DS_Store files and separate the videos into folders
 def get_files_paths(dir):
@@ -32,92 +41,119 @@ def get_files_paths(dir):
                     r_file.append(file)
     return r, r_subdir, r_file
 
+# Get the paths of the videos
+# paths, subdirs, files = get_files_paths('/Users/dim__gag/Desktop/SASE-FE/FakeTrue_DB')
+
 
 # Function to extract frames from videos
-
 def video2frames(dir, dirname, file):
-	vidcap = cv2.VideoCapture(dir)
-	'''
+    vidcap = cv2.VideoCapture(dir)
+    '''
 	Get length of the videos in frames:
 		- Get frames from 50% of the video's length until 90% of the length
 	'''
-	length_of_video = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-	success, image = vidcap.read()
+    length_of_video = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+    success, image = vidcap.read()
+    
 
-	new_dir = dir.replace('patches','frames3D').split('.MP4')[0]
-	# print( new_dir )
+    new_dir = dir.replace('patches', 'frames3D').split('.MP4')[0]
+    print(new_dir)
 
-	print( os.path.basename(new_dir) )
+    print(os.path.basename(new_dir))
 
-	count = 0
-	frame_counter = 0
-	vid = []
-	while success:
-		success,image = vidcap.read()
+    count = 0
+    frame_counter = 0
+    vid = []
+    while success:
+        success, image = vidcap.read()
 
-		if frame_counter > 16:
-			frame_counter = 0
-			print(file)
-			# np.save(, vid)
-			vid = []
-		
-		if count > int(length_of_video*.6) and count < int(length_of_video*.9):
-			vid.append(dirname)
-			# cv2.imwrite(os.path.join(dirname, file + 'frame%d.jpg' % count), image)     # save frame as JPEG file
+        if frame_counter > 16:
+            frame_counter = 0
+            print(file)
+            vid = []
+        
+        if count > int(length_of_video*.6) and count < int(length_of_video*.9):
+            vid.append(dirname)
 
-		if cv2.waitKey(10) == 27:                     # exit if Escape is hit
-			break
+            
+            if file == 'N2Sur':            
+                print("start spliting the videos")
+                print(file, 'real', 'surprise')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + 'frame%d.jpg' % count), image)
+            if file == 'N2A.MP4':
+                print(file, 'real', 'anger')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/anger', file + 'frame%d.jpg' % count), image)
+            if file == 'N2C.MP4':
+                print(file, 'real', 'contempt')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/contempt', file + 'frame%d.jpg' % count), image)
+            if file == 'N2D.MP4':
+                print(file, 'real', 'disgust')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/disgust', file + 'frame%d.jpg' % count), image)
+            if file == 'N2S.MP4':
+                print(file, 'real', 'sad')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/sad', file + 'frame%d.jpg' % count), image)
+            if file == 'N2H.MP4':
+                print(file, 'real', 'happy')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/happy', file + 'frame%d.jpg' % count), image)
+            if file == 'D2N2Sur.MP4':
+                print(file, 'fake', 'surprise')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/surprise', file + 'frame%d.jpg' % count), image)
+            if file == 'H2N2A.MP4':
+                print(file, 'fake', 'anger')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/anger', file + 'frame%d.jpg' % count), image)
+            if file == 'H2N2C.MP4':
+                print(file, 'fake', 'contempt')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/contempt', file + 'frame%d.jpg' % count), image)
+            if file == 'H2N2D.MP4':
+                print(file, 'fake', 'disgust')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/disgust', file + 'frame%d.jpg' % count), image)
+            if file == 'H2N2S.MP4':
+                print(file, 'fake', 'sad')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + 'frame%d.jpg' % count), image)
+            if file == 'S2N2H.MP4':
+                print(file, 'fake', 'happy')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + 'frame%d.jpg' % count), image)
 
-		count += 1
-		frame_counter += 1
 
+        if cv2.waitKey(10) == 27:
+            break
 
-
-
-data_dir = "/Users/dim__gag/Desktop/SASE-FE/FakeTrue_DB"
-
-r, r_subdir, r_file = get_files_paths(data_dir)
-
-for video, dirname, file in zip(r, r_subdir, r_file):
-    video2frames(video, dirname, file)
-
-
-
+        count += 1
+        frame_counter += 1
+        
 
 
 if __name__ == '__main__':
-	import argparse
+    # Data directory:
+    data_dir = "/Users/dim__gag/Desktop/SASE-FE/FakeTrue_DB"
 
-	parser = argparse.ArgumentParser(description='Generate the dataset for the 3D CNN')
-	parser.add_argument('-dataset', type=str, default='patches', 
-											help='Name of the dataset to use')
-	parser.add_argument('-set', type=str, default='training',
-											help='Set to use (training, validation, test)')
-	args = parser.parse_args()
+    # Create a new directory for the frames
+    create_dir('/Users/dim__gag/Desktop/SASE-FE/frames')
+    frames_dir = '/Users/dim__gag/Desktop/SASE-FE/frames'
 
-	'''
-	@ r: list of directory path
-	@ r_subdir: list of subdirectories
-	@ r_file: list of files
-	'''
-	path_to_dataset = os.path.join('..', '2_Model', '2_Dataset', args.dataset, args.set)
-	r, r_subdir, r_file = get_files_paths(path_to_dataset)
+    # Create subdirectories for the frames real and fake
+    create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real')
+    create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake')
 
-	for video, dirname, file in zip(r, r_subdir, r_file):
-		video2frames(video, dirname, file)
+    # Emotions
+    emotions = ['surprise', 'anger', 'happiness', 'sadness', 'disgust', 'fear']
 
+    # Create subdirectories for the emotions
+    for emotion in emotions:
+        create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real/' + emotion)
+        create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake/' + emotion)
 
 
-
-
-
-
-
-
-
-
-
-
+    # Get the paths of the videos
+    r, r_subdir, r_file = get_files_paths(data_dir)
+    
+    # # Extract frames from videos
+    # for video, dirname, file in zip(r, r_subdir, r_file):
+    #     video2frames(video, dirname, file)
+    
+    for video, dirname, file in zip(r, r_subdir, r_file):
+        video2frames(video, dirname, file)
+    
 
 
 
@@ -125,20 +161,4 @@ if __name__ == '__main__':
 
 
 
-
-
-
-# def main():
-#     # Get the list of videos
-#     videos = glob.glob(os.path.join(data_dir, "*.MP4"))
-
-#     # Create the output directory
-#     output_path = os.path.join(data_dir, "frames")
-#     if not os.path.exists(output_path):
-#         os.makedirs(output_path)
-
-#     # Extract the frames
-#     for video in videos:
-#         filename = os.path.splitext(os.path.basename(video))[0]
-#         video2frames(output_path, video, filename)
 
