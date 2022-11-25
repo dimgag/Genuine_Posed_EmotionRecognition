@@ -112,10 +112,6 @@ def video2frames(dir, dirname, file):
             if file == 'S2N2H.MP4':
                 print(file, 'fake', 'happy')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + 'frame%d.jpg' % count), image)
-            if file == 'D2N2S.MP4':
-                print(file, 'fake', 'sad')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + 'frame%d.jpg' % count), image)
-
         if cv2.waitKey(10) == 27:
             break
 
