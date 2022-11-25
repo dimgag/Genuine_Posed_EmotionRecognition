@@ -76,13 +76,12 @@ def video2frames(dir, dirname, file):
             vid.append(dirname)
 
             
-            if file == 'N2Sur':            
-                print("start spliting the videos")
+            if file == 'N2SUR.MP4':            
                 print(file, 'real', 'surprise')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + 'frame%d.jpg' % count), image)
             if file == 'N2A.MP4':
-                print(file, 'real', 'anger')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/anger', file + 'frame%d.jpg' % count), image)
+                print(file, 'real', 'angry')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/angry', file + 'frame%d.jpg' % count), image)
             if file == 'N2C.MP4':
                 print(file, 'real', 'contempt')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/contempt', file + 'frame%d.jpg' % count), image)
@@ -95,12 +94,12 @@ def video2frames(dir, dirname, file):
             if file == 'N2H.MP4':
                 print(file, 'real', 'happy')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/happy', file + 'frame%d.jpg' % count), image)
-            if file == 'D2N2Sur.MP4':
+            if file == 'D2N2SUR.MP4':
                 print(file, 'fake', 'surprise')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/surprise', file + 'frame%d.jpg' % count), image)
             if file == 'H2N2A.MP4':
-                print(file, 'fake', 'anger')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/anger', file + 'frame%d.jpg' % count), image)
+                print(file, 'fake', 'angry')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/angry', file + 'frame%d.jpg' % count), image)
             if file == 'H2N2C.MP4':
                 print(file, 'fake', 'contempt')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/contempt', file + 'frame%d.jpg' % count), image)
@@ -113,7 +112,9 @@ def video2frames(dir, dirname, file):
             if file == 'S2N2H.MP4':
                 print(file, 'fake', 'happy')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + 'frame%d.jpg' % count), image)
-
+            if file == 'D2N2S.MP4':
+                print(file, 'fake', 'sad')
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + 'frame%d.jpg' % count), image)
 
         if cv2.waitKey(10) == 27:
             break
@@ -136,21 +137,21 @@ if __name__ == '__main__':
     create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake')
 
     # Emotions
-    emotions = ['surprise', 'anger', 'happiness', 'sadness', 'disgust', 'fear']
+    emotions = ['surprise', 'angry', 'happy', 'sad', 'disgust', 'contempt']
 
     # Create subdirectories for the emotions
     for emotion in emotions:
         create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real/' + emotion)
         create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake/' + emotion)
 
-
     # Get the paths of the videos
     r, r_subdir, r_file = get_files_paths(data_dir)
     
-    # # Extract frames from videos
-    # for video, dirname, file in zip(r, r_subdir, r_file):
-    #     video2frames(video, dirname, file)
+    # Capitalize all video names
+    for i in range(len(r_file)):
+        r_file[i] = r_file[i].upper()
     
+    # Extract frames from videos
     for video, dirname, file in zip(r, r_subdir, r_file):
         video2frames(video, dirname, file)
     
