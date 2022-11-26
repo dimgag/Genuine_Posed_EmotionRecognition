@@ -154,7 +154,12 @@ if __name__ == '__main__':
 
 
 
-
+# # unique values
+# unique_values = set(data)
+# print(unique_values)
+# # Count the unique values
+# unique_values_count = len(unique_values)
+# print(unique_values_count)
 
 
 
