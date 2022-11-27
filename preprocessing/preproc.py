@@ -74,43 +74,8 @@ def video2frames(dir, dirname, file):
         
         if count > int(length_of_video*.6) and count < int(length_of_video*.9):
             vid.append(dirname)
-            
-            if file == 'N2SUR.MP4':            
-                print(file, 'real', 'surprise')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'N2A.MP4':
-                print(file, 'real', 'angry')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/angry', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'N2C.MP4':
-                print(file, 'real', 'contempt')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/contempt', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'N2D.MP4':
-                print(file, 'real', 'disgust')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/disgust', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'N2S.MP4':
-                print(file, 'real', 'sad')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/sad', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'N2H.MP4':
-                print(file, 'real', 'happy')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/happy', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'D2N2SUR.MP4':
-                print(file, 'fake', 'surprise')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/surprise', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'H2N2A.MP4':
-                print(file, 'fake', 'angry')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/angry', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'H2N2C.MP4':
-                print(file, 'fake', 'contempt')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/contempt', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'H2N2D.MP4':
-                print(file, 'fake', 'disgust')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/disgust', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'H2N2S.MP4':
-                print(file, 'fake', 'sad')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + "{:02d}.jpg".format(count) ), image)
-            if file == 'S2N2H.MP4':
-                print(file, 'fake', 'happy')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + "{:02d}.jpg".format(count) ), image)
+            cv2.imwrite(os.path.join(dirname, file + 'frame%d.jpg' % count), image)  
+
         if cv2.waitKey(10) == 27:
             break
 
