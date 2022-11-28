@@ -77,47 +77,47 @@ def video2frames(dir, dirname, file):
             
             if file == 'N2SUR.MP4':            
                 print(file, 'real', 'surprise')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file.split('.')[-1] + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
             if file == 'N2A.MP4':
                 print(file, 'real', 'angry')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/angry', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2C.MP4':
                 print(file, 'real', 'contempt')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/contempt', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2D.MP4':
                 print(file, 'real', 'disgust')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/disgust', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2S.MP4':
                 print(file, 'real', 'sad')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/sad', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2H.MP4':
                 print(file, 'real', 'happy')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/happy', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'D2N2SUR.MP4':
                 print(file, 'fake', 'surprise')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/surprise', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/surprise', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2A.MP4':
                 print(file, 'fake', 'angry')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/angry', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2C.MP4':
                 print(file, 'fake', 'contempt')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/contempt', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2D.MP4':
                 print(file, 'fake', 'disgust')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/disgust', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2S.MP4':
                 print(file, 'fake', 'sad')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'S2N2H.MP4':
                 print(file, 'fake', 'happy')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/fake/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
         if cv2.waitKey(10) == 27:
             break
 
         count += 1
         frame_counter += 1
         
-
+# r_subdir.split('/')[-1]
 
 if __name__ == '__main__':
     # Data directory:
@@ -163,3 +163,5 @@ if __name__ == '__main__':
 
 
 
+
+# File preprocessing_dimgag.py -> Created frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)

@@ -128,3 +128,4 @@ if __name__ == '__main__':
 
 
 
+# File preproc.py -> Created frames inside the folders of the candidates
