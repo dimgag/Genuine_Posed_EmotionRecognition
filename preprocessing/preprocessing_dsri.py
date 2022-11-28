@@ -79,40 +79,40 @@ def video2frames(dir, dirname, file):
             # Local code
             if file == 'N2SUR.MP4':            
                 print(file, 'real', 'surprise')
-                cv2.imwrite(os.path.join('/persistent/frames/real/surprise', file + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/surprise', file + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
             if file == 'N2A.MP4':
                 print(file, 'real', 'angry')
-                cv2.imwrite(os.path.join('/persistent/frames/real/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2C.MP4':
                 print(file, 'real', 'contempt')
-                cv2.imwrite(os.path.join('/persistent/frames/real/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2D.MP4':
                 print(file, 'real', 'disgust')
-                cv2.imwrite(os.path.join('/persistent/frames/real/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2S.MP4':
                 print(file, 'real', 'sad')
-                cv2.imwrite(os.path.join('/persistent/frames/real/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'N2H.MP4':
                 print(file, 'real', 'happy')
-                cv2.imwrite(os.path.join('/persistent/frames/real/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/real/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'D2N2SUR.MP4':
                 print(file, 'fake', 'surprise')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/surprise', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/surprise', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2A.MP4':
                 print(file, 'fake', 'angry')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2C.MP4':
                 print(file, 'fake', 'contempt')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/contempt', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2D.MP4':
                 print(file, 'fake', 'disgust')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/disgust', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'H2N2S.MP4':
                 print(file, 'fake', 'sad')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/sad', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
             if file == 'S2N2H.MP4':
                 print(file, 'fake', 'happy')
-                cv2.imwrite(os.path.join('/persistent/frames/fake/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('../persistent/frames/fake/happy', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
         if cv2.waitKey(10) == 27:
             break
 
@@ -124,15 +124,15 @@ def video2frames(dir, dirname, file):
 if __name__ == '__main__':
     # Data directory:
     # DSRI Dataset Path
-    data_dir = '/persistent/FakeTrue_DB'
+    data_dir = '../persistent/FakeTrue_DB'
 
     # Create a new directory for the frames
-    create_dir('/persistent/frames')
-    frames_dir = '/persistent/frames'
+    create_dir('../persistent/frames')
+    frames_dir = '../persistent/frames'
         
     # Create subdirectories for the frames real and fake
-    create_dir('/persistent/frames/real')
-    create_dir('/persistent/frames/fake')
+    create_dir('../persistent/frames/real')
+    create_dir('../persistent/frames/fake')
     
     
     # Emotions
@@ -140,8 +140,8 @@ if __name__ == '__main__':
 
     # Create subdirectories for the emotions
     for emotion in emotions:
-        create_dir('/persistent/frames/real/' + emotion)
-        create_dir('/persistent/frames/fake/' + emotion)    
+        create_dir('../persistent/frames/real/' + emotion)
+        create_dir('../persistent/frames/fake/' + emotion)    
     
         
     # Get the paths of the videos
