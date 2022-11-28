@@ -2,6 +2,9 @@ import os
 import json
 import cv2
 
+# Preprocessing Python file for Local 
+# File preprocessing_dimgag.py -> Created frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
+
 # Create a new directory for the frames
 def create_dir(dir):
     if not os.path.exists(dir):
@@ -41,8 +44,6 @@ def get_files_paths(dir):
                     r_file.append(file)
     return r, r_subdir, r_file
 
-# Get the paths of the videos
-# paths, subdirs, files = get_files_paths('/Users/dim__gag/Desktop/SASE-FE/FakeTrue_DB')
 
 
 # Function to extract frames from videos
@@ -75,9 +76,10 @@ def video2frames(dir, dirname, file):
         if count > int(length_of_video*.6) and count < int(length_of_video*.9):
             vid.append(dirname)
             
+            # Local code
             if file == 'N2SUR.MP4':            
                 print(file, 'real', 'surprise')
-                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file.split('.')[-1] + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
+                cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
             if file == 'N2A.MP4':
                 print(file, 'real', 'angry')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/angry', file + dirname.split('/')[-1] + "{:02d}.jpg".format(count) ), image)
@@ -139,6 +141,7 @@ if __name__ == '__main__':
         create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real/' + emotion)
         create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake/' + emotion)
 
+        
     # Get the paths of the videos
     r, r_subdir, r_file = get_files_paths(data_dir)
     
@@ -149,20 +152,4 @@ if __name__ == '__main__':
     # Extract frames from videos
     for video, dirname, file in zip(r, r_subdir, r_file):
         video2frames(video, dirname, file)
-    
-
-
-
-# # unique values
-# unique_values = set(data)
-# print(unique_values)
-# # Count the unique values
-# unique_values_count = len(unique_values)
-# print(unique_values_count)
-
-
-
-
-
-# File preprocessing_dimgag.py -> Created frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
     
