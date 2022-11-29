@@ -3,7 +3,7 @@ import json
 import cv2
 
 # Preprocessing Python file for DSRI 
-# File preprocessing_dimgag.py -> Created frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
+# File preprocessing_dimgag.py -> Creates frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
 
 # Create a new directory for the frames
 def create_dir(dir):
