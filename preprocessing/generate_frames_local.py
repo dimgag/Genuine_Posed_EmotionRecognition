@@ -133,15 +133,23 @@ if __name__ == '__main__':
     create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real')
     create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake')
 
-    # Emotions
-    emotions = ['surprise', 'angry', 'happy', 'sad', 'disgust', 'contempt']
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # # Emotions
+    # emotions = ['surprise', 'angry', 'happy', 'sad', 'disgust', 'contempt']
 
-    # Create subdirectories for the emotions
+    # # Create subdirectories for the emotions
+    # for emotion in emotions:
+    #     create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real/' + emotion)
+    #     create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake/' + emotion)
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    
+    emotions = ['real_surprise','real_angry','real_happy','real_sad','real_disgust','real_contempt',
+                'fake_surprise','fake_angry','fake_happy','fake_sad','fake_disgust','fake_contempt']
+    
     for emotion in emotions:
-        create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/real/' + emotion)
-        create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/fake/' + emotion)
+        create_dir('/Users/dim__gag/Desktop/SASE-FE/frames/' + emotion)
+    
 
-        
     # Get the paths of the videos
     r, r_subdir, r_file = get_files_paths(data_dir)
     
