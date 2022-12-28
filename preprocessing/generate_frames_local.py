@@ -76,7 +76,6 @@ def video2frames(dir, dirname, file):
         if count > int(length_of_video*.6) and count < int(length_of_video*.9):
             vid.append(dirname)
             
-            # Local code
             if file == 'N2SUR.MP4':            
                 print(file, 'real', 'surprise')
                 cv2.imwrite(os.path.join('/Users/dim__gag/Desktop/SASE-FE/frames/real/surprise', file + dirname.split('/')[-1] + dirname.split('/')[-1] +"{:02d}.jpg".format(count) ), image)
