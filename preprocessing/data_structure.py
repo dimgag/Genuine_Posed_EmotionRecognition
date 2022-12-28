@@ -126,7 +126,7 @@ if __name__ == "__main__":
     r, r_subdir, r_file = get_files_paths(data_dir)
 
     # Capitalize all video names
-    r_files = [file.upper() for file in r_file]
+    r_file = [file.upper() for file in r_file]
 
     # Extract frames from videos
     for video, dirname, file in zip(r, r_subdir, r_file):
