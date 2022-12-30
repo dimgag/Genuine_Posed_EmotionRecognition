@@ -1,9 +1,11 @@
+# Preprocessing Python file for DSRI 
+# Creates frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
+# Author: Dimitrios Gagatsis
+
 import os 
 import json
 import cv2
 
-# Preprocessing Python file for DSRI 
-# Creates frames inside the correct folders (real and fake) and inside the correct emotions folders (surprise, angry, happy, sad, disgust, contempt)
 
 # Create a new directory for the frames
 def create_dir(dir):

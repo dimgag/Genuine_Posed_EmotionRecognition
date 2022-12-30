@@ -1,4 +1,5 @@
 # Get a small version of the origianl dataset for local use
+# Author: Dimitrios Gagatsis
 import shutil
 import os
 

@@ -1,6 +1,7 @@
 # This file generates frames videos and splits them into 12 labels.
 # 'real_surprise','real_angry','real_happy','real_sad','real_disgust','real_contempt',
 # 'fake_surprise','fake_angry','fake_happy','fake_sad','fake_disgust','fake_contempt'
+# Author: Dimitrios Gagatsis
 
 import os
 import cv2
