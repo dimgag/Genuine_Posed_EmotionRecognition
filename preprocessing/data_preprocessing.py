@@ -11,9 +11,6 @@ classes = "../data/frames"
 classes_emotions = os.listdir(classes)
 classes_emotions.remove('.DS_Store')
 
-# Count the number  of classes
-print("Number of classes is: ", len(classes_emotions))
-
 
 # Find .DS_Store and remove it from every emotion folder
 for emotion in classes_emotions:
