@@ -1,5 +1,5 @@
 # Data preprocessing - detect faces and crop the images with Haar Cascade.
-# Author - Dimitrios Gagatsis
+# Author: Dimitrios Gagatsis
 import matplotlib.pyplot as plt
 import cv2
 import os
