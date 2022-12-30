@@ -1,0 +1,12 @@
+fake_surprise Original Images:  5187 Cropped Images:  5069
+fake_contempt Original Images:  5689 Cropped Images:  5462
+fake_disgust Original Images:  5524 Cropped Images:  5386
+fake_sad Original Images:  5281 Cropped Images:  5082
+fake_happy Original Images:  4937 Cropped Images:  4718
+real_happy Original Images:  5348 Cropped Images:  5323
+real_surprise Original Images:  5438 Cropped Images:  5282
+real_disgust Original Images:  5307 Cropped Images:  5172
+real_angry Original Images:  5402 Cropped Images:  5160
+real_contempt Original Images:  5222 Cropped Images:  5066
+real_sad Original Images:  5407 Cropped Images:  5381
+fake_angry Original Images:  5850 Cropped Images:  5574
