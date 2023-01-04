@@ -1,7 +1,9 @@
+# Code template for the function to predict the emotion
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
+
 
 class VGGFace(nn.Module):
     def __init__(self):
@@ -14,7 +16,7 @@ class VGGFace(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, 2622),
+            nn.Linear(4096, 12), # 12 Output classes
         )
 
     def forward(self, x):
@@ -23,14 +25,7 @@ class VGGFace(nn.Module):
         x = self.classifier(x)
         return x
 
-vggface = VGGFace()
-print(vggface)
 
-# Load VGGface2
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torchvision import models
 
 class VGGFace2(nn.Module):
     def __init__(self):
@@ -43,7 +38,7 @@ class VGGFace2(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, 8631),
+            nn.Linear(4096, 12), # 12 Output classes
         )
 
     def forward(self, x):
@@ -52,5 +47,4 @@ class VGGFace2(nn.Module):
         x = self.classifier(x)
         return x
 
-vggface2 = VGGFace2()
-print(vggface2)
+
