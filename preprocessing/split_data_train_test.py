@@ -52,3 +52,4 @@ for emotion in faces:
 
 print('Train images: ', train)
 print('Test images: ', test)
+
