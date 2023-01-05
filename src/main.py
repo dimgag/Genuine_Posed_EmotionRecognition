@@ -8,7 +8,8 @@ import torch.nn.functional as F
 from utils import save_model, save_plots
 from data import get_datasets, get_data_loaders
 from train import train, validate
-
+from model1 import Net
+from vggface import VGGFace, VGGFace2
 
 
 if __name__ == '__main__':
@@ -23,29 +24,13 @@ if __name__ == '__main__':
     dataset_train, dataset_test, dataset_classes = get_datasets()
     train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)
 
+    
 
     # 2. Define the model
-    class Net(nn.Module):
-        def __init__(self):
-            super(Net, self).__init__()
-            self.conv1 = nn.Conv2d(3, 6, 5)
-            self.pool = nn.MaxPool2d(2, 2)
-            self.conv2 = nn.Conv2d(6, 16, 5)
-            self.fc1 = nn.Linear(16 * 53 * 53, 120)
-            self.fc2 = nn.Linear(120, 84)
-            self.fc3 = nn.Linear(84, 12)
+    # net = Net()
+    # net = VGGFace()
+    net = VGGFace2()
 
-        def forward(self, x):
-            x = self.pool(F.relu(self.conv1(x)))
-            x = self.pool(F.relu(self.conv2(x)))
-            # x = x.view(-1, 16 * 53 * 53)
-            x = torch.flatten(x, 1)
-            x = F.relu(self.fc1(x))
-            x = F.relu(self.fc2(x))
-            x = self.fc3(x)
-            return x
-
-    net = Net()
 
     # 3. Define the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
