@@ -25,6 +25,15 @@
 .AppleDouble
 .LSOverride
 
+# Exclude ipycheckpoints 
+*.ipynb_checkpoints
+*.ipynb_checkpoints/*
+
+# Exclude __pycache__
+__pycache__
+__pycache__/*
+
+
 # Thumbnails
 ._*
 
