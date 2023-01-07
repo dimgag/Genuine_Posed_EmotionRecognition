@@ -79,11 +79,14 @@ if __name__ == '__main__':
         y_true.append(labels)
         y_pred.append(predicted)
 
+    # print(len(y_true)) 
+    # print(len(y_pred))
+
     cm = ConfusionMatrix(y_true, y_pred, labels=dataset_classes)
     cm.plot_confusion_matrix()
 
     # Save the Model and Accuracy&Loss plots.
     save_model(epochs, net, optimizer, criterion)
     
-    save_plots(train_acc, valid_acc, train_loss, valid_loss)
+    # save_plots(train_acc, valid_acc, train_loss, valid_loss)
     print('TRAINING COMPLETE')
