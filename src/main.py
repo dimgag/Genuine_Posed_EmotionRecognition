@@ -27,9 +27,9 @@ if __name__ == '__main__':
     
 
     # 2. Define the model
-    # net = Net()
+    net = Net()
     # net = VGGFace()
-    net = VGGFace2()
+    # net = VGGFace2()
 
 
     # 3. Define the loss function and optimizer
@@ -47,7 +47,11 @@ if __name__ == '__main__':
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
+<<<<<<< HEAD
     epochs = 5
+=======
+    epochs = 1
+>>>>>>> refs/remotes/origin/master
 
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
@@ -67,6 +71,20 @@ if __name__ == '__main__':
 
     print('Finished Training')
 
+    #  get confusion matrix of the model
+    from conf_matrix import ConfusionMatrix
+    y_true = []
+    y_pred = []
+
+    for i, data in enumerate(test_loader, 0):
+        inputs, labels = data
+        outputs = net(inputs)
+        _, predicted = torch.max(outputs.data, 1)
+        y_true.append(labels)
+        y_pred.append(predicted)
+
+    cm = ConfusionMatrix(y_true, y_pred, labels=dataset_classes)
+    cm.plot_confusion_matrix()
 
     # Save the Model and Accuracy&Loss plots.
     save_model(epochs, net, optimizer, criterion)
