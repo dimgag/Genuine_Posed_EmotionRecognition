@@ -67,26 +67,10 @@ if __name__ == '__main__':
 
     print('Finished Training')
 
-    #  get confusion matrix of the model
+
     from conf_matrix import ConfusionMatrix
-    y_true = []
-    y_pred = []
-
-    for i, data in enumerate(test_loader, 0):
-        inputs, labels = data
-        outputs = net(inputs)
-        _, predicted = torch.max(outputs.data, 1)
-        y_true.append(labels)
-        y_pred.append(predicted)
-
-    # print(len(y_true)) 
-    # print(len(y_pred))
-
-    cm = ConfusionMatrix(y_true, y_pred, labels=dataset_classes)
-    cm.plot_confusion_matrix()
-
-    # Save the Model and Accuracy&Loss plots.
-    save_model(epochs, net, optimizer, criterion)
+    ConfusionMatrix(net, test_loader, dataset_classes)
     
-    # save_plots(train_acc, valid_acc, train_loss, valid_loss)
-    print('TRAINING COMPLETE')
+    # Save the Model and Accuracy & Loss plots.
+    save_model(epochs, net, optimizer, criterion)    
+    save_plots(train_acc, valid_acc, train_loss, valid_loss)
