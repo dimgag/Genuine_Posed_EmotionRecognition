@@ -47,11 +47,8 @@ if __name__ == '__main__':
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-<<<<<<< HEAD
+
     epochs = 5
-=======
-    epochs = 1
->>>>>>> refs/remotes/origin/master
 
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
