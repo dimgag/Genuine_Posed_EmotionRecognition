@@ -26,7 +26,7 @@ class CrossEntropyLoss(nn.Module):
 # output = triplet_loss(anchor, positive, negative)
 # output.backward()
 
-# Triplet Loss // TripletMargin Loss
+# Triplet Loss // TripletMargin Loss #NEED TO BE FIXED OR CHECKED
 class TripletMarginLoss(nn.Module):
     def __init__(self, margin=1.0, p=2, eps=1e-6, swap=False):
         super(TripletMarginLoss, self).__init__()

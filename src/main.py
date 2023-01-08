@@ -10,7 +10,7 @@ from data import get_datasets, get_data_loaders
 from train import train, validate
 from model1 import Net
 from vggface import VGGFace, VGGFace2
-
+import loss_functions
 
 if __name__ == '__main__':
     # 1. Load the data 
@@ -23,7 +23,6 @@ if __name__ == '__main__':
 
     dataset_train, dataset_test, dataset_classes = get_datasets()
     train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)
-
     
 
     # 2. Define the model
@@ -33,7 +32,10 @@ if __name__ == '__main__':
 
 
     # 3. Define the loss function and optimizer
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+    # criterion = loss_functions.TripletMarginLoss()
+    criterion = loss_functions.MultiFocalLoss()
+
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     # 4. Train the model
@@ -69,8 +71,8 @@ if __name__ == '__main__':
     print('Finished Training')
 
 
-    from conf_matrix import ConfusionMatrix
-    ConfusionMatrix(net, test_loader, dataset_classes)
+    # from conf_matrix import ConfusionMatrix
+    # ConfusionMatrix(net, test_loader, dataset_classes)
     
     # Save the Model and Accuracy & Loss plots.
     save_model(epochs, net, optimizer, criterion)    
