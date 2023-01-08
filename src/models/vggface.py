@@ -1,4 +1,3 @@
-# Code template for the function to predict the emotion
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

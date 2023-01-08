@@ -4,13 +4,18 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
-# Import modules
+
 from utils import save_model, save_plots
 from data import get_datasets, get_data_loaders
 from train import train, validate
-from model1 import Net
-from vggface import VGGFace, VGGFace2
+
+
+from models.model1 import Net
+from models.vggface import VGGFace, VGGFace2
+
+
 import loss_functions
+
 
 if __name__ == '__main__':
     # 1. Load the data 
