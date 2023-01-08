@@ -1,32 +1,30 @@
-# Crerate Confusion Matrix class
-
-import numpy as np
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
+import torch
 
-class ConfusionMatrix:
-    def __init__(self, y_true, y_pred, labels=None):
-        self.y_true = y_true
-        self.y_pred = y_pred
-        self.labels = labels
+def ConfusionMatrix(net, test_loader, dataset_classes):
+    y_pred = []
+    y_true = []
+    # iterate over test data
+    for inputs, labels in test_loader:
+            output = net(inputs) # Feed Network
 
-    def get_confusion_matrix(self):
-        return pd.crosstab(self.y_true, self.y_pred, rownames=['Actual'], colnames=['Predicted'])
+            output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+            y_pred.extend(output) # Save Prediction
+            
+            labels = labels.data.cpu().numpy()
+            y_true.extend(labels) # Save Truth
 
-    def plot_confusion_matrix(self, normalize=False):
-        cm = self.get_confusion_matrix()
-        if normalize:
-            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-            cm = cm.round(2)
-            title = 'Normalized Confusion Matrix'
-        else:
-            title = 'Confusion Matrix'
-        plt.figure(figsize=(10, 7))
-        sns.heatmap(cm, annot=True, cmap='Blues', fmt='g')
-        plt.title(title)
-        plt.xlabel('Predicted')
-        plt.ylabel('Actual')
-        plt.show()
+    # constant for classes
+    classes = dataset_classes
 
-
+    # Build confusion matrix
+    cf_matrix = confusion_matrix(y_true, y_pred)
+    df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [i for i in classes],
+                        columns = [i for i in classes])
+    plt.figure(figsize = (12,7))
+    sn.heatmap(df_cm, annot=True)
+    plt.savefig('output.png')
