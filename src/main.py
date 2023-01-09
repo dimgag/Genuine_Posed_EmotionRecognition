@@ -35,10 +35,10 @@ if __name__ == '__main__':
     
 
     # 2. Define the model to train in gpu
-    net = Net().to(device)
+    # net = Net().to(device)
 
     # net = Net()
-    # net = VGGFace()
+    net = VGGFace().to(device)
     # net = VGGFace2()
 
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
 
 
-    epochs = 5
+    epochs = 10
 
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
