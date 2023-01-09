@@ -4,7 +4,6 @@ from tqdm.auto import tqdm
 # Define the device.
 device = ('cuda' if torch.cuda.is_available() else 'cpu')
 
-
 def train(model, trainloader, optimizer, criterion):
   model.train()
   print("Training model...")

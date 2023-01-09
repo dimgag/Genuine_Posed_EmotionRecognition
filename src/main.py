@@ -31,15 +31,15 @@ if __name__ == '__main__':
     
 
     # 2. Define the model
-    net = Net()
-    # net = VGGFace()
+    # net = Net()
+    net = VGGFace()
     # net = VGGFace2()
 
 
     # 3. Define the loss function and optimizer
-    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
     # criterion = loss_functions.TripletMarginLoss()
-    criterion = loss_functions.MultiFocalLoss()
+    # criterion = loss_functions.MultiFocalLoss()
 
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
 
     # from conf_matrix import ConfusionMatrix
-    # ConfusionMatrix(net, test_loader, dataset_classes)
+    ConfusionMatrix(net, test_loader, dataset_classes)
     
     # Save the Model and Accuracy & Loss plots.
     save_model(epochs, net, optimizer, criterion)    
