@@ -18,6 +18,10 @@ import loss_functions
 
 
 if __name__ == '__main__':
+    # Device 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("Device:", device)
+
     # 1. Load the data 
     # Local Paths
     train_dir = "data/train"
@@ -30,8 +34,10 @@ if __name__ == '__main__':
     train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)
     
 
-    # 2. Define the model
-    net = Net()
+    # 2. Define the model to train in gpu
+    net = Net().to(device)
+
+    # net = Net()
     # net = VGGFace()
     # net = VGGFace2()
 
