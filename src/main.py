@@ -82,8 +82,8 @@ if __name__ == '__main__':
     print('Finished Training')
 
 
-    # from conf_matrix import ConfusionMatrix
-    # ConfusionMatrix(net, test_loader, dataset_classes)
+    from conf_matrix import ConfusionMatrix
+    ConfusionMatrix(net, test_loader, dataset_classes)
     
     # Save the Model and Accuracy & Loss plots.
     save_model(epochs, net, optimizer, criterion)    
