@@ -18,6 +18,10 @@ import loss_functions
 
 
 if __name__ == '__main__':
+    # Device 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("Device:", device)
+
     # 1. Load the data 
     # Local Paths
     train_dir = "data/train"
@@ -30,16 +34,18 @@ if __name__ == '__main__':
     train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)
     
 
-    # 2. Define the model
+    # 2. Define the model to train in gpu
+    net = Net().to(device)
+
     # net = Net()
-    net = VGGFace()
+    # net = VGGFace()
     # net = VGGFace2()
 
 
     # 3. Define the loss function and optimizer
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
     # criterion = loss_functions.TripletMarginLoss()
-    # criterion = loss_functions.MultiFocalLoss()
+    criterion = loss_functions.MultiFocalLoss()
 
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
@@ -77,7 +83,7 @@ if __name__ == '__main__':
 
 
     # from conf_matrix import ConfusionMatrix
-    ConfusionMatrix(net, test_loader, dataset_classes)
+    # ConfusionMatrix(net, test_loader, dataset_classes)
     
     # Save the Model and Accuracy & Loss plots.
     save_model(epochs, net, optimizer, criterion)    
