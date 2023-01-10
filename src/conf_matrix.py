@@ -10,7 +10,7 @@ def ConfusionMatrix(net, test_loader, dataset_classes):
     y_true = []
     # iterate over test data
     for inputs, labels in test_loader:
-            output = net(inputs) # Feed Network
+            output = net(inputs.cuda()) # Feed Network - Remove .cuda() for CPU usage
 
             output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
             y_pred.extend(output) # Save Prediction

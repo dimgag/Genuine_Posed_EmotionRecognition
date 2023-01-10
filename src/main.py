@@ -35,17 +35,15 @@ if __name__ == '__main__':
     
 
     # 2. Define the model to train in gpu
-    # net = Net().to(device)
-
-    # net = Net()
-    net = VGGFace().to(device)
-    # net = VGGFace2()
+    net = Net().to(device)
+    # net = VGGFace().to(device)
+    # net = VGGFace2().to(device)
 
 
     # 3. Define the loss function and optimizer
-    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
     # criterion = loss_functions.TripletMarginLoss()
-    criterion = loss_functions.MultiFocalLoss()
+    # criterion = loss_functions.MultiFocalLoss()
 
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
