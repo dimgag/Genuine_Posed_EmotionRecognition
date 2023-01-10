@@ -1,6 +1,6 @@
 import os
 import cv2
-
+import shutil
 
 def get_files_paths(dir):
     '''Function to remove .DS_Store files and get the file paths'''
@@ -141,3 +141,12 @@ def crop_faces(folder):
 
     print("Faces cropped and saved in: ", cropped_faces)
 
+    # Clear the directory
+    for emotion in os.listdir(folder):
+        os.rmtree(folder + "/" + emotion)
+    
+    # Move emotions from cropped_faces to folder
+    for emotion in os.listdir(cropped_faces):
+        shutil.move(cropped_faces + "/" + emotion, folder + "/" + emotion)
+    
+    os.rmdir(cropped_faces)

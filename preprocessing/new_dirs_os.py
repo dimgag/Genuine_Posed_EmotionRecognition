@@ -1,6 +1,6 @@
 import os 
 import shutil
- 
+from preprocessing_utils import get_files_paths, video2frames, crop_faces
 
 data_dir = "data/SASE-FE/FakeTrue_DB"
 persons = os.listdir(data_dir)
@@ -41,16 +41,7 @@ test_prep = "data/test_prep"
 # Now I have splitted the participants in two folders with 40 persons in train (80%) and 10 persons in test (20%)
 # Those folders have the original videos of the participants
 # 1. I want to extract frames from those videos and put them in emotions folders
-
-# for emotion in emotions:
-#     if not os.path.exists("data/train_prep/" + emotion):
-#         os.mkdir("data/train_prep/" + emotion)
-#     if not os.path.exists("data/test_prep/" + emotion):
-#         os.mkdir("data/test_prep/" + emotion)
-
 # Extract video frames and put them in emotions folders
-
-from preprocessing_utils import get_files_paths, video2frames
 
 # Train_prep folder
 r, r_subdir, r_file = get_files_paths(train_prep)
@@ -64,7 +55,6 @@ for video, dirname, file in zip(r, r_subdir, r_file):
 # Delete persons folders in train_prep
 for person in persons[:40]:
     shutil.rmtree('data/train_prep/' + person)
-
 
 
 # Test_prep folder
@@ -85,3 +75,9 @@ print("EXTRACTING FRAMES IS DONE")
 
 # 2. Now I want to crop the frames and put them in emotions folders
 
+folder = "data/train_prep"
+crop_faces(folder)
+
+
+folder = "data/test_prep"
+crop_faces(folder)
