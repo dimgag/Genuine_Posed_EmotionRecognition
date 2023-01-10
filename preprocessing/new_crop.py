@@ -42,14 +42,14 @@ def crop_faces(folder):
     print("Faces cropped and saved in: ", cropped_faces)
 
     # Clear the directory
-    for emotion in os.listdir(folder):
-        os.rmtree(folder + "/" + emotion)
+#     for emotion in os.listdir(folder):
+#         shutil.rmtree(folder + "/" + emotion)
     
-    # Move emotions from cropped_faces to folder
-    for emotion in os.listdir(cropped_faces):
-        shutil.move(cropped_faces + "/" + emotion, folder + "/" + emotion)
+#     # Move emotions from cropped_faces to folder
+#     for emotion in os.listdir(cropped_faces):
+#         shutil.move(cropped_faces + "/" + emotion, folder + "/" + emotion)
     
-    os.rmdir(cropped_faces)
+#     os.rmdir(cropped_faces)
 
 
 
@@ -57,9 +57,9 @@ def crop_faces(folder):
 # Add this to new_dirs_os.py
 # from preprocessing_utils import crop_faces
 
-folder = "data/train_prep"
-crop_faces(folder)
-
-
-# folder = "data/test_prep"
+# folder = "data/train_prep"
 # crop_faces(folder)
+
+
+folder = "data/test_prep"
+crop_faces(folder)
