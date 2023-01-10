@@ -1,6 +1,6 @@
 import os 
 import shutil
-import cv2 
+ 
 
 data_dir = "data/SASE-FE/FakeTrue_DB"
 persons = os.listdir(data_dir)
