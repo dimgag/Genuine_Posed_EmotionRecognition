@@ -10,104 +10,78 @@ emotions = ['real_surprise','real_angry','real_happy','real_sad','real_disgust',
 
 
 
-from preprocessing_utils import get_files_paths
-
-r, r_subdir, r_file = get_files_paths(data_dir)
-
-print("\nWHAT is r", r[1])
-print("\nWHAT is r_subdir", r_subdir[1])
-print("\nWHAT is r_file", r_file[1])
-
 # List files dirs
 # print(os.listdir(data_dir))
 
+# Example:
+# r data/SASE-FE/FakeTrue_DB/Pavel/N2S.MP4
+# r_subdir data/SASE-FE/FakeTrue_DB/Pavel
+# r_file N2S.MP4
 
-'''
-if ".DS_Store" in persons:
-    persons.remove(".DS_Store")
-
-print(persons)
-
-print(len(persons), "persons in the dataset")
-
-
-# Make dir
-if not os.path.exists("data/train1"):
-    os.mkdir("data/train1")
-
-if not os.path.exists("data/test1"):
-    os.mkdir("data/test1")
-
-# # Make emotion dirs
-# for emotion in os.listdir(data_dir):
-#     os.mkdir("data/train1/" + emotion)
-#     os.mkdir("data/test1/" + emotion)
-
-
-# print(os.listdir(data_dir))
-
-for emotion in emotions:
-    if not os.path.exists("data/train1/" + emotion):
-        os.mkdir("data/train1/" + emotion)
-
-
-
-# Make Frames directory 
-if not os.path.exists("data/frames"):
-    os.mkdir("data/frames")
-
-# make persons directories in frames
+# Copy first 40 persons to train_prep folder
 for person in persons:
-    if not os.path.exists("data/frames/" + person):
-        os.mkdir("data/frames/" + person)
+    if ".DS_Store" in person:
+        persons.remove(".DS_Store")
+    for person in persons[:40]:
+        # copy persons folder to train_prep
+        if not os.path.exists("data/train_prep/" + person):
+            shutil.copytree(data_dir + "/" + person, "data/train_prep/" + person)
+    for person in persons[40:]:
+        # copy persons folder to test_prep
+        if not os.path.exists("data/test_prep/" + person):
+            shutil.copytree(data_dir + "/" + person, "data/test_prep/" + person)
+print("Copied files")
 
 
 
 
-# Generate the frames from videos and move them to frames directories 
-for person in persons:
-    for emotion in emotions:
-        videos = os.listdir(data_dir + "/" + person + "/" + emotion)
-        for video in videos:
-            if ".DS_Store" in video:
-                videos.remove(".DS_Store")
-        for video in videos:
-            os.system("ffmpeg -i " + data_dir + "/" + person + "/" + emotion + "/" + video + " -vf fps=1 data/frames/" + person + "/" + video[:-4] + "_%d.jpg")
-    print("Frames Generated")
+train_prep = "data/train_prep"
+test_prep = "data/test_prep"
 
+# Now I have splitted the participants in two folders with 40 persons in train (80%) and 10 persons in test (20%)
+# Those folders have the original videos of the participants
+# 1. I want to extract frames from those videos and put them in emotions folders
 
+# for emotion in emotions:
+#     if not os.path.exists("data/train_prep/" + emotion):
+#         os.mkdir("data/train_prep/" + emotion)
+#     if not os.path.exists("data/test_prep/" + emotion):
+#         os.mkdir("data/test_prep/" + emotion)
 
+# Extract video frames and put them in emotions folders
 
+from preprocessing_utils import get_files_paths, video2frames
 
-# Crop the frames
+# Train_prep folder
+r, r_subdir, r_file = get_files_paths(train_prep)
 
+[os.mkdir('data/train_prep/' + emotion) for emotion in emotions]
 
+# Extract frames from videos in train_prep folder
+for video, dirname, file in zip(r, r_subdir, r_file):
+    video2frames(video, dirname, file, 'train_prep')
 
-
-
-
-
-# for first 40 persons 
+# Delete persons folders in train_prep
 for person in persons[:40]:
-    for emotion in emotions:
-        images = os.listdir(data_dir + "/" + person + "/" + emotion)
-        for image in images:
-            if ".DS_Store" in image:
-                images.remove(".DS_Store")
-        for image in images[int(len(images))]:
-            shutil.move(data_dir + "/" + person + "/" + emotion + "/" + image, "data/train1/" + emotion + "/" + image)
-    print("Train Directory Created")
+    shutil.rmtree('data/train_prep/' + person)
 
-# for last 40 persons
+
+
+# Test_prep folder
+r, r_subdir, r_file = get_files_paths(test_prep)
+
+[os.mkdir('data/test_prep/' + emotion) for emotion in emotions]
+
+# Extract frames from videos in test_prep folder
+for video, dirname, file in zip(r, r_subdir, r_file):
+    video2frames(video, dirname, file, 'test_prep')
+
+# Delete persons folders in train_prep
 for person in persons[40:]:
-    for emotion in emotions:
-        images = os.listdir(data_dir + "/" + person + "/" + emotion)
-        for image in images:
-            if ".DS_Store" in image:
-                images.remove(".DS_Store")
-        for image in images[int(len(images))]:
-            shutil.move(data_dir + "/" + person + "/" + emotion + "/" + image, "data/test1/" + emotion + "/" + image)
-    print("Test Directory Created")
+    shutil.rmtree('data/test_prep/' + person)
 
 
-# '''
+print("EXTRACTING FRAMES IS DONE")
+
+# 2. Now I want to crop the frames and put them in emotions folders
+
