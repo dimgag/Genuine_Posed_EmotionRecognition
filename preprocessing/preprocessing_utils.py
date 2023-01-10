@@ -1,6 +1,6 @@
 import os
 import cv2
-
+import shutil
 
 def get_files_paths(dir):
     '''Function to remove .DS_Store files and get the file paths'''
