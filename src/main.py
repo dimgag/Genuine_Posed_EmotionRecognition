@@ -35,9 +35,9 @@ if __name__ == '__main__':
     
 
     # 2. Define the model to train in gpu
-    net = Net().to(device)
+    # net = Net().to(device)
     # net = VGGFace().to(device)
-    # net = VGGFace2().to(device)
+    net = VGGFace2().to(device)
 
 
     # 3. Define the loss function and optimizer
