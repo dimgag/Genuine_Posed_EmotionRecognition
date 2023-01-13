@@ -1,41 +1,13 @@
 import torch
 import torch.nn as nn
 import pickle
-
-# /Users/dim__gag/Desktop/resnet50_ft_weight/resnet50_ft_weight.pkl
-# Load model
-# model = torch.load('/Users/dim__gag/Desktop/resnet50_ft_weight/resnet50_ft_weight.pkl')
-
-
-class Identity(nn.Module):
-    def __init__(self):
-        super(Identity, self).__init__()
-    def forward(self, x):
-        return x
-
-class PositionalEncoding(nn.Module):
-
-    def __init__(self, d_model, dropout=0.1, max_len=5000):
-        super(PositionalEncoding, self).__init__()
-        self.dropout = nn.Dropout(p=dropout)
-
-        pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0).transpose(0, 1)
-        self.register_buffer('pe', pe)
-
-    def forward(self, x):
-        x = x + self.pe[:x.size(0), :]
-        return self.dropout(x)
-
+# from .resnet50_ft_dag import Resnet50_ft_dag
+# from .transformer_temporal import TemporalTransformer
 
 
 class CnnTransformer(nn.Module):
     def __init__(self, num_patch, embed_dim, output_dim, num_heads, dropout, cnn_ckpt=None):
-        super(CnnTransformer, self).__init__()
+        # super(CnnTransformer, self).__init__()
 
         self.embed_dim = embed_dim
         self.num_patch = num_patch
@@ -122,6 +94,34 @@ class CnnTransformer(nn.Module):
         self.cnn.classifier.weight.requires_grad = True
         self.cnn.classifier.bias.requires_grad = True
         print('Partial weights freezed')
+
+
+
+class PositionalEncoding(nn.Module):
+
+    def __init__(self, d_model, dropout=0.1, max_len=5000):
+        super(PositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + self.pe[:x.size(0), :]
+        return self.dropout(x)
+
+
+class Identity(nn.Module):
+    def __init__(self):
+        super(Identity, self).__init__()
+    def forward(self, x):
+        return x
+
 
 
 
