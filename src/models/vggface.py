@@ -7,7 +7,7 @@ from torchvision import models
 class VGGFace(nn.Module):
     def __init__(self):
         super(VGGFace, self).__init__()
-        self.features = models.vgg16(pretrained=True).features
+        self.features = models.vgg16(pretrained=False).features
         self.classifier = nn.Sequential(
             nn.Linear(25088, 4096),
             nn.ReLU(True),
@@ -29,7 +29,7 @@ class VGGFace(nn.Module):
 class VGGFace2(nn.Module):
     def __init__(self):
         super(VGGFace2, self).__init__()
-        self.features = models.vgg16(weights='VGGFace2').features
+        self.features = models.vgg16(weights=False).features
         self.classifier = nn.Sequential(
             nn.Linear(25088, 4096),
             nn.ReLU(True),
