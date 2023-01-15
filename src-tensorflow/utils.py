@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sn
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-
+import tensorflow as tf
 
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
