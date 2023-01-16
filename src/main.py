@@ -5,14 +5,13 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 
-from utils import save_model, save_plots, get_model_params
+from utils import save_model, save_plots, get_model_params, ConfusionMatrix
 from data import get_datasets, get_data_loaders
 from train import train, validate
-
-
+from fine_tune import freeze_model, get_model, get_model_params, add_classification_head
 from models.model1 import Net
 from models.vggface import VGGFace, VGGFace2
-from models.facenet import FaceNet
+from models.facenet import FaceNet, FaceNet_withClassifier
 
 
 import loss_functions
@@ -39,10 +38,16 @@ if __name__ == '__main__':
     # net = Net().to(device)
     # net = VGGFace().to(device)
     # net = VGGFace2().to(device)
-    net = FaceNet().to(device)
+    # net = FaceNet().to(device)
+    net = FaceNet_withClassifier().to(device)
+
+    # Fine Tuning the model:
+    net = freeze_model(net)
+    net = add_classification_head(net, device)
+
 
     # Print model parameters
-    get_model_params(net)
+    # get_model_params(net)
 
     # 3. Define the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -85,9 +90,7 @@ if __name__ == '__main__':
 
 
 
-    from conf_matrix import ConfusionMatrix
-    ConfusionMatrix(net, test_loader, dataset_classes)
-    
-    # Save the Model and Accuracy & Loss plots.
+    # Save the Model, Accuracy & Loss plots and Confusion Matrix
     save_model(epochs, net, optimizer, criterion)    
     save_plots(train_acc, valid_acc, train_loss, valid_loss)
+    ConfusionMatrix(net, test_loader, dataset_classes)

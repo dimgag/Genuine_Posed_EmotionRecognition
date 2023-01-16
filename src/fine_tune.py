@@ -16,9 +16,9 @@ from torchvision import datasets, transforms
 from models.model1 import Net
 from models.vggface import VGGFace
 from models.vggface import VGGFace2
+from models.facenet import FaceNet_withClassifier
+from models.facenet import FaceNet
 
-
-# Get the model
 def get_model(model_name):
     if model_name == 'model1':
         model = Net()
@@ -26,19 +26,11 @@ def get_model(model_name):
         model = VGGFace()
     elif model_name == 'vggface2':
         model = VGGFace2()
+    elif model_name == 'facenet':
+        model = FaceNet_withClassifier()
     else:
         print('Model not found')
         sys.exit(1)
-    return model
-
-# Freeze the model and train the last layer
-def freeze_model(model):
-    for param in model.parameters():
-        param.requires_grad = False
-
-    for param in model.classifier[-1].parameters():
-        param.requires_grad = True 
-
     return model
 
 
@@ -50,6 +42,26 @@ def get_model_params(model):
   print(f"Trainable parameters: {total_trainable_params:,}")
 
 
+
+
+# Freeze the model parameters except classification head
+
+def freeze_model(model):
+    print("-"*50)
+    print("\nModel parameters before freezing: ", get_model_params(model))
+
+    for param in model.parameters():
+        param.requires_grad = False
+
+    for param in model.classifier[-1].parameters():
+        param.requires_grad = True 
+
+    print("-"*50)
+    print("\nModel parameters after freezing the base model: ", get_model_params(model))
+
+    return model
+
+
 def add_classification_head(model, device, num_classes=12):
     model.classifier[3] = torch.nn.Sequential(
         torch.nn.Linear(in_features=1280, out_features=640, bias=True),
@@ -57,24 +69,20 @@ def add_classification_head(model, device, num_classes=12):
         torch.nn.Linear(in_features=640, out_features=320, bias=True),
         torch.nn.Dropout(p=0.2, inplace=True),
         torch.nn.Linear(in_features=320, out_features=num_classes, bias=True)).to(device)
+    
+    print("\nModel parameters after adding new classification head: ", get_model_params(model))
 
-    # Print the model parameters
-    print("New model parameters after adding Classification head:")
-    get_model_params(model)
+    return model
 
 
 
 
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = get_model('vggface2')
-    get_model_params(model)
-    
+    model = get_model('facenet')
     model = freeze_model(model)
-    get_model_params(model)
+    model = add_classification_head(model, device)
 
-    print("Adding Classification Head . . .")
-    add_classification_head(model, device)
 
 
 

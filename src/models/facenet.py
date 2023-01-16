@@ -24,3 +24,25 @@ class FaceNet(nn.Module):
         x = self.model(x)
         return x
 
+    
+
+
+class FaceNet_withClassifier(nn.Module):
+    def __init__(self):
+        super(FaceNet_withClassifier, self).__init__()
+        self.features = InceptionResnetV1(pretrained='vggface2')
+        self.classifier = nn.Sequential(
+            nn.Linear(512, 256),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(256, 128),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(128, 12), # 12 Output classes
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.classifier(x)
+        return x
+        
