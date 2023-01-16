@@ -5,6 +5,7 @@ import torch.nn as nn
 from tqdm.auto import tqdm
 from models.model1 import Net
 from models.vggface import VGGFace, VGGFace2
+from models.facenet import FaceNet
 
 from data import get_datasets, get_data_loaders
 
@@ -45,16 +46,16 @@ def evaluate(model, testloader, criterion, class_names):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
 	# Change the path to the model
-	# path =  '/Users/dim__gag/git/Genuine_Posed_EmotionRecognition/experiments/experiments_1st_data_split/experiment1/model.pth'
-    path = 'experiments/experiments_2st_data_split/exp1-net-10ep/model.pth'
+    path = 'experiments/experiments_2st_data_split/exp2-facenet/model.pth'
+    # path = 'model.pth'
     
     # Device configuration
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 	# 1. Define the model class
-	# Add the model class here
-    loaded_model = Net()
+    # loaded_model = Net()
     # loaded_model = VGGFace()
     # loaded_model = VGGFace2()
+    loaded_model = FaceNet()
     
 
 	# 2. Load the model parameters
