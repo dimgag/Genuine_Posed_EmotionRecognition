@@ -12,6 +12,7 @@ from train import train, validate
 
 from models.model1 import Net
 from models.vggface import VGGFace, VGGFace2
+from models.facenet import FaceNet
 
 
 import loss_functions
@@ -37,8 +38,8 @@ if __name__ == '__main__':
     # 2. Define the model to train in gpu
     # net = Net().to(device)
     # net = VGGFace().to(device)
-    net = VGGFace2().to(device)
-
+    # net = VGGFace2().to(device)
+    net = FaceNet().to(device)
 
     # 3. Define the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
