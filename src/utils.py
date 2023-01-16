@@ -12,6 +12,16 @@ def save_model(epochs, model, optimizer, criterion):
         'loss': criterion,
     }, 'model.pth')
 
+
+def get_model_params(model):
+  """Get model parameters"""
+  total_params = sum(p.numel() for p in model.parameters())
+  print(f"Total parameters: {total_params:,}")
+  total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+  print(f"Trainable parameters: {total_trainable_params:,}")
+
+
+
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
     Function to save the loss and accuracy plots to disk.
@@ -45,3 +55,5 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     plt.ylabel('Loss')
     plt.legend()
     plt.savefig(f"loss.png")
+
+

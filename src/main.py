@@ -5,7 +5,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 
-from utils import save_model, save_plots
+from utils import save_model, save_plots, get_model_params
 from data import get_datasets, get_data_loaders
 from train import train, validate
 
@@ -40,6 +40,9 @@ if __name__ == '__main__':
     # net = VGGFace().to(device)
     # net = VGGFace2().to(device)
     net = FaceNet().to(device)
+
+    # Print model parameters
+    get_model_params(net)
 
     # 3. Define the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -79,6 +82,7 @@ if __name__ == '__main__':
         print('-'*50)
 
     print('Finished Training')
+
 
 
     from conf_matrix import ConfusionMatrix
