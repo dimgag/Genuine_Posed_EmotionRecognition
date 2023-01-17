@@ -53,7 +53,7 @@ def freeze_model(model):
     for param in model.parameters():
         param.requires_grad = False
 
-    for param in model.classifier[-1].parameters():
+    for param in model.classifier.parameters():
         param.requires_grad = True 
 
     print("-"*50)
@@ -64,11 +64,11 @@ def freeze_model(model):
 
 def add_classification_head(model, device, num_classes=12):
     model.classifier[3] = torch.nn.Sequential(
-        torch.nn.Linear(in_features=1280, out_features=640, bias=True),
+        torch.nn.Linear(in_features=256, out_features=128, bias=True),
         torch.nn.Dropout(p=0.2, inplace=True),
-        torch.nn.Linear(in_features=640, out_features=320, bias=True),
+        torch.nn.Linear(in_features=128, out_features=64, bias=True),
         torch.nn.Dropout(p=0.2, inplace=True),
-        torch.nn.Linear(in_features=320, out_features=num_classes, bias=True)).to(device)
+        torch.nn.Linear(in_features=64, out_features=num_classes, bias=True)).to(device)
     
     print("\nModel parameters after adding new classification head: ", get_model_params(model))
 

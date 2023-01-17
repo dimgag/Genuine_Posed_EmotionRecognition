@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     # Fine Tuning the model:
     net = freeze_model(net)
-    net = add_classification_head(net, device)
+    # net = add_classification_head(net, device)
 
 
     # Print model parameters
