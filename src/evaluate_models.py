@@ -5,7 +5,7 @@ import torch.nn as nn
 from tqdm.auto import tqdm
 from models.model1 import Net
 from models.vggface import VGGFace, VGGFace2
-from models.facenet import FaceNet
+from models.facenet import FaceNet, FaceNet_withClassifier
 
 from data import get_datasets, get_data_loaders
 
@@ -46,7 +46,7 @@ def evaluate(model, testloader, criterion, class_names):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
 	# Change the path to the model
-    path = 'experiments/experiments_2st_data_split/exp2-facenet/model.pth'
+    path = 'exp3-facenet-finetune-10ep/model.pth'
     # path = 'model.pth'
     
     # Device configuration
@@ -55,7 +55,8 @@ if __name__ == "__main__":
     # loaded_model = Net()
     # loaded_model = VGGFace()
     # loaded_model = VGGFace2()
-    loaded_model = FaceNet()
+    # loaded_model = FaceNet()
+    loaded_model = FaceNet_withClassifier()
     
 
 	# 2. Load the model parameters
