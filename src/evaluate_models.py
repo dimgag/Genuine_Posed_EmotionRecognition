@@ -46,7 +46,7 @@ def evaluate(model, testloader, criterion, class_names):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
 	# Change the path to the model
-    path = 'exp3-facenet-finetune-10ep/model.pth'
+    path = 'experiments/exp4-facenet-finetune-30ep/model.pth'
     # path = 'model.pth'
     
     # Device configuration
