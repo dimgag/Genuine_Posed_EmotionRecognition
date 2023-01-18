@@ -9,7 +9,7 @@ from utils import save_model, save_plots, get_model_params, ConfusionMatrix
 from data import get_datasets, get_data_loaders
 from train import train, validate
 from fine_tune import freeze_model, get_model, get_model_params, add_classification_head
-from models.model1 import Net
+from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet, FaceNet_withClassifier
 
@@ -36,13 +36,14 @@ if __name__ == '__main__':
 
     # 2. Define the model to train in gpu
     # net = Net().to(device)
+    net = EfficientNetV2M().to(device)
     # net = VGGFace().to(device)
     # net = VGGFace2().to(device)
     # net = FaceNet().to(device)
-    net = FaceNet_withClassifier().to(device)
+    # net = FaceNet_withClassifier().to(device)
 
     # Fine Tuning the model:
-    net = freeze_model(net)
+    # net = freeze_model(net)
     # net = add_classification_head(net, device)
 
 
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     # Scheduler
-    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
+    # scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
 
     # 4. Train the model
     # Lists to keep track of the loss and accuracy.
@@ -86,8 +87,8 @@ if __name__ == '__main__':
         valid_acc.append(valid_epoch_acc)
         
         # Update the learning rate.
-        scheduler.step(valid_epoch_acc)
-        
+        # scheduler.step(valid_epoch_acc)
+
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
         print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")

@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torchvision import models
 
 
 class Net(nn.Module):
@@ -24,3 +25,15 @@ class Net(nn.Module):
         return x
 
 net = Net()
+
+# Make a class for efficientnet_v2_m
+
+class EfficientNetV2M(nn.Module):
+    def __init__(self):
+        super(EfficientNetV2M, self).__init__()
+        self.model = models.efficientnet_v2(pretrained=True)
+        self.model.classifier = nn.Linear(1280, 12)
+
+    def forward(self, x):
+        x = self.model(x)
+        return x

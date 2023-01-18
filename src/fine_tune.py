@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from models.model1 import Net
+from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace
 from models.vggface import VGGFace2
 from models.facenet import FaceNet_withClassifier
@@ -22,6 +22,8 @@ from models.facenet import FaceNet
 def get_model(model_name):
     if model_name == 'model1':
         model = Net()
+    elif model_name == 'efficientnetv2m':
+        model = EfficientNetV2M()
     elif model_name == 'vggface':
         model = VGGFace()
     elif model_name == 'vggface2':

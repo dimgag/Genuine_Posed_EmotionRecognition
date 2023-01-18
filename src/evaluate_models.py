@@ -3,7 +3,7 @@
 import torch
 import torch.nn as nn
 from tqdm.auto import tqdm
-from models.model1 import Net
+from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet, FaceNet_withClassifier
 
@@ -56,7 +56,8 @@ if __name__ == "__main__":
     # loaded_model = VGGFace()
     # loaded_model = VGGFace2()
     # loaded_model = FaceNet()
-    loaded_model = FaceNet_withClassifier()
+    # loaded_model = FaceNet_withClassifier()
+    loaded_model = EfficientNetV2M()
     
 
 	# 2. Load the model parameters
