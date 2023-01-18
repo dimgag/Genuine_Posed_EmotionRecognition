@@ -42,7 +42,7 @@ if __name__ == '__main__':
     net = FaceNet_withClassifier().to(device)
 
     # Fine Tuning the model:
-    net = freeze_model(net)
+    # net = freeze_model(net)
     # net = add_classification_head(net, device)
 
 
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
 
 
-    epochs = 30
+    epochs = 50
 
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
