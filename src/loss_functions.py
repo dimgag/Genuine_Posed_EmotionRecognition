@@ -75,3 +75,19 @@ class MultiFocalLoss(nn.Module):
 # output = multi_focal_loss(inputs, targets)
 # output.backward()
 
+# Focal Loss
+
+# def FL(x,y):
+#     focal_loss = torch.hub.load(
+# 	'adeelh/pytorch-multi-class-focal-loss',
+# 	model='focal_loss',
+# 	alpha=[.75, .25],
+# 	gamma=2,
+# 	reduction='mean',
+# 	device='cpu',
+# 	dtype=torch.float32,
+# 	force_reload=False
+#     )
+#     loss = focal_loss(x,y)
+#     return loss
+

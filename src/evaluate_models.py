@@ -6,6 +6,7 @@ from tqdm.auto import tqdm
 from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet, FaceNet_withClassifier
+from models.transformers import ViT
 
 from data import get_datasets, get_data_loaders
 
@@ -58,6 +59,7 @@ if __name__ == "__main__":
     # loaded_model = FaceNet()
     loaded_model = FaceNet_withClassifier()
     # loaded_model = EfficientNetV2M()
+    # loaded_model = ViT()
     
 
 	# 2. Load the model parameters
