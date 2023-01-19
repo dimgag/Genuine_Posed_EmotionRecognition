@@ -47,7 +47,7 @@ def evaluate(model, testloader, criterion, class_names):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
 	# Change the path to the model
-    path = 'exp1-facenet-MFL/model.pth'
+    path = 'experiments/exp1-ViT/model.pth'
     # path = 'model.pth'
     
     # Device configuration
@@ -57,9 +57,9 @@ if __name__ == "__main__":
     # loaded_model = VGGFace()
     # loaded_model = VGGFace2()
     # loaded_model = FaceNet()
-    loaded_model = FaceNet_withClassifier()
+    # loaded_model = FaceNet_withClassifier()
     # loaded_model = EfficientNetV2M()
-    # loaded_model = ViT()
+    loaded_model = ViT()
     
 
 	# 2. Load the model parameters
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     
     test_epoch_loss, test_epoch_acc = evaluate(loaded_model, test_loader, loss, dataset_classes)
     
-    print(f"Test loss: {test_epoch_loss:.3f}, Test accuracy:{test_epoch_acc:.3f}")
+    print(f"Test loss: {test_epoch_loss:.3f}, Test accuracy: {test_epoch_acc:.3f}")
 
 
     
