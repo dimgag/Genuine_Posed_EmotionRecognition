@@ -36,11 +36,11 @@ if __name__ == '__main__':
 
     # 2. Define the model to train in gpu
     # net = Net().to(device)
-    net = EfficientNetV2M().to(device)
+    # net = EfficientNetV2M().to(device)
     # net = VGGFace().to(device)
     # net = VGGFace2().to(device)
     # net = FaceNet().to(device)
-    # net = FaceNet_withClassifier().to(device)
+    net = FaceNet_withClassifier().to(device)
 
     # Fine Tuning the model:
     # net = freeze_model(net)
@@ -51,9 +51,9 @@ if __name__ == '__main__':
     # get_model_params(net)
 
     # 3. Define the loss function and optimizer
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
     # criterion = loss_functions.TripletMarginLoss()
-    # criterion = loss_functions.MultiFocalLoss()
+    criterion = loss_functions.MultiFocalLoss()
 
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
 
 
-    epochs = 50
+    epochs = 10
 
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")

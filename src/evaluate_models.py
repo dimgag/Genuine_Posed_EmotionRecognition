@@ -46,7 +46,7 @@ def evaluate(model, testloader, criterion, class_names):
 if __name__ == "__main__":
     torch.cuda.empty_cache()
 	# Change the path to the model
-    path = 'model.pth'
+    path = 'exp1-facenet-MFL/model.pth'
     # path = 'model.pth'
     
     # Device configuration
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     # loaded_model = VGGFace()
     # loaded_model = VGGFace2()
     # loaded_model = FaceNet()
-    # loaded_model = FaceNet_withClassifier()
-    loaded_model = EfficientNetV2M()
+    loaded_model = FaceNet_withClassifier()
+    # loaded_model = EfficientNetV2M()
     
 
 	# 2. Load the model parameters
