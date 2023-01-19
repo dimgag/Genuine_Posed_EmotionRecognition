@@ -14,10 +14,10 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
 from models.model1 import Net, EfficientNetV2M
-from models.vggface import VGGFace
-from models.vggface import VGGFace2
-from models.facenet import FaceNet_withClassifier
-from models.facenet import FaceNet
+from models.vggface import VGGFace, VGGFace2
+from models.facenet import FaceNet_withClassifier, FaceNet
+from models.transformers import ViT
+
 
 def get_model(model_name):
     if model_name == 'model1':
@@ -30,6 +30,8 @@ def get_model(model_name):
         model = VGGFace2()
     elif model_name == 'facenet':
         model = FaceNet_withClassifier()
+    elif model_name == 'ViT':
+        model = ViT()
     else:
         print('Model not found')
         sys.exit(1)

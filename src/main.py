@@ -12,6 +12,8 @@ from fine_tune import freeze_model, get_model, get_model_params, add_classificat
 from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet, FaceNet_withClassifier
+from models.transformers import ViT
+
 
 
 import loss_functions
@@ -40,7 +42,8 @@ if __name__ == '__main__':
     # net = VGGFace().to(device)
     # net = VGGFace2().to(device)
     # net = FaceNet().to(device)
-    net = FaceNet_withClassifier().to(device)
+    # net = FaceNet_withClassifier().to(device)
+    net = ViT().to(device)
 
     # Fine Tuning the model:
     # net = freeze_model(net)
@@ -51,9 +54,9 @@ if __name__ == '__main__':
     # get_model_params(net)
 
     # 3. Define the loss function and optimizer
-    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
     # criterion = loss_functions.TripletMarginLoss()
-    criterion = loss_functions.MultiFocalLoss()
+    # criterion = loss_functions.MultiFocalLoss()
 
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
