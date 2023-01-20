@@ -1,6 +1,7 @@
 # IGNORE FILES AND FOLDERS #
 ############################
 /data/*
+/data_mtl/*
 /docs/*
 /experiments/*
 
