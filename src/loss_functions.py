@@ -18,36 +18,21 @@ class CrossEntropyLoss(nn.Module):
         return self.nll_loss(F.log_softmax(inputs, 1), targets)
 
 
-# Triple Loss -- PyTorch Example
-# triplet_loss = nn.TripletMarginLoss(margin=1.0, p=2)
-# anchor = torch.randn(100, 128, requires_grad=True)
-# positive = torch.randn(100, 128, requires_grad=True)
-# negative = torch.randn(100, 128, requires_grad=True)
-# output = triplet_loss(anchor, positive, negative)
-# output.backward()
-
-# Triplet Loss // TripletMargin Loss #NEED TO BE FIXED OR CHECKED
-class TripletMarginLoss(nn.Module):
-    def __init__(self, margin=1.0, p=2, eps=1e-6, swap=False):
-        super(TripletMarginLoss, self).__init__()
+# Triplet Loss
+class TripletLoss(nn.Module):
+    def __init__(self, margin=1.0):
+        super(TripletLoss, self).__init__()
         self.margin = margin
-        self.p = p
-        self.eps = eps
-        self.swap = swap
+        
+    def calc_euclidean(self, x1, x2):
+        return (x1 - x2).pow(2).sum(1)
+    
+    def forward(self, anchor: torch.Tensor, positive: torch.Tensor, negative: torch.Tensor) -> torch.Tensor:
+        d_p = self.calc_euclidean(anchor, positive)
+        d_n = self.calc_euclidean(anchor, negative)
+        triplet_loss = torch.relu(d_p - d_n + self.margin)
 
-    def forward(self, anchor, positive, negative):
-        d_p = (anchor - positive).pow(self.p).sum(1)  # .pow(.5)
-        d_n = (anchor - negative).pow(self.p).sum(1)  # .pow(.5)
-
-        if self.swap:
-            d_n_swapped = (positive - negative).pow(self.p).sum(1)  # .pow(.5)
-            loss = torch.max(d_p - d_n_swapped + self.margin, torch.zeros_like(d_p))
-        else:
-            loss = torch.max(d_p - d_n + self.margin, torch.zeros_like(d_p))
-
-        return loss.mean()
-
-
+        return triplet_loss.mean()
 
 # Multi Focal Loss
 class MultiFocalLoss(nn.Module):
