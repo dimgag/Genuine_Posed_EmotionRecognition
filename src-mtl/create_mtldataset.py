@@ -7,26 +7,29 @@ import cv2
 import shutil
 
 ## Create the forders for train and test
-'''persons = os.listdir(data_dir)
-for person in persons:
-    if ".DS_Store" in person:
-        persons.remove(".DS_Store")
-    for person in persons[:40]:
-        # copy persons folder to train
-        if not os.path.exists("data_mtl/train/" + person):
-            shutil.copytree(data_dir + "/" + person, "data_mtl/train/" + person)
-    print("Copied train files done")
+
+# data_dir = "data/SASE-FE/FakeTrue_DB"
+# persons = os.listdir(data_dir)
+# for person in persons:
+#     if ".DS_Store" in person:
+#         persons.remove(".DS_Store")
+#     for person in persons[:40]:
+#         # copy persons folder to train
+#         if not os.path.exists("data_mtl/train/" + person):
+#             shutil.copytree(data_dir + "/" + person, "data_mtl/train/" + person)
+#     print("Copied train files done")
     
-    for person in persons[40:50]:
-        # copy persons folder to test
-        if not os.path.exists("data/test/" + person):
-            shutil.copytree(data_dir + "/" + person, "data_mtl/test/" + person)
-    print("Copied test files done")
-'''
+#     for person in persons[40:50]:
+#         # copy persons folder to test
+#         if not os.path.exists("data/test/" + person):
+#             shutil.copytree(data_dir + "/" + person, "data_mtl/test/" + person)
+#     print("Copied test files done")
+
+
 
 
 def get_files_paths(dir):
-    '''Function to remove .DS_Store files and get the file paths'''
+  #  Function to remove .DS_Store files and get the file paths
     if '.DS_Store' in os.listdir(dir):
         os.remove(os.path.join(dir, '.DS_Store'))
         print("Remove .DS_Store file from main directory")
@@ -53,7 +56,7 @@ def get_files_paths(dir):
 
 
 def video2frames(dir, dirname, file, folder):
-    '''Function to extract frames from videos'''
+    # Function to extract frames from videos
     vidcap = cv2.VideoCapture(dir)
     length_of_video = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
     success, image = vidcap.read()
@@ -140,13 +143,15 @@ def crop_faces(folder):
 
     # Crop the faces and save them in the new directory
     for image in os.listdir(folder):
-        img = cv2.imread(folder + "/" + image)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (25, 25), 0)
-        face = face_cascade.detectMultiScale(gray, 1.1, 4)
-        for (x, y, w, h) in face:
-            face = img[y:y+h, x:x+w]
-            cv2.imwrite(cropped_faces + "/" + image, face)
+        if image != 'cropped_faces':
+            # print("Cropping Image:", image)
+            img = cv2.imread(folder + "/" + image)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            gray = cv2.GaussianBlur(gray, (25, 25), 0)
+            face = face_cascade.detectMultiScale(gray, 1.1, 4)
+            for (x, y, w, h) in face:
+                face = img[y:y+h, x:x+w]
+                cv2.imwrite(cropped_faces + "/" + image, face)
 
     print("Faces cropped and saved in: ", cropped_faces)
 
@@ -161,28 +166,35 @@ def main():
 
     # Train folder
     train_prep = "data_mtl/train"
-    r, r_subdir, r_file = get_files_paths(train_prep)
+#     r, r_subdir, r_file = get_files_paths(train_prep)
 
-    for video, dirname, file in zip(r, r_subdir, r_file):
-        video2frames(video, dirname, file, 'train')
+#     for video, dirname, file in zip(r, r_subdir, r_file):
+#         video2frames(video, dirname, file, 'train')
+    if '.DS_Store' in os.listdir('data_mtl/train'):
+        os.remove('data_mtl/train' + "/" + '.DS_Store')
+        print("Removed .DS_Store")
+    
+    for file in os.listdir(train_prep):
+        os.rename(os.path.join(train_prep, file), os.path.join(train_prep, file.replace(' ', '')))
     
     crop_faces(train_prep)
 
     #######################################################
     # Test folder
-    test_prep = "data_mtl/test"
-    r, r_subdir, r_file = get_files_paths(test_prep)
+#     test_prep = "data_mtl/test"
+# #     r, r_subdir, r_file = get_files_paths(test_prep)
 
-    for video, dirname, file in zip(r, r_subdir, r_file):
-        video2frames(video, dirname, file, 'test')
+# #     for video, dirname, file in zip(r, r_subdir, r_file):
+# #         video2frames(video, dirname, file, 'test')
+#     if '.DS_Store' in os.listdir('data_mtl/test'):
+#         os.remove('data_mtl/test' + "/" + '.DS_Store')
+#         print("Removed .DS_Store")
     
-    crop_faces(test_prep)
+#     for file in os.listdir(test_prep):
+#         os.rename(os.path.join(test_prep, file), os.path.join(test_prep, file.replace(' ', '')))
+#     crop_faces(test_prep)
 
 
 
 if __name__ == '__main__':
-    # main()
-    # 
-    test_prep = "data_mtl/test"
-    crop_faces(test_prep)
-
+    main()
