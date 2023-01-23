@@ -8,13 +8,18 @@ def train(model, trainloader, optimizer):
     model.train()
     print("Training model...")
     
+    # Define the loss functions.
+    emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
+    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    
+    # Define the sigmoid function
     Sig = nn.Sigmoid()
     total_training_loss = 0.0
     emotion_training_acc = 0
     real_fake_training_acc = 0 
     counter = 0
 
-    for i, data in tqdm(enumerate(trainloader)):
+    for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         inputs = data["image"].to(device)
 
         real_fake_label = data["real_fake"].to(device)
@@ -56,6 +61,10 @@ def validate(model, testloader):
     model.eval()
     print("Validating model...")
     
+    # Define the loss functions.
+    emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
+    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+
     Sig = nn.Sigmoid()
     total_validation_loss = 0.0
     emotion_validation_acc = 0
@@ -97,14 +106,10 @@ def validate(model, testloader):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Add to main.py
 # 
-# Define the Optimizer
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.09)
 
 # Define the Losses
 # L_1: the emotion Loss, is a multi-class classification loss. In our case, it’s Cross-Entropy!
 # L_2: the Real_Fake Loss, is a Binary Classification loss. In our case, Binary Cross-Entropy.
-emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-real_fake_loss = nn.BCELoss() # Doesn't include Softmax
-# Maybe you don't have to put those in the main.py, but I did it for clarity....
+
 
 

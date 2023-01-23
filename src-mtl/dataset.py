@@ -9,7 +9,7 @@ class SASEFE_MTL(Dataset):
         # a function defining the elements of a dataset (like inputs and labels)
         # transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
         # Define Transforms
-        self.transforms = transforms.Compose([
+        self.transform = transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
@@ -18,15 +18,15 @@ class SASEFE_MTL(Dataset):
         # Set Inputs and Labels
         self.image_paths = image_paths
         self.images = []
-        self.real_fake = []
-        self.emotion = []
+        self.real_fakes = []
+        self.emotions = []
 
         for path in image_paths:
-            filename = path[8:].split("_")
-            if len(filename) == 2:
+            filename = path[0:].split("_")
+            if len(filename) == 3:
                 self.images.append(path)
-                self.real_fake.append(str(filename[0]))
-                self.emotion.append(str(filename[1]))
+                self.real_fakes.append(str(filename[0]))
+                self.emotions.append(str(filename[1]))
 
 
             
@@ -43,9 +43,33 @@ class SASEFE_MTL(Dataset):
         img = self.transform(img)
 
         # Get the labels
-        real_fake = self.real_fake[index]
-        emotion = self.emotion[index]
+        real_fake = self.real_fakes[index]
+        emotion = self.emotions[index]
 
         # Return the sample of the dataset
         sample = {'image': img, 'real_fake': real_fake, 'emotion': emotion}
+        
         return sample
+
+################################################################################# 
+# Make a dataset
+# train_dir = "data_mtl/train"
+
+# train_image_paths = os.listdir("data_mtl/train")
+
+# train_dataloader = DataLoader(SASEFE_MTL(train_image_paths), shuffle=True, batch_size=32)
+
+
+
+# print(train_dataloader)
+# # Shape of the dataloader?
+# print(len(train_dataloader))
+# # Shape of the dataset?
+
+# print(train_dataloader.__len__())
+
+# for i, batch in enumerate(train_dataloader):
+#     print(batch)
+#     break
+
+# print(train_dataloader.dataset.__getitem__(1))

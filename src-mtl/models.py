@@ -1,6 +1,5 @@
-import torch
+
 import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.models as models
 from collections import OrderedDict
 
@@ -26,10 +25,10 @@ class HydraNet(nn.Module):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Add to main.py
-#
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# #
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-net = HydraNet(pretrained=True)
-model = HydraNet(net).to(device)
-emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+# net = HydraNet(pretrained=True)
+# model = HydraNet(net).to(device)
+# emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
+# real_fake_loss = nn.BCELoss() # Doesn't include Softmax
