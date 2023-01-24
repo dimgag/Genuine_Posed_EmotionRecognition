@@ -23,8 +23,9 @@ def main():
     # Data directory
     train_dir = "data_mtl/train"
     test_dir = "data_mtl/test"
-    test_image_paths = os.listdir(test_dir)
     train_image_paths = os.listdir(train_dir)
+    test_image_paths = os.listdir(test_dir)
+
 
     # Get the dataset class
     train_dataset = SASEFE_MTL(train_image_paths)
@@ -73,7 +74,7 @@ def main():
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-    epochs = 1
+    epochs = 5
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.

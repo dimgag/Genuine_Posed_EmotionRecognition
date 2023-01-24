@@ -78,7 +78,7 @@ def rename_emotions(dir_image_paths):
 
 
 
-dir = 'data_mtl/train'
+dir = 'data_mtl/test'
 
 dir_image_paths = os.listdir(dir)
 

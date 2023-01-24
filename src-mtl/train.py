@@ -23,7 +23,6 @@ def train(model, trainloader, optimizer):
 
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         inputs = data["image"].to(device)
-
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
 
@@ -34,10 +33,7 @@ def train(model, trainloader, optimizer):
         # # # Convert to torch tensor
         # real_fake_label = torch.from_numpy(real_fake_label)
         # emotion_label = torch.from_numpy(emotion_label)
-        
-
         optimizer.zero_grad()
-
         # Forward pass
         real_fake_output, emotion_output = model(inputs)
 
@@ -75,7 +71,8 @@ def validate(model, testloader):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    real_fake_loss = nn.BCEWithLogitsLoss() 
 
     Sig = nn.Sigmoid()
     total_validation_loss = 0.0
@@ -83,10 +80,10 @@ def validate(model, testloader):
     real_fake_validation_acc = 0 
     counter = 0
 
-    for i, data in tqdm(enumerate(testloader)):
+    for i, data in tqdm(enumerate(testloader), total=len(testloader)):
         inputs = data["image"].to(device)
 
-        real_fake_label = data["real_fake"].to(device)
+        real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
 
         # Forward pass

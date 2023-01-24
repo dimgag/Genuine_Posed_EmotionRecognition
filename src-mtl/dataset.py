@@ -74,8 +74,8 @@ class SASEFE_MTL_TEST(Dataset):
             filename = path[0:].split("_")
             if len(filename) == 3:
                 self.images.append(path)
-                self.real_fakes.append(str(filename[0]))
-                self.emotions.append(str(filename[1]))
+                self.real_fakes.append(int(filename[0]))
+                self.emotions.append(int(filename[1]))
 
 
             
