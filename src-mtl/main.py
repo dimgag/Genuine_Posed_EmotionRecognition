@@ -10,7 +10,7 @@ import os
 from PIL import Image
 
 # Import modues
-from dataset import SASEFE_MTL
+from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 from utils import *
 
 from models import HydraNet
@@ -28,7 +28,7 @@ def main():
 
     # Get the dataset class
     train_dataset = SASEFE_MTL(train_image_paths)
-    test_dataset = SASEFE_MTL(test_image_paths)
+    test_dataset = SASEFE_MTL_TEST(test_image_paths)
 
     # Get the dataloaders
     train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True)

@@ -1,6 +1,7 @@
 from tqdm.auto import tqdm
 import torch
 import torch.nn as nn
+import numpy as np
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -9,8 +10,8 @@ def train(model, trainloader, optimizer):
     print("Training model...")
     
     # Define the loss functions.
-    emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
+    real_fake_loss = nn.BCELoss()# Doesn't include Softmax
     
     # Define the sigmoid function
     Sig = nn.Sigmoid()
@@ -22,8 +23,18 @@ def train(model, trainloader, optimizer):
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         inputs = data["image"].to(device)
 
-        real_fake_label = data["real_fake"].to(device)
+        real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
+
+        # Convert to numpy array
+        real_fake_label = np.array(real_fake_label, dtype=np.int64)
+        emotion_label = np.array(emotion_label, dtype=np.int64)
+
+        # # Convert to torch tensor
+        real_fake_label = torch.from_numpy(real_fake_label)
+        emotion_label = torch.from_numpy(emotion_label)
+        
+
         optimizer.zero_grad()
 
         # Forward pass
