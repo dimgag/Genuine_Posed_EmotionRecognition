@@ -79,30 +79,31 @@ def validate(model, testloader):
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
     counter = 0
+    
+    with torch.no_grad():
+        for i, data in tqdm(enumerate(testloader), total=len(testloader)):
+            inputs = data["image"].to(device)
 
-    for i, data in tqdm(enumerate(testloader), total=len(testloader)):
-        inputs = data["image"].to(device)
+            real_fake_label = data["real_fake"].to(device) 
+            emotion_label = data["emotion"].to(device)
 
-        real_fake_label = data["real_fake"].to(device) 
-        emotion_label = data["emotion"].to(device)
+            # Forward pass
+            real_fake_output, emotion_output = model(inputs)
 
-        # Forward pass
-        real_fake_output, emotion_output = model(inputs)
+            # Calculate the Loss
+            loss_1 = emotion_loss(emotion_output, emotion_label)
+            loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+            loss = loss_1 + loss_2
+            total_validation_loss += loss
 
-        # Calculate the Loss
-        loss_1 = emotion_loss(emotion_output, emotion_label)
-        loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
-        loss = loss_1 + loss_2
-        total_validation_loss += loss
-        
-        # Calculate Accuracy
-        _, preds = torch.max(emotion_output.data, 1)
-        
-        _, preds = torch.max(real_fake_output.data, 1)
+            # Calculate Accuracy
+            _, preds = torch.max(emotion_output.data, 1)
 
-        emotion_validation_acc += (preds == emotion_label).sum().item()
-        
-        real_fake_validation_acc += (preds == real_fake_label).sum().item()
+            _, preds = torch.max(real_fake_output.data, 1)
+
+            emotion_validation_acc += (preds == emotion_label).sum().item()
+
+            real_fake_validation_acc += (preds == real_fake_label).sum().item()
 
     epoch_loss = total_validation_loss / counter
     epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
