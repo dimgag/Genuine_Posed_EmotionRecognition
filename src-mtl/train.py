@@ -11,8 +11,8 @@ def train(model, trainloader, optimizer):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
-    # real_fake_loss = nn.BCELoss()# Doesn't include Softmax
-    real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
+    real_fake_loss = nn.BCELoss()# Doesn't include Softmax
+    # real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
     
     # Define the sigmoid function
     Sig = nn.Sigmoid()
@@ -71,8 +71,8 @@ def validate(model, testloader):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
-    real_fake_loss = nn.BCEWithLogitsLoss() 
+    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    # real_fake_loss = nn.BCEWithLogitsLoss() 
 
     Sig = nn.Sigmoid()
     total_validation_loss = 0.0

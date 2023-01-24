@@ -80,7 +80,7 @@ def main():
         # Train the model.
         train_epoch_loss, train_emo_epoch_acc, train_real_fake_epoch_acc  = train(model, train_dataloader, optimizer)
 
-        torch.cuda.empty_cache()
+        # torch.cuda.empty_cache()
 
         # Validation of the model.
         valid_epoch_loss, valid_emo_epoch_acc, valid_real_fake_epoch_acc = validate(model, test_dataloader)
