@@ -44,15 +44,14 @@ def train(model, trainloader, optimizer):
         total_training_loss += loss
         
         # Calculate Accuracy
-        _, preds = torch.max(emotion_output.data, 1)
+        _, emo_preds = torch.max(emotion_output.data, 1)
+        emotion_training_acc += (emo_preds == emotion_label).sum().item()
         
-        _, preds = torch.max(real_fake_output.data, 1)
-
-        emotion_training_acc += (preds == emotion_label).sum().item()
-        
-        real_fake_training_acc += (preds == real_fake_label).sum().item()
+        _, rf_preds = torch.max(real_fake_output.data, 1)        
+        real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
 
         loss.backward()
+        
         optimizer.step()
 
     epoch_loss = total_training_loss / counter
@@ -97,17 +96,16 @@ def validate(model, testloader):
             total_validation_loss += loss
 
             # Calculate Accuracy
-            _, preds = torch.max(emotion_output.data, 1)
+            _, emo_preds = torch.max(emotion_output.data, 1)
+            emotion_validation_acc += (emo_preds == emotion_label).sum().item()
+            
+            _, rf_preds = torch.max(real_fake_output.data, 1)
+            real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
+            
 
-            _, preds = torch.max(real_fake_output.data, 1)
-
-            emotion_validation_acc += (preds == emotion_label).sum().item()
-
-            real_fake_validation_acc += (preds == real_fake_label).sum().item()
-
-    epoch_loss = total_validation_loss / counter
-    epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
-    epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
+        epoch_loss = total_validation_loss / counter
+        epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
+        epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
     
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake
 

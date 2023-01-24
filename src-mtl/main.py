@@ -32,8 +32,8 @@ def main():
     test_dataset = SASEFE_MTL_TEST(test_image_paths)
 
     # Get the dataloaders
-    train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+    train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
 
     print("Number of training images: ", len(train_dataset))
     print("Number of test images: ", len(test_dataset))
