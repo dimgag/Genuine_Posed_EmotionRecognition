@@ -11,7 +11,7 @@ def train(model, trainloader, optimizer):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
-    real_fake_loss = nn.BCELoss()# Doesn't include Softmax
+    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
     # real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
     
     # Define the sigmoid function
@@ -39,7 +39,8 @@ def train(model, trainloader, optimizer):
 
         # Calculate the Loss
         loss_1 = emotion_loss(emotion_output, emotion_label)
-        loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+        # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+        loss_2 = real_fake_loss(real_fake_output, real_fake_label.unsqueeze(1).float())
         loss = loss_1 + loss_2
         total_training_loss += loss
         
@@ -49,9 +50,10 @@ def train(model, trainloader, optimizer):
         
         _, rf_preds = torch.max(real_fake_output.data, 1)        
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
-
-        loss.backward()
         
+        # Backpropagation
+        loss.backward()
+        # Update the weights
         optimizer.step()
 
     epoch_loss = total_training_loss / counter
