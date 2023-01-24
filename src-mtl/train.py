@@ -39,8 +39,8 @@ def train(model, trainloader, optimizer):
 
         # Calculate the Loss
         loss_1 = emotion_loss(emotion_output, emotion_label)
-        # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
-        loss_2 = real_fake_loss(real_fake_output, real_fake_label.unsqueeze(1).float())
+        loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+        # loss_2 = real_fake_loss(real_fake_output, real_fake_label.unsqueeze(1).float())
         loss = loss_1 + loss_2
         total_training_loss += loss
         
