@@ -11,7 +11,8 @@ def train(model, trainloader, optimizer):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
-    real_fake_loss = nn.BCELoss()# Doesn't include Softmax
+    # real_fake_loss = nn.BCELoss()# Doesn't include Softmax
+    real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
     
     # Define the sigmoid function
     Sig = nn.Sigmoid()
@@ -26,13 +27,13 @@ def train(model, trainloader, optimizer):
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
 
-        # Convert to numpy array
-        real_fake_label = np.array(real_fake_label, dtype=np.int64)
-        emotion_label = np.array(emotion_label, dtype=np.int64)
+        # # Convert to numpy array
+        # real_fake_label = np.array(real_fake_label, dtype=np.int64)
+        # emotion_label = np.array(emotion_label, dtype=np.int64)
 
-        # # Convert to torch tensor
-        real_fake_label = torch.from_numpy(real_fake_label)
-        emotion_label = torch.from_numpy(emotion_label)
+        # # # Convert to torch tensor
+        # real_fake_label = torch.from_numpy(real_fake_label)
+        # emotion_label = torch.from_numpy(emotion_label)
         
 
         optimizer.zero_grad()
