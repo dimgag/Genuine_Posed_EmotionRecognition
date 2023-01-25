@@ -64,7 +64,7 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define the model class
-    loaded_model = HydraNet()
+    loaded_model = HydraNet().to(device)
     # loaded_model = ChimeraNet()
 
     # Define the optimizer

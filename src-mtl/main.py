@@ -48,7 +48,7 @@ def main():
     # net = HydraNet()
     # model = HydraNet(net).to(device)
 
-    model = HydraNet().to(device)
+    model = ChimeraNet().to(device)
 
     # get model parameters
     get_model_params(model)
