@@ -10,8 +10,8 @@ def train(model, trainloader, optimizer):
     print("Training model...")
     
     # Define the loss functions.
-    emotion_loss = nn.CrossEntropyLoss()#.to(device)  # Includes Softmax
-    real_fake_loss = nn.BCELoss()#.to(device) # Doesn't include Softmax
+    emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
+    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
     # real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
     
     # Define the sigmoid function
@@ -41,7 +41,7 @@ def train(model, trainloader, optimizer):
         # Calculate the Loss
         loss_1 = emotion_loss(emotion_output, emotion_label)
         loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
-        # loss_2 = real_fake_loss(real_fake_output, real_fake_label.unsqueeze(1).float())
+
         loss = loss_1 + loss_2
         total_training_loss += loss
         
@@ -74,7 +74,6 @@ def validate(model, testloader):
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
     real_fake_loss = nn.BCELoss() # Doesn't include Softmax
-    # real_fake_loss = nn.BCEWithLogitsLoss() 
 
     Sig = nn.Sigmoid()
     total_validation_loss = 0.0
@@ -96,6 +95,7 @@ def validate(model, testloader):
             # Calculate the Loss
             loss_1 = emotion_loss(emotion_output, emotion_label)
             loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+            
             loss = loss_1 + loss_2
             total_validation_loss += loss
 

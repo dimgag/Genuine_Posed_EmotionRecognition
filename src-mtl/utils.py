@@ -67,6 +67,9 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.savefig(f"accuracy_rf.png")
 
     # Loss plots.
+    train_loss = np.array(train_loss)
+    valid_loss = np.array(valid_loss)
+    
     plt.figure(figsize=(10, 7))
     plt.plot(
         train_loss, color='orange', linestyle='-', 

@@ -62,6 +62,9 @@ def main():
     # Train & Val the model 
     train_loss = []
     valid_loss = []
+    
+    train_loss1 = []
+    valid_loss1 = []
 
     train_emo_acc = []
     valid_emo_acc = []
@@ -75,20 +78,28 @@ def main():
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-    epochs = 10
+    epochs = 30
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
         train_epoch_loss, train_emo_epoch_acc, train_real_fake_epoch_acc  = train(model, train_dataloader, optimizer)
-
-        # torch.cuda.empty_cache()
-
         # Validation of the model.
         valid_epoch_loss, valid_emo_epoch_acc, valid_real_fake_epoch_acc = validate(model, test_dataloader)
         
         # Save the loss and accuracy for the epoch. 
-        train_loss.append(train_epoch_loss)
-        valid_loss.append(valid_epoch_loss)
+        train_loss1.append(train_epoch_loss)
+        valid_loss1.append(valid_epoch_loss)
+        
+
+        
+        train_loss.append(train_loss1[0].tolist())
+        valid_loss.append(valid_loss1[0].tolist())
+        
+        
+        train_loss1 = []
+        valid_loss1 = []
+        
+        #######################################
 
         train_emo_acc.append(train_emo_epoch_acc)
         valid_emo_acc.append(valid_emo_epoch_acc)
