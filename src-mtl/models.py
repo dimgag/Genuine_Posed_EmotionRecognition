@@ -33,7 +33,7 @@ class HydraNet(nn.Module):
 # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
 from facenet_pytorch import InceptionResnetV1
 
-class HydraFaceNet(nn.Module):
+class ChimeraNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.net = InceptionResnetV1(pretrained='vggface2')

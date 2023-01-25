@@ -48,7 +48,7 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.ylabel('Accuracy')
     plt.title('Accuracy plot for Emotions')
     plt.legend()
-    plt.savefig(f"accuracy.png")
+    plt.savefig(f"accuracy_emo.png")
     
     # Accuracy plot for real/fake
     plt.figure(figsize=(10, 7))
@@ -64,7 +64,7 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.ylabel('Accuracy')
     plt.title('Accuracy plot for Real/Fake')
     plt.legend()
-    plt.savefig(f"accuracy.png")
+    plt.savefig(f"accuracy_rf.png")
 
     # Loss plots.
     plt.figure(figsize=(10, 7))

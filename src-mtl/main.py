@@ -14,7 +14,7 @@ from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 # from utils import *
 from utils import save_model, get_model_params, save_plots, cm_emotions
 
-from models import HydraNet
+from models import HydraNet, ChimeraNet
 
 from train import train, validate
 
@@ -75,7 +75,7 @@ def main():
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-    epochs = 5
+    epochs = 10
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
