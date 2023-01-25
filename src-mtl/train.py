@@ -22,6 +22,7 @@ def train(model, trainloader, optimizer):
     counter = 0
 
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
+        counter += 1
         inputs = data["image"].to(device)
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
@@ -83,6 +84,7 @@ def validate(model, testloader):
     
     with torch.no_grad():
         for i, data in tqdm(enumerate(testloader), total=len(testloader)):
+            counter +=1
             inputs = data["image"].to(device)
 
             real_fake_label = data["real_fake"].to(device) 
