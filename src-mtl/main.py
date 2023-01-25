@@ -11,7 +11,8 @@ from PIL import Image
 
 # Import modues
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
-from utils import *
+# from utils import *
+from utils import save_model, get_model_params, save_plots, cm_emotions
 
 from models import HydraNet
 
@@ -41,9 +42,9 @@ def main():
     print("Train dataloader: ", len(train_dataloader))
     print("Test dataloader: ", len(test_dataloader))
 
-    # Get the model
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    # Get the model
     # net = HydraNet()
     # model = HydraNet(net).to(device)
 
@@ -110,8 +111,10 @@ def main():
     # One plot for the losses and one plot for the accuracies.
     # 'fake_contempt_H2N2C.MP4Anton274.jpg'
 
+    save_model(epochs, model, optimizer)
+    save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss)
 
-
+    # cm_emotions(model, test_dataloader, 6)
 
 
 

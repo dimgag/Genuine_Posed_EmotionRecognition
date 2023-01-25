@@ -11,13 +11,14 @@ from sklearn.metrics import confusion_matrix
 
 matplotlib.style.use('ggplot')
 
-def save_model(epochs, model, optimizer, criterion):
+
+def save_model(epochs, model, optimizer):
     torch.save({
         'epoch': epochs,
         'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': criterion,
+        'optimizer_state_dict': optimizer.state_dict()
     }, 'model.pth')
+
 
 
 def get_model_params(model):
@@ -29,25 +30,42 @@ def get_model_params(model):
 
 
 
-def save_plots(train_acc, valid_acc, train_loss, valid_loss):
+def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss):
     """
     Function to save the loss and accuracy plots to disk.
     """
-    # Accuracy plots.
+    # Accuracy plot for Emotions
     plt.figure(figsize=(10, 7))
     plt.plot(
-        train_acc, color='green', linestyle='-', 
+        train_emo_acc, color='green', linestyle='-', 
         label='train accuracy'
     )
     plt.plot(
-        valid_acc, color='blue', linestyle='-', 
+        valid_emo_acc, color='blue', linestyle='-', 
         label='validataion accuracy'
     )
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
+    plt.title('Accuracy plot for Emotions')
     plt.legend()
     plt.savefig(f"accuracy.png")
     
+    # Accuracy plot for real/fake
+    plt.figure(figsize=(10, 7))
+    plt.plot(
+        train_real_fake_acc, color='green', linestyle='-', 
+        label='train accuracy'
+    )
+    plt.plot(
+        valid_real_fake_acc, color='blue', linestyle='-', 
+        label='validataion accuracy'
+    )
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title('Accuracy plot for Real/Fake')
+    plt.legend()
+    plt.savefig(f"accuracy.png")
+
     # Loss plots.
     plt.figure(figsize=(10, 7))
     plt.plot(
@@ -65,8 +83,33 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
 
 
 
+# def ConfusionMatrix(net, test_loader, dataset_classes):
+#     y_pred = []
+#     y_true = []
+#     # iterate over test data
+#     for inputs, labels in test_loader:
+#             output = net(inputs.cuda()) # Feed Network - Remove .cuda() for CPU usage
 
-def ConfusionMatrix(net, test_loader, dataset_classes):
+#             output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+#             y_pred.extend(output) # Save Prediction
+            
+#             labels = labels.data.cpu().numpy()
+#             y_true.extend(labels) # Save Truth
+
+#     # constant for classes
+#     classes = dataset_classes
+
+#     # Build confusion matrix
+#     cf_matrix = confusion_matrix(y_true, y_pred)
+#     df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [i for i in classes],
+#                         columns = [i for i in classes])
+#     plt.figure(figsize = (12,7))
+#     sn.heatmap(df_cm, annot=True)
+#     plt.savefig('output.png')
+
+
+
+def cm_emotions(net, test_loader, emotion_labels):
     y_pred = []
     y_true = []
     # iterate over test data
@@ -76,11 +119,12 @@ def ConfusionMatrix(net, test_loader, dataset_classes):
             output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
             y_pred.extend(output) # Save Prediction
             
-            labels = labels.data.cpu().numpy()
+            labels = labels["emotion"].cpu().numpy()
+            # labels = labels.data.cpu().numpy()
             y_true.extend(labels) # Save Truth
 
     # constant for classes
-    classes = dataset_classes
+    classes = emotion_labels
 
     # Build confusion matrix
     cf_matrix = confusion_matrix(y_true, y_pred)
