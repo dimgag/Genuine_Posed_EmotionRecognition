@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset, DataLoader
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
 import os
 from PIL import Image
 
@@ -43,7 +44,7 @@ def main():
     print("Test dataloader: ", len(test_dataloader))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+    
     # Get the model
     # net = HydraNet()
     # model = HydraNet(net).to(device)
@@ -56,8 +57,8 @@ def main():
 
 
     # Define optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.09)
-
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.09)
+    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
 
     # Train & Val the model 
     train_loss = []
@@ -78,7 +79,7 @@ def main():
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-    epochs = 30
+    epochs = 10
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
@@ -108,7 +109,7 @@ def main():
         valid_real_fake_acc.append(valid_real_fake_epoch_acc)
         
         # Update the learning rate. -if using scheduler-
-        # scheduler.step(valid_epoch_acc)
+        scheduler.step(valid_epoch_acc)
 
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}")
