@@ -34,8 +34,8 @@ def main():
     test_dataset = SASEFE_MTL_TEST(test_image_paths)
 
     # Get the dataloaders
-    train_dataloader = DataLoader(train_dataset, batch_size=128, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=128, shuffle=True)
+    train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
 
     print("Number of training images: ", len(train_dataset))
     print("Number of test images: ", len(test_dataset))
@@ -58,7 +58,7 @@ def main():
 
     # Define optimizer
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.09)
-    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
     # Train & Val the model 
     train_loss = []
@@ -109,7 +109,7 @@ def main():
         valid_real_fake_acc.append(valid_real_fake_epoch_acc)
         
         # Update the learning rate. -if using scheduler-
-        scheduler.step(valid_epoch_acc)
+        scheduler.step(valid_loss)
 
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}")
