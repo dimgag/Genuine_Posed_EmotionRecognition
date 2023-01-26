@@ -109,7 +109,7 @@ def main():
         valid_real_fake_acc.append(valid_real_fake_epoch_acc)
         
         # Update the learning rate. -if using scheduler-
-        scheduler.step(valid_loss)
+        scheduler.step(valid_epoch_loss)
 
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}")
