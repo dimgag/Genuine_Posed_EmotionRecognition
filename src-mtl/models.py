@@ -48,4 +48,3 @@ class ChimeraNet(nn.Module):
         emotion_head = self.net.fc2(self.net(x))
         return real_fake_head, emotion_head
 
-# To be continued...

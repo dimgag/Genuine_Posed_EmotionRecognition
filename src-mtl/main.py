@@ -13,7 +13,7 @@ from PIL import Image
 # Import modues
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 # from utils import *
-from utils import save_model, get_model_params, save_plots, cm_emotions
+from utils import save_model, get_model_params, save_plots, cm_emotions, freeze_baseline
 
 from models import HydraNet, ChimeraNet
 
@@ -52,7 +52,10 @@ def main():
     model = ChimeraNet().to(device)
 
     # get model parameters
-    get_model_params(model)
+    # get_model_params(model)
+    model = freeze_baseline(model)
+    
+    # get_model_params(model)
 
 
 

@@ -28,6 +28,23 @@ def get_model_params(model):
   total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
   print(f"Trainable parameters: {total_trainable_params:,}")
 
+def freeze_baseline(model):
+	print("-"*50)
+	print("Model parameters before freezing the model:", get_model_params(model))
+    
+	for param in model.parameters():
+		param.requires_grad = False
+        
+	for param in model.net.fc1.parameters():
+		param.requires_grad = True
+        
+	for param in model.net.fc2.parameters():
+		param.requires_grad = True
+
+	print("-"*50)
+	print("\nModel parameters after freezing the baseline:", get_model_params(model))
+    
+	return model
 
 
 def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss):
