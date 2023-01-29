@@ -40,7 +40,7 @@ class ChimeraNet(nn.Module):
         # self.n_features = self.net.fc.in_features
 
         self.net.fc = nn.Identity()
-        self.net.fc1 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 1))]))
+        self.net.fc1 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 1)), ('sigmoid', nn.Sigmoid())]))
         self.net.fc2 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 6))]))
         
     def forward(self, x):

@@ -55,7 +55,6 @@ def main():
     # get_model_params(model)
     model = freeze_baseline(model)
     
-    # get_model_params(model)
 
 
 
