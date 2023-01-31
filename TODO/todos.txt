@@ -1,9 +1,0 @@
-1. See what happened from training in VGGFace with DSRI cluster
-
-2. Train VGGFace2 in DSRI for some epochs. 
-
-3. Implement TripleLoss and train the basic CNN with it and also VGGFace and VGGFace2
-
-4. Implement MFL (Multi Focal Loss) and repeat the above experiments
-
-5. Adapt TSM (Temporalm Shiftet Module) to work with your code.
