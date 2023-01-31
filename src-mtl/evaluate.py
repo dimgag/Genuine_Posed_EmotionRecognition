@@ -58,7 +58,7 @@ if __name__ == "__main__":
     print("Evaluate model")
     torch.cuda.empty_cache()
     # Load the model.pth
-    path = 'model.pth'
+    path = 'experiments/last-experiment-sigmoid_as_last_layer/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
