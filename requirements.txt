@@ -2,5 +2,7 @@ pandas
 seaborn
 matplotlib
 opencv-python
-pip install facenet-pytorch
-torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+facenet-pytorch
+torch
+torchvision
+scikit-learn
