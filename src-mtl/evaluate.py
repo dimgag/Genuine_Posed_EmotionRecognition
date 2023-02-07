@@ -57,7 +57,8 @@ def evaluate(model, testloader):
 if __name__ == "__main__":
     print("Evaluate model")
     torch.cuda.empty_cache()
-    # Load the model.pth
+
+    # Load the model.pth - change the path to the model you want to evaluate
     path = 'experiments/last-experiment-sigmoid_as_last_layer/model.pth'
 
     # Device configuration
@@ -77,17 +78,14 @@ if __name__ == "__main__":
     # Load the checkpoint
     loaded_checkpoint = torch.load(path)
 
-    # 
+    # Load the model state
     loaded_model.load_state_dict(loaded_checkpoint['model_state_dict'])
     optimizer.load_state_dict(loaded_checkpoint['optimizer_state_dict'])
     epoch = loaded_checkpoint['epoch']
 
     # Load the data
-
     test_dir = "data_mtl/test"
-
     test_image_paths = os.listdir(test_dir)
-
 
     # Get the dataset class
     test_dataset = SASEFE_MTL_TEST(test_image_paths)

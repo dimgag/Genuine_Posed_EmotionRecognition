@@ -1,6 +1,3 @@
-# I need to adjust some of the functions to work for 2 Accuracy scores and 2 Loss scores.
-# Also, I might need to adjust the save model function and.
-# File with utils function for the project
 import torch
 import seaborn as sn
 import pandas as pd

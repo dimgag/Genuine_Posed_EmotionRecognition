@@ -1,7 +1,3 @@
-# HydraNet - Multi Task approach for Real/Fake and Emotion Classification
-# The dataset is a set of images, ana the names of the images give the labels.
-# For example the image "real_happy_1.jpg" is a real image of a happy person.
-
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
@@ -10,15 +6,10 @@ from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
 import os
 from PIL import Image
 
-# Import modues
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
-# from utils import *
 from utils import save_model, get_model_params, save_plots, cm_emotions, freeze_baseline
-
 from models import HydraNet, ChimeraNet
-
 from train import train, validate
-
 
 
 def main():
@@ -27,7 +18,6 @@ def main():
     test_dir = "data_mtl/test"
     train_image_paths = os.listdir(train_dir)
     test_image_paths = os.listdir(test_dir)
-
 
     # Get the dataset class
     train_dataset = SASEFE_MTL(train_image_paths)
@@ -48,28 +38,24 @@ def main():
     # Define the model
     # net = HydraNet()
     # model = HydraNet(net).to(device)
-
+    
     model = ChimeraNet().to(device)
 
+    # Fine Tuning the model
     model = freeze_baseline(model) # Freeze the baseline model and train only the new layers
     
 
-
-
-    # Define optimizer
+    # Define the optimizer
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.09)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
-    # Train & Val the model 
+    # Train & Validate the model 
     train_loss = []
     valid_loss = []
-    
     train_loss1 = []
     valid_loss1 = []
-
     train_emo_acc = []
     valid_emo_acc = []
-
     train_real_fake_acc = []
     valid_real_fake_acc = []
 
@@ -79,6 +65,7 @@ def main():
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
+    # Set the number of epochs here.
     epochs = 10
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
@@ -90,25 +77,19 @@ def main():
         # Save the loss and accuracy for the epoch. 
         train_loss1.append(train_epoch_loss)
         valid_loss1.append(valid_epoch_loss)
-        
-
-        
         train_loss.append(train_loss1[0].tolist())
         valid_loss.append(valid_loss1[0].tolist())
-        
         
         train_loss1 = []
         valid_loss1 = []
         
-        #######################################
-
         train_emo_acc.append(train_emo_epoch_acc)
         valid_emo_acc.append(valid_emo_epoch_acc)
 
         train_real_fake_acc.append(train_real_fake_epoch_acc)
         valid_real_fake_acc.append(valid_real_fake_epoch_acc)
         
-        # Update the learning rate. -if using scheduler-
+        # Update the learning rate. -if using scheduler- If not, comment the next line.
         scheduler.step(valid_epoch_loss)
 
         # Print the loss and accuracy for the epoch.
@@ -118,14 +99,8 @@ def main():
 
     print('Finished Training') 
 
-    # In the end of the training I have the following lists:
-    # train_loss, valid_loss, train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc
-    # One plot for the losses and one plot for the accuracies.
-    # 'fake_contempt_H2N2C.MP4Anton274.jpg'
-
     save_model(epochs, model, optimizer)
     save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss)
-
     # cm_emotions(model, test_dataloader, 6)
 
 

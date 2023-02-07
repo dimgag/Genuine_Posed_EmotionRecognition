@@ -11,10 +11,8 @@ def train(model, trainloader, optimizer):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
-    real_fake_loss = nn.CrossEntropyLoss() 
-    
     # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
-    # real_fake_loss = nn.BCEWithLogitsLoss() # Doesn't include Softmax
+    real_fake_loss = nn.CrossEntropyLoss() 
     
     # Define the sigmoid function
     Sig = nn.Sigmoid()
@@ -29,28 +27,21 @@ def train(model, trainloader, optimizer):
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
 
-        # # Convert to numpy array
-        # real_fake_label = np.array(real_fake_label, dtype=np.int64)
-        # emotion_label = np.array(emotion_label, dtype=np.int64)
-
-        # # # Convert to torch tensor
-        # real_fake_label = torch.from_numpy(real_fake_label)
-        # emotion_label = torch.from_numpy(emotion_label)
+        # Clear the gradients
         optimizer.zero_grad()
         # Forward pass
         real_fake_output, emotion_output = model(inputs)
-
         # Calculate the Loss
         loss_1 = emotion_loss(emotion_output, emotion_label)
-        # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
-        loss_2 = real_fake_loss(real_fake_output, real_fake_label)
-        
 
+        # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float()) # This is for BCELoss (Also in valide)
+
+        loss_2 = real_fake_loss(real_fake_output, real_fake_label)
         loss = loss_1 + loss_2
         total_training_loss += loss
         
         # Calculate Accuracy
-        _, emo_preds = torch.max(emotion_output.data, 1) # Try with 2 --> also in validate
+        _, emo_preds = torch.max(emotion_output.data, 1)
         emotion_training_acc += (emo_preds == emotion_label).sum().item()
         
         _, rf_preds = torch.max(real_fake_output.data, 1)        
@@ -77,8 +68,8 @@ def validate(model, testloader):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    real_fake_loss = nn.CrossEntropyLoss() 
     # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    real_fake_loss = nn.CrossEntropyLoss() 
 
     Sig = nn.Sigmoid()
     total_validation_loss = 0.0
@@ -99,6 +90,7 @@ def validate(model, testloader):
 
             # Calculate the Loss
             loss_1 = emotion_loss(emotion_output, emotion_label)
+            
             # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
             loss_2 = real_fake_loss(real_fake_output, real_fake_label)
             
@@ -118,16 +110,3 @@ def validate(model, testloader):
         epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
     
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-# Add to main.py
-# 
-
-# Define the Losses
-# L_1: the emotion Loss, is a multi-class classification loss. In our case, it’s Cross-Entropy!
-# L_2: the Real_Fake Loss, is a Binary Classification loss. In our case, Binary Cross-Entropy.
-
-
-
