@@ -45,15 +45,13 @@ def main():
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
-    # Get the model
+    # Define the model
     # net = HydraNet()
     # model = HydraNet(net).to(device)
 
     model = ChimeraNet().to(device)
 
-    # get model parameters
-    # get_model_params(model)
-    model = freeze_baseline(model)
+    model = freeze_baseline(model) # Freeze the baseline model and train only the new layers
     
 
 

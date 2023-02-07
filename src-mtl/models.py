@@ -19,18 +19,6 @@ class HydraNet(nn.Module):
 
 
 
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-# Add to main.py
-# #
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-# net = HydraNet(pretrained=True)
-# model = HydraNet(net).to(device)
-# emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-# real_fake_loss = nn.BCELoss() # Doesn't include Softmax
 from facenet_pytorch import InceptionResnetV1
 
 class ChimeraNet(nn.Module):
@@ -40,7 +28,7 @@ class ChimeraNet(nn.Module):
         # self.n_features = self.net.fc.in_features
 
         self.net.fc = nn.Identity()
-        self.net.fc1 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 2)), ('sigmoid', nn.Sigmoid())]))
+        self.net.fc1 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 2)), ('sigmoid', nn.Sigmoid())])) # This should be 2 for real/fake? 
         self.net.fc2 = nn.Sequential(OrderedDict([('linear', nn.Linear(512,256)),('relu1', nn.ReLU()),('final', nn.Linear(256, 6))]))
         
     def forward(self, x):
