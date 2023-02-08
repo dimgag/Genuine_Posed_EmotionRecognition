@@ -41,8 +41,10 @@ def main():
     
     model = ChimeraNet().to(device)
 
+    get_model_params(model)
+
     # Fine Tuning the model
-    model = freeze_baseline(model) # Freeze the baseline model and train only the new layers
+    # model = freeze_baseline(model) # Freeze the baseline model and train only the new layers
     
 
     # Define the optimizer
