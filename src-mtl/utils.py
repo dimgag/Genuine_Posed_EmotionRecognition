@@ -100,53 +100,28 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
 
 
 
-# def ConfusionMatrix(net, test_loader, dataset_classes):
-#     y_pred = []
-#     y_true = []
-#     # iterate over test data
-#     for inputs, labels in test_loader:
-#             output = net(inputs.cuda()) # Feed Network - Remove .cuda() for CPU usage
+# New Confusion Matrix that hopefully works for both emotions and real/fake
+def CM(net, test_loader, task_labels, filename):
+	y_pred = []
+	y_true = []
 
-#             output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
-#             y_pred.extend(output) # Save Prediction
-            
-#             labels = labels.data.cpu().numpy()
-#             y_true.extend(labels) # Save Truth
+	for inputs, labels in test_loader:
+		output = net(inputs.cuda())
+		output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+		y_pred.extend(output) 
+		labels = labels.data.cpu().numpy()
+		y_true.extend(labels)
 
-#     # constant for classes
-#     classes = dataset_classes
+	classes = task_labels
+	cf_matrix = confusion_matrix(y_true, y_pred)
+	df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix)*10, index = [i for i in classes],
+			columns = [i for i in classes])
 
-#     # Build confusion matrix
-#     cf_matrix = confusion_matrix(y_true, y_pred)
-#     df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [i for i in classes],
-#                         columns = [i for i in classes])
-#     plt.figure(figsize = (12,7))
-#     sn.heatmap(df_cm, annot=True)
-#     plt.savefig('output.png')
+	plt.figure(figsize = (12,7))
+	sn.heatmap(df_cm, annot=True)
+	plt.savefig(str(filename)+'png')
 
 
-
-def cm_emotions(net, test_loader, emotion_labels):
-    y_pred = []
-    y_true = []
-    # iterate over test data
-    for inputs, labels in test_loader:
-            output = net(inputs.cuda()) # Feed Network - Remove .cuda() for CPU usage
-
-            output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
-            y_pred.extend(output) # Save Prediction
-            
-            labels = labels["emotion"].cpu().numpy()
-            # labels = labels.data.cpu().numpy()
-            y_true.extend(labels) # Save Truth
-
-    # constant for classes
-    classes = emotion_labels
-
-    # Build confusion matrix
-    cf_matrix = confusion_matrix(y_true, y_pred)
-    df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [i for i in classes],
-                        columns = [i for i in classes])
-    plt.figure(figsize = (12,7))
-    sn.heatmap(df_cm, annot=True)
-    plt.savefig('output.png')
+# Example call:
+# CM(net, test_loader, emo_labels, emotion_cm)
+# CM(net, test_loader, real_fake_classes, real_fake_cm)
