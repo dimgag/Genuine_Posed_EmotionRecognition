@@ -7,7 +7,7 @@ import os
 from PIL import Image
 
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
-from utils import save_model, get_model_params, save_plots, cm_emotions, freeze_baseline
+from utils import save_model, get_model_params, save_plots, freeze_baseline
 from models import HydraNet, ChimeraNet
 from train import train, validate
 
