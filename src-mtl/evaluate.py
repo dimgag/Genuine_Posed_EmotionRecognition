@@ -13,7 +13,9 @@ def evaluate(model, testloader):
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    real_fake_loss = nn.CrossEntropyLoss()
+    
     # real_fake_loss = nn.BCEWithLogitsLoss() 
 
     Sig = nn.Sigmoid()
@@ -35,7 +37,10 @@ def evaluate(model, testloader):
 
             # Calculate the Loss
             loss_1 = emotion_loss(emotion_output, emotion_label)
-            loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+            # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
+
+            loss_2 = real_fake_loss(real_fake_output, real_fake_label)
+            
             loss = loss_1 + loss_2
             total_validation_loss += loss
 
@@ -59,7 +64,7 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
 
     # Load the model.pth - change the path to the model you want to evaluate
-    path = 'experiments/last-experiment-sigmoid_as_last_layer/model.pth'
+    path = 'model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
