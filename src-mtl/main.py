@@ -68,7 +68,7 @@ def main():
     torch.backends.cudnn.benchmark = True
 
     # Set the number of epochs here.
-    epochs = 15
+    epochs = 50
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
