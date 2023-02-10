@@ -68,7 +68,8 @@ if __name__ == "__main__":
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    # device = 'cpu'
+    
     # Define the model class
     # loaded_model = HydraNet().to(device)
     loaded_model = ChimeraNet().to(device)
@@ -78,7 +79,8 @@ if __name__ == "__main__":
 
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()
-    real_fake_loss = nn.BCELoss()
+    # real_fake_loss = nn.BCELoss()
+    real_fake_loss = nn.CrossEntropyLoss()
 
     # Load the checkpoint
     loaded_checkpoint = torch.load(path)

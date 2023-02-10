@@ -15,7 +15,7 @@ from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 matplotlib.style.use('ggplot')
 
 
-def CM(net, test_loader):
+def CM(model, test_loader):
     y_pred = []
     y_true = []
     y_pred_real_fake = []
@@ -30,44 +30,47 @@ def CM(net, test_loader):
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
 
-        real_fake_outputs, emotion_output = net(inputs) # Add inputs.cuda for GPU Usage
-
-        real_fake_outputs = (torch.max(torch.exp(real_fake_outputs), 1)[1]).data.cpu().numpy()
-        y_pred_real_fake.extend(real_fake_outputs)
-
-        emotion_output = (torch.max(torch.exp(emotion_output), 1)[1]).data.cpu().numpy()
-        y_pred_emotion.extend(emotion_output)
-
-        output = net(inputs.cuda())
-        output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
-		
-        y_true_realfake.extend(real_fake_label)
-        y_true_emotions.extend(emotion_label)
+        real_fake_output, emotion_output = model(inputs)
         
-        y_pred.extend(output) 
+        
+        # So I have emotion_output = prediction and emotion_label = GT
+        # generate Confussion matrix for real_fake: 
+    
+    real_fake_output = real_fake_output.cpu()
+    emotion_output = emotion_output.cpu()
+    
+    real_fake_output = real_fake_output.detach().numpy()
+    emotion_output = emotion_output.detach().numpy()
 
-        labels = labels.data.cpu().numpy()
-        y_true.extend(labels)
+    real_fake_output = np.round(real_fake_output)
+    
+    emotion_output = np.argmax(emotion_output, axis=1)
+    
+    real_fake_label = real_fake_label.cpu()
+    
+    
+    real_fake_cm = confusion_matrix(real_fake_label, real_fake_output)
+    print(real_fake_cm)
 
-    # Generate CM for real/fake
-    real_fake_classes = real_fake_label
-    cf_matrix = confusion_matrix(y_true_realfake, y_pred_real_fake)
-    df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix)*10, index = [i for i in real_fake_classes],
-            columns = [i for i in real_fake_classes])
+#     # Generate CM for real/fake
+#     real_fake_classes = real_fake_label
+#     cf_matrix = confusion_matrix(y_true_realfake, y_pred_real_fake)
+#     df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix)*10, index = [i for i in real_fake_classes],
+#             columns = [i for i in real_fake_classes])
 
-    plt.figure(figsize = (12,7))
-    sn.heatmap(df_cm, annot=True)
-    plt.savefig('CM_rf.png')
+#     plt.figure(figsize = (12,7))
+#     sn.heatmap(df_cm, annot=True)
+#     plt.savefig('CM_rf.png')
 
-    # Generate CM for emotions
-    emotion_classes = emotion_label
-    cf_matrix = confusion_matrix(y_true_emotions, y_pred_emotion)
-    df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix)*10, index = [i for i in emotion_classes],
-            columns = [i for i in emotion_classes])
+#     # Generate CM for emotions
+#     emotion_classes = emotion_label
+#     cf_matrix = confusion_matrix(y_true_emotions, y_pred_emotion)
+#     df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix)*10, index = [i for i in emotion_classes],
+#             columns = [i for i in emotion_classes])
 
-    plt.figure(figsize = (12,7))
-    sn.heatmap(df_cm, annot=True)
-    plt.savefig('CM_emo.png')
+#     plt.figure(figsize = (12,7))
+#     sn.heatmap(df_cm, annot=True)
+#     plt.savefig('CM_emo.png')
 
 
 
@@ -79,8 +82,11 @@ if __name__ == "__main__":
     path = 'experiments/exp1-chimeranet/model.pth'
 
     # Device configuration
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    # device = 'cpu'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    
     # Define the model class
     # loaded_model = HydraNet().to(device)
     loaded_model = ChimeraNet().to(device)
@@ -109,12 +115,5 @@ if __name__ == "__main__":
 
     # Get the dataloaders
     test_dataloader = DataLoader(test_dataset, batch_size=128, shuffle=True)
-
-    # Generate Confusion matrices
-    CM(loaded_model, test_dataloader)
-
-
     
-
-
-
+    CM(loaded_model, test_dataloader)
