@@ -16,6 +16,9 @@ matplotlib.style.use('ggplot')
 
 
 def CM(model, test_loader):
+    real_fake_classes = ['real', 'fake']
+    emotion_classes = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
+    
     y_pred = []
     y_true = []
     y_pred_real_fake = []
@@ -37,19 +40,19 @@ def CM(model, test_loader):
         # generate Confussion matrix for real_fake: 
     
     real_fake_output = real_fake_output.cpu()
-    emotion_output = emotion_output.cpu()
-    
-    real_fake_output = real_fake_output.detach().numpy()
-    emotion_output = emotion_output.detach().numpy()
 
+    real_fake_output = real_fake_output.detach().numpy()
+    
+    
     real_fake_output = np.round(real_fake_output)
-    
-    emotion_output = np.argmax(emotion_output, axis=1)
-    
-    real_fake_label = real_fake_label.cpu()
+    # emotion_output = np.argmax(emotion_output, axis=0)
     
     
-    real_fake_cm = confusion_matrix(real_fake_label, real_fake_output)
+    # emotion_output = emotion_output.cpu()
+    # emotion_output = emotion_output.detach().numpy()
+    # Compute the confusion matrix
+    
+    real_fake_cm = confusion_matrix(real_fake_classes, real_fake_output)
     print(real_fake_cm)
 
 #     # Generate CM for real/fake
