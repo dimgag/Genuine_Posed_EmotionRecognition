@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 
 from models import HydraNet, ChimeraNet
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
+from utils import CM
 
 def evaluate(model, testloader):
     model.eval()
@@ -103,7 +104,17 @@ if __name__ == "__main__":
     # Evaluate the model
     epoch_loss, epoch_acc_emotion, epoch_acc_real_fake = evaluate(loaded_model, test_dataloader)
     print(f"Test loss: {epoch_loss:.3f}, Test Emotion acc: {epoch_acc_emotion:.3f}, Test Real/Fake acc: {epoch_acc_real_fake:.3f}")
-
     
+    # Confussion matrix 
+    # Get the classes of the dataset to generate the confusion matrix
+    real_fake_classes = test_dataset.real_fakes
+    real_fake_classes = np.unique(real_fake_classes)
+    convert_dict = {0: 'fake', 1: 'real'}
+    real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
 
+    emotion_classes = test_dataset.emotions
+    emotion_classes = np.unique(emotion_classes)
+    convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
+    emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
 
+    CM(loaded_model, test_dataloader, real_fake_classes, emotion_classes)

@@ -103,9 +103,7 @@ def main():
 
     save_model(epochs, model, optimizer)
     save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss)
-    # cm_emotions(model, test_dataloader, 6)
-
-
+    
 
 
 if __name__ == "__main__":
