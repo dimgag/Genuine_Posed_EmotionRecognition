@@ -1,6 +1,6 @@
 # File with utils function for the project
 import torch
-import seaborn as sn
+import seaborn as sns
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -85,5 +85,5 @@ def ConfusionMatrix(net, test_loader, dataset_classes):
     df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [i for i in classes],
                         columns = [i for i in classes])
     plt.figure(figsize = (12,7))
-    sn.heatmap(df_cm, annot=True)
+    sns.heatmap(df_cm, annot=True)
     plt.savefig('output.png')
