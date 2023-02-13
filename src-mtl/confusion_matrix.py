@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()
-    real_fake_loss = nn.BCELoss()
+    real_fake_loss = nn.CrossEntropyLoss()
 
     # Load the checkpoint
     loaded_checkpoint = torch.load(path, map_location=torch.device('cpu'))
