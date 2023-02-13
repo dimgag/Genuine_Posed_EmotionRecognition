@@ -36,9 +36,6 @@ def train(model, trainloader, optimizer, criterion):
   return epoch_loss, epoch_acc 
 
 
-
-
-# Validation of the model
 def validate(model, testloader, criterion, class_names):
     model.eval()
     print('Validation')

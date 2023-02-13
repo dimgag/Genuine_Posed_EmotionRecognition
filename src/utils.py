@@ -1,4 +1,3 @@
-# File with utils function for the project
 import torch
 import seaborn as sns
 import pandas as pd
@@ -6,7 +5,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-
 matplotlib.style.use('ggplot')
 
 def save_model(epochs, model, optimizer, criterion):
@@ -24,8 +22,6 @@ def get_model_params(model):
   print(f"Total parameters: {total_params:,}")
   total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
   print(f"Trainable parameters: {total_trainable_params:,}")
-
-
 
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
@@ -65,6 +61,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
 
 
 def ConfusionMatrix(net, test_loader, dataset_classes):
+    '''Function to plot confusion matrix'''
     y_pred = []
     y_true = []
     # iterate over test data

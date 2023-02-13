@@ -1,10 +1,8 @@
-# Main file for the project
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
-
 from utils import save_model, save_plots, get_model_params, ConfusionMatrix
 from data import get_datasets, get_data_loaders
 from train import train, validate
@@ -13,9 +11,6 @@ from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet, FaceNet_withClassifier
 from models.transformers import ViT
-
-
-
 import loss_functions
 
 

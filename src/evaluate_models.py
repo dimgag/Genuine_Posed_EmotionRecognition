@@ -1,5 +1,3 @@
-# Load model
-# methods.py
 import torch
 import torch.nn as nn
 from tqdm.auto import tqdm
@@ -10,10 +8,6 @@ from models.transformers import ViT
 
 from data import get_datasets, get_data_loaders
 
-
-
-
-# Evaluate the model
 def evaluate(model, testloader, criterion, class_names):
     # Set the model to evaluation mode
     model.eval()
@@ -38,9 +32,6 @@ def evaluate(model, testloader, criterion, class_names):
     epoch_loss = test_running_loss / counter
     epoch_acc = 100. * (test_running_correct / len(testloader.dataset))
     return epoch_loss, epoch_acc
-
-
-
 
 
 
@@ -86,7 +77,6 @@ if __name__ == "__main__":
     # Get the data Local Paths
     # train_dir = "data/train"
     # test_dir = "data/test"
-
 
     dataset_train, dataset_test, dataset_classes = get_datasets()
     train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)

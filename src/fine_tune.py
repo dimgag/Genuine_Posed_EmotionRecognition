@@ -1,6 +1,3 @@
-# Fine tune models
-
-# Path: src/fine_tune.py
 import os
 import sys
 import time
@@ -12,7 +9,6 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-
 from models.model1 import Net, EfficientNetV2M
 from models.vggface import VGGFace, VGGFace2
 from models.facenet import FaceNet_withClassifier, FaceNet
@@ -46,10 +42,6 @@ def get_model_params(model):
   print(f"Trainable parameters: {total_trainable_params:,}")
 
 
-
-
-# Freeze the model parameters except classification head
-
 def freeze_model(model):
     print("-"*50)
     print("\nModel parameters before freezing: ", get_model_params(model))
@@ -79,8 +71,6 @@ def add_classification_head(model, device, num_classes=12):
     return model
 
 
-
-
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = get_model('facenet')
@@ -88,12 +78,5 @@ def main():
     model = add_classification_head(model, device)
 
 
-
-
-
-
 if __name__ == '__main__':
     main()
-
-
-

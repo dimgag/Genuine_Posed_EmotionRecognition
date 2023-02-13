@@ -7,8 +7,7 @@ image_size = 224
 batch_size = 32
 num_workers = 4
 
-## Data directoris
-# Local Paths
+# Data directories
 train_dir = "data/train"
 test_dir = "data/test"
 
@@ -79,6 +78,7 @@ def get_data_loaders(dataset_train, dataset_test):
 
 
 def get_mean_and_std(dataloader):
+    '''Compute the mean and std value of dataset.'''
     channels_sum, channels_squared_sum, num_batches = 0, 0, 0
     for data, _ in dataloader:
         # Mean over batch, height and width, but not over the channels
