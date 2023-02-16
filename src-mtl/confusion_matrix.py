@@ -58,7 +58,6 @@ def CM(model, test_loader, real_fake_classes, emotion_classes):
 
 
 if __name__ == "__main__":
-    print("Evaluate model")
     torch.cuda.empty_cache()
     # Load the model.pth - change the path to the model you want to evaluate
     path = 'experiments/exp1-chimeranet/model.pth'

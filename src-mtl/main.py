@@ -7,7 +7,7 @@ import os
 from PIL import Image
 
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
-from utils import save_model, get_model_params, save_plots, freeze_baseline
+from utils import save_model, get_model_params, save_plots, freeze_baseline, CM
 from models import HydraNet, ChimeraNet
 from train import train, validate
 
@@ -48,8 +48,9 @@ def main():
     
 
     # Define the optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.09)
-    # scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.09)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
     # Train & Validate the model 
     train_loss = []
@@ -68,7 +69,7 @@ def main():
     torch.backends.cudnn.benchmark = True
 
     # Set the number of epochs here.
-    epochs = 50
+    epochs = 15
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
@@ -92,7 +93,7 @@ def main():
         valid_real_fake_acc.append(valid_real_fake_epoch_acc)
         
         # Update the learning rate. -if using scheduler- If not, comment the next line.
-        # scheduler.step(valid_epoch_loss)
+        scheduler.step(valid_epoch_loss)
 
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}")
