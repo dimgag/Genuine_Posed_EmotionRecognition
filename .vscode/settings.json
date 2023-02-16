@@ -1,0 +1,12 @@
+{
+    "terminal.integrated.drawBoldTextInBrightColors": false,
+    "keyboard.touchbar.enabled": true,
+    "window.autoDetectColorScheme": false,
+    "window.commandCenter": false,
+    "workbench.activityBar.iconClickBehavior": "toggle",
+    "workbench.activityBar.visible": true,
+    "workbench.colorTheme": "GitHub Dark Default",
+    "breadcrumbs.icons": false,
+    "breadcrumbs.showArrays": true,
+    "editor.cursorStyle": "line"
+}

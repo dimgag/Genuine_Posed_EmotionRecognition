@@ -140,39 +140,3 @@ def CM(model, test_loader, real_fake_classes, emotion_classes):
 
 
 
-
-# Implement F1-score function 
-def f1_score(y_true, y_pred):
-    """
-    Function to calculate the F1 score.
-    """
-    tp = np.sum(y_true * y_pred)
-    fp = np.sum((1 - y_true) * y_pred)
-    fn = np.sum(y_true * (1 - y_pred))
-    
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    
-    f1 = 2 * precision * recall / (precision + recall)
-    return f1
-
-# Implement accuracy function
-def f1_loss(outputs, labels, f1_fn):
-    # Get the outputs for each task
-    task1_outputs = outputs[0]
-    task2_outputs = outputs[1]
-
-    # Get the labels for each task
-    task1_labels = labels[0]
-    task2_labels = labels[1]
-
-    # Calculate the F1 scores for each task
-    task1_f1 = f1_fn(task1_outputs, task1_labels)
-    task2_f1 = f1_fn(task2_outputs, task2_labels)
-
-    # Calculate the total loss as a weighted sum of the F1 scores
-    total_loss = 1 - (task1_f1 + task2_f1) / 2
-
-    return total_loss
-
-# loss = f1_loss(outputs, labels, f1_score)
