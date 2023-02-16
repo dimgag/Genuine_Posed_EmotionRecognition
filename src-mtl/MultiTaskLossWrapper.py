@@ -18,7 +18,7 @@ class MultiTaskLossWrapper(nn.Module):
 
         crossEntropy = nn.CrossEntropyLoss()
 
-        loss_real_fake = crossEntropy(real_fake_prediction, real_fake_label) # To adjust.
+        loss_real_fake = crossEntropy(real_fake_prediction, real_fake_label) # To adjust. I have to add this to the training loop. train.py (and validation loop)
         
         loss_emotions = crossEntropy(emotion_prediction, emotio_label) # To adjust.
 
