@@ -100,6 +100,7 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
 
 
 def CM(model, test_loader, real_fake_classes, emotion_classes):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     y_pred_rf = []
     y_true_rf = []
 
@@ -174,4 +175,4 @@ def f1_loss(outputs, labels, f1_fn):
 
     return total_loss
 
-loss = f1_loss(outputs, labels, f1_score)
+# loss = f1_loss(outputs, labels, f1_score)
