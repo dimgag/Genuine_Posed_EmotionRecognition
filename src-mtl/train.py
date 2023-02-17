@@ -53,7 +53,7 @@ def train(model, trainloader, optimizer):
         # _, emo_preds = torch.max(emotion_output.data, 1)        
         overall_training_acc = (rf_preds == real_fake_label).sum().item()
         overall_training_acc += (emo_preds == emotion_label).sum().item()
-        overall_training_acc = overall_training_acc / 2 
+        overall_training_acc = overall_training_acc / 2 # Maybe remove this line?
 
 
 
@@ -130,5 +130,5 @@ def validate(model, testloader):
         epoch_loss = total_validation_loss / counter
         epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
         epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
-    
-    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake
+        overall_validation_acc = 100. * (overall_validation_acc / len(testloader.dataset))
+    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc
