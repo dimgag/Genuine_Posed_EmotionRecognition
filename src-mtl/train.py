@@ -61,14 +61,12 @@ def train(model, trainloader, optimizer):
         # Calculate Accuracy for Emotions
         _, emo_preds = torch.max(emotion_output.data, 1)
         emotion_training_acc += (emo_preds == emotion_label).sum().item()
-        
         # Calculate Accuracy for Real / fake
-        _, rf_preds = torch.max(real_fake_output.data, 1)        
+        _, rf_preds = torch.max(real_fake_output.data, 1)
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
-        
-        # Calculate Overall Accuracy       
-        overall_training_acc = (rf_preds == real_fake_label).sum().item()
-        overall_training_acc += (emo_preds == emotion_label).sum().item()
+        # Calculate Overall Accuracy
+        overall_training_acc = (emo_preds == emotion_label).sum().item()
+        overall_training_acc += (rf_preds == real_fake_label).sum().item()
 
         # Backpropagation
         loss.backward()
@@ -138,14 +136,15 @@ def validate(model, testloader):
             '''
             # ------------------------------------------------------------ 
             # Calculate Accuracy for emotions
+            # Calculate Accuracy for emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
             # Calculate Accuracy for Real / fake
             _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
             # Calculate Overall Accuracy
-            overall_validation_acc = (rf_preds == real_fake_label).sum().item()
-            overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            overall_validation_acc = (emo_preds == emotion_label).sum().item()
+            overall_validation_acc += (rf_preds == real_fake_label).sum().item()
 
 
         epoch_loss = total_validation_loss / counter
