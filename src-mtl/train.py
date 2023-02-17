@@ -49,9 +49,8 @@ def train(model, trainloader, optimizer):
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
         
         # Calculate Overall Accuracy
-        _, rf_preds = torch.max(real_fake_output.data, 1)
-        _, emo_preds = torch.max(emotion_output.data, 1)
-        
+        # _, rf_preds = torch.max(real_fake_output.data, 1)
+        # _, emo_preds = torch.max(emotion_output.data, 1)        
         overall_training_acc = (rf_preds == real_fake_label).sum().item()
         overall_training_acc += (emo_preds == emotion_label).sum().item()
         overall_training_acc = overall_training_acc / 2 
