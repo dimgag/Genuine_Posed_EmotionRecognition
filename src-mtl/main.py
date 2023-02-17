@@ -38,7 +38,6 @@ def main():
     # Define the model
     # net = HydraNet()
     # model = HydraNet(net).to(device)
-    
     model = ChimeraNet().to(device)
 
     # get_model_params(model)
@@ -48,7 +47,7 @@ def main():
     
 
     # Define the optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.09)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     # optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 

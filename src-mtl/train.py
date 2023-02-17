@@ -46,12 +46,12 @@ def train(model, trainloader, optimizer):
         # Idea: to calculate the loss based on the precision scores.
         # Calculate precision for emotions and real/fake 
         '''
-        precisiotn_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
-        precisiotn_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+        precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+        precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
         
         # Calculate the Loss
-        loss_emotions = precisiotn_emotions * loss_1
-        loss_real_fake = precisiotn_real_fake * loss_2
+        loss_emotions = precision_emotions * loss_1
+        loss_real_fake = precision_real_fake * loss_2
 
         loss = loss_emotions + loss_real_fake
         total_training_loss += loss
@@ -66,9 +66,7 @@ def train(model, trainloader, optimizer):
         _, rf_preds = torch.max(real_fake_output.data, 1)        
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
         
-        # Calculate Overall Accuracy
-        # _, rf_preds = torch.max(real_fake_output.data, 1)
-        # _, emo_preds = torch.max(emotion_output.data, 1)        
+        # Calculate Overall Accuracy       
         overall_training_acc = (rf_preds == real_fake_label).sum().item()
         overall_training_acc += (emo_preds == emotion_label).sum().item()
 
@@ -81,8 +79,6 @@ def train(model, trainloader, optimizer):
     epoch_acc_emotion = 100. * (emotion_training_acc / len(trainloader.dataset))
     epoch_acc_real_fake = 100. * (real_fake_training_acc / len(trainloader.dataset))
     overall_training_acc = 100. * (overall_training_acc / len(trainloader.dataset))
-
-
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_training_acc
 
 
@@ -130,31 +126,24 @@ def validate(model, testloader):
             # Idea: to calculate the loss based on the precision scores.
             # Calculate precision for emotions and real/fake 
             '''
-            precisiotn_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
-            precisiotn_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+            precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+            precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
             
             # Calculate the Loss
-            loss_emotions = precisiotn_emotions * loss_1
-            loss_real_fake = precisiotn_real_fake * loss_2
+            loss_emotions = precision_emotions * loss_1
+            loss_real_fake = precision_real_fake * loss_2
 
             loss = loss_emotions + loss_real_fake
             total_validation_loss += loss
             '''
             # ------------------------------------------------------------ 
-
-
             # Calculate Accuracy for emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
             # Calculate Accuracy for Real / fake
             _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
-            
-            
             # Calculate Overall Accuracy
-            _, rf_preds = torch.max(real_fake_output.data, 1) # remove this?
-            _, emo_preds = torch.max(emotion_output.data, 1) # Remove this?
-
             overall_validation_acc = (rf_preds == real_fake_label).sum().item()
             overall_validation_acc += (emo_preds == emotion_label).sum().item()
 
