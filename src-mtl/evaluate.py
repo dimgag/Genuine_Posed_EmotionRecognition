@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from tqdm.auto import tqdm
 import torch
 import torch.nn as nn
@@ -7,6 +8,7 @@ from torch.utils.data import DataLoader
 from models import HydraNet, ChimeraNet
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 from utils import CM
+
 
 def evaluate(model, testloader):
     model.eval()
@@ -107,14 +109,14 @@ if __name__ == "__main__":
     
     # Confussion matrix 
     # Get the classes of the dataset to generate the confusion matrix
-    real_fake_classes = test_dataset.real_fakes
-    real_fake_classes = np.unique(real_fake_classes)
-    convert_dict = {0: 'fake', 1: 'real'}
-    real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
+    # real_fake_classes = test_dataset.real_fakes
+    # real_fake_classes = np.unique(real_fake_classes)
+    # convert_dict = {0: 'fake', 1: 'real'}
+    # real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
 
-    emotion_classes = test_dataset.emotions
-    emotion_classes = np.unique(emotion_classes)
-    convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
-    emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
+    # emotion_classes = test_dataset.emotions
+    # emotion_classes = np.unique(emotion_classes)
+    # convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
+    # emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
 
-    CM(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
+    # CM(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
