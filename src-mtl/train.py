@@ -41,10 +41,28 @@ def train(model, trainloader, optimizer):
         loss = loss_1 + loss_2
         total_training_loss += loss
         
-        # Calculate Accuracy
+
+        # ------------------------------------------------------------
+        # Idea: to calculate the loss based on the precision scores.
+        # Calculate precision for emotions and real/fake 
+        '''
+        precisiotn_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+        precisiotn_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+        
+        # Calculate the Loss
+        loss_emotions = precisiotn_emotions * loss_1
+        loss_real_fake = precisiotn_real_fake * loss_2
+
+        loss = loss_emotions + loss_real_fake
+        total_training_loss += loss
+        '''
+        # ------------------------------------------------------------ 
+
+        # Calculate Accuracy for Emotions
         _, emo_preds = torch.max(emotion_output.data, 1)
         emotion_training_acc += (emo_preds == emotion_label).sum().item()
         
+        # Calculate Accuracy for Real / fake
         _, rf_preds = torch.max(real_fake_output.data, 1)        
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
         
@@ -53,9 +71,6 @@ def train(model, trainloader, optimizer):
         # _, emo_preds = torch.max(emotion_output.data, 1)        
         overall_training_acc = (rf_preds == real_fake_label).sum().item()
         overall_training_acc += (emo_preds == emotion_label).sum().item()
-        overall_training_acc = overall_training_acc / 2 # Maybe remove this line?
-
-
 
         # Backpropagation
         loss.backward()
@@ -101,7 +116,8 @@ def validate(model, testloader):
             # Forward pass
             real_fake_output, emotion_output = model(inputs)
 
-            # Calculate the Loss
+            # ------------------------------------------------------------
+            # Calculate the Loss and Sum them together.
             loss_1 = emotion_loss(emotion_output, emotion_label)
             
             # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
@@ -110,21 +126,37 @@ def validate(model, testloader):
             loss = loss_1 + loss_2
             total_validation_loss += loss
 
-            # Calculate Accuracy
+            # ------------------------------------------------------------
+            # Idea: to calculate the loss based on the precision scores.
+            # Calculate precision for emotions and real/fake 
+            '''
+            precisiotn_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+            precisiotn_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+            
+            # Calculate the Loss
+            loss_emotions = precisiotn_emotions * loss_1
+            loss_real_fake = precisiotn_real_fake * loss_2
+
+            loss = loss_emotions + loss_real_fake
+            total_validation_loss += loss
+            '''
+            # ------------------------------------------------------------ 
+
+
+            # Calculate Accuracy for emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
-            
+            # Calculate Accuracy for Real / fake
             _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
             
             
             # Calculate Overall Accuracy
-            _, rf_preds = torch.max(real_fake_output.data, 1)
-            _, emo_preds = torch.max(emotion_output.data, 1)
+            _, rf_preds = torch.max(real_fake_output.data, 1) # remove this?
+            _, emo_preds = torch.max(emotion_output.data, 1) # Remove this?
 
             overall_validation_acc = (rf_preds == real_fake_label).sum().item()
             overall_validation_acc += (emo_preds == emotion_label).sum().item()
-            overall_validation_acc = overall_validation_acc / 2 
 
 
         epoch_loss = total_validation_loss / counter

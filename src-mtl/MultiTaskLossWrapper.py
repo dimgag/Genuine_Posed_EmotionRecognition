@@ -4,17 +4,30 @@ import torch.nn as nn
 # idea1: Combine the two losses into one loss function based on the precision scores. 
 
 class MultiTaskLossWrapper(nn.Module):
-    def __init__(self, task_num):
+    def __init__(self, task_num, model):
         super(MultiTaskLossWrapper, self).__init__()
+        self.model = model
         self.task_num = task_num
         self.log_vars = nn.Parameter(torch.zeros((task_num)))
 
-    def forward(self, preds, age, gender, ethnicity):# Edit the inputs to fit your needs....... real_fake_label, emotion_label):
-        loss_real_fake = nn.CrossEntropyLoss()
-        loss_emotions = nn.CrossEntropyLoss()
+    def forward(self, input, targets):
+        
+        outputs = self.model(input)
+
+        precision1 = torch.exp(-self.log_vars[0])
+        loss = torch.sum(precision1 * (targets[0] - outputs[0]) ** 2. + self.log_vars[0], -1)
+
+
+        precision2 = torch.exp(-self.log_vars[1])
+        loss += torch.sum(precision2 * (targets[1] - outputs[1]) ** 2. + self.log_vars[1], -1)
+
+        loss = torch.mean(loss)
+
+
+        return loss, self.log_vars.data.tolist()
 
         ########################################################################
-        # Calculate the losses, as you did in the original code
+'''        # Calculate the losses, as you did in the original code
         # Edit this code ? to make it work somehow... after the calculation of the los
 
         crossEntropy = nn.CrossEntropyLoss()
@@ -30,12 +43,7 @@ class MultiTaskLossWrapper(nn.Module):
         loss_emotions = precision_emotions * loss_emotions + self.log_vars[1]
 		
         return loss_real_fake + loss_emotions
-
-
-
-
-
-
+'''
 
 
 

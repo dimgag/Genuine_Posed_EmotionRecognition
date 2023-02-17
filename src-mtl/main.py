@@ -102,7 +102,7 @@ def main():
 
         # Print the loss and accuracy for the epoch.
         print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}, Overall training acc: {overall_training_acc:.3f}")
-        print(f"Validation loss: {valid_epoch_loss:.3f}, Emotion validation acc: {valid_emo_epoch_acc:.3f}, Real/Fake validation acc: {valid_real_fake_epoch_acc:.3f}, , Overall Validation acc: {overall_validation_acc:.3f}")
+        print(f"Validation loss: {valid_epoch_loss:.3f}, Emotion validation acc: {valid_emo_epoch_acc:.3f}, Real/Fake validation acc: {valid_real_fake_epoch_acc:.3f}, Overall Validation acc: {overall_validation_acc:.3f}")
         print('-'*50)
 
     print('Finished Training') 
