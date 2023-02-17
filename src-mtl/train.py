@@ -15,10 +15,11 @@ def train(model, trainloader, optimizer):
     real_fake_loss = nn.CrossEntropyLoss() 
     
     # Define the sigmoid function
-    Sig = nn.Sigmoid()
+    # Sig = nn.Sigmoid()
     total_training_loss = 0.0
     emotion_training_acc = 0
-    real_fake_training_acc = 0 
+    real_fake_training_acc = 0
+    overall_training_acc = 0
     counter = 0
 
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
@@ -47,6 +48,16 @@ def train(model, trainloader, optimizer):
         _, rf_preds = torch.max(real_fake_output.data, 1)        
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
         
+        # Calculate Overall Accuracy
+        _, rf_preds = torch.max(real_fake_output.data, 1)
+        _, emo_preds = torch.max(emotion_output.data, 1)
+        
+        overall_training_acc = (rf_preds == real_fake_label).sum().item()
+        overall_training_acc += (emo_preds == emotion_label).sum().item()
+        overall_training_acc = overall_training_acc / 2 
+
+
+
         # Backpropagation
         loss.backward()
         # Update the weights
@@ -55,8 +66,10 @@ def train(model, trainloader, optimizer):
     epoch_loss = total_training_loss / counter
     epoch_acc_emotion = 100. * (emotion_training_acc / len(trainloader.dataset))
     epoch_acc_real_fake = 100. * (real_fake_training_acc / len(trainloader.dataset))
-    
-    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake
+    overall_training_acc = 100. * (overall_training_acc / len(trainloader.dataset))
+
+
+    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_training_acc
 
 
 
@@ -71,10 +84,11 @@ def validate(model, testloader):
     # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
     real_fake_loss = nn.CrossEntropyLoss() 
 
-    Sig = nn.Sigmoid()
+    # Sig = nn.Sigmoid()
     total_validation_loss = 0.0
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
+    overall_validation_acc = 0
     counter = 0
     
     with torch.no_grad():
@@ -104,6 +118,15 @@ def validate(model, testloader):
             _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
             
+            
+            # Calculate Overall Accuracy
+            _, rf_preds = torch.max(real_fake_output.data, 1)
+            _, emo_preds = torch.max(emotion_output.data, 1)
+
+            overall_validation_acc = (rf_preds == real_fake_label).sum().item()
+            overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            overall_validation_acc = overall_validation_acc / 2 
+
 
         epoch_loss = total_validation_loss / counter
         epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))

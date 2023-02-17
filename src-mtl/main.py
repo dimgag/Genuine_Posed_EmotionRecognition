@@ -48,8 +48,8 @@ def main():
     
 
     # Define the optimizer
-    # optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.09)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.09)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
     # Train & Validate the model 
@@ -61,6 +61,8 @@ def main():
     valid_emo_acc = []
     train_real_fake_acc = []
     valid_real_fake_acc = []
+    total_train_acc = []
+    total_valid_acc = []
 
     torch.manual_seed(42)
     torch.cuda.manual_seed(42)
@@ -69,13 +71,13 @@ def main():
     torch.backends.cudnn.benchmark = True
 
     # Set the number of epochs here.
-    epochs = 15
+    epochs = 10
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
         # Train the model.
-        train_epoch_loss, train_emo_epoch_acc, train_real_fake_epoch_acc  = train(model, train_dataloader, optimizer)
+        train_epoch_loss, train_emo_epoch_acc, train_real_fake_epoch_acc, overall_training_acc  = train(model, train_dataloader, optimizer)
         # Validation of the model.
-        valid_epoch_loss, valid_emo_epoch_acc, valid_real_fake_epoch_acc = validate(model, test_dataloader)
+        valid_epoch_loss, valid_emo_epoch_acc, valid_real_fake_epoch_acc, overall_validation_acc = validate(model, test_dataloader)
         
         # Save the loss and accuracy for the epoch. 
         train_loss1.append(train_epoch_loss)
@@ -89,15 +91,18 @@ def main():
         train_emo_acc.append(train_emo_epoch_acc)
         valid_emo_acc.append(valid_emo_epoch_acc)
 
-        train_real_fake_acc.append(train_real_fake_epoch_acc)
-        valid_real_fake_acc.append(valid_real_fake_epoch_acc)
+        train_real_fake_acc.append(train_real_fake_epoch_acc) # For plotting
+        valid_real_fake_acc.append(valid_real_fake_epoch_acc) # For plotting
+
+        total_train_acc.append(overall_training_acc) # For plotting
+        total_valid_acc.append(overall_validation_acc) # For plotting
         
         # Update the learning rate. -if using scheduler- If not, comment the next line.
         scheduler.step(valid_epoch_loss)
 
         # Print the loss and accuracy for the epoch.
-        print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}")
-        print(f"Validation loss: {valid_epoch_loss:.3f}, Emotion validation acc: {valid_emo_epoch_acc:.3f}, Real/Fake validation acc: {valid_real_fake_epoch_acc:.3f}")
+        print(f"Training loss: {train_epoch_loss:.3f}, Emotion training acc: {train_emo_epoch_acc:.3f}, Real/Fake training acc: {train_real_fake_epoch_acc:.3f}, Overall training acc: {overall_training_acc:.3f}")
+        print(f"Validation loss: {valid_epoch_loss:.3f}, Emotion validation acc: {valid_emo_epoch_acc:.3f}, Real/Fake validation acc: {valid_real_fake_epoch_acc:.3f}, , Overall Validation acc: {overall_validation_acc:.3f}")
         print('-'*50)
 
     print('Finished Training') 
@@ -105,6 +110,21 @@ def main():
     save_model(epochs, model, optimizer)
     save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss)
     
+    # Plot the overall accuracy
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(10, 7))
+    plt.plot(
+        total_train_acc, color='green', linestyle='-', 
+        label='train accuracy'
+    )
+    plt.plot(
+        total_valid_acc, color='blue', linestyle='-', 
+        label='validataion accuracy'
+    )
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.savefig(f"Overall_acc.png")
 
 
 if __name__ == "__main__":
