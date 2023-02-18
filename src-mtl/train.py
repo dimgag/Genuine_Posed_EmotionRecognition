@@ -5,40 +5,40 @@ import numpy as np
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-
-
 def train(model, trainloader, optimizer):
     model.train()
     print("Training model...")
-    
-    # Define the loss functions.
-    emotion_loss = nn.CrossEntropyLoss()  # Includes Softmax
+    emotion_loss = nn.CrossEntropyLoss()
     real_fake_loss = nn.CrossEntropyLoss() 
-    
     total_training_loss = 0.0
     emotion_training_acc = 0
     real_fake_training_acc = 0
     overall_training_acc = 0
     counter = 0
-
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         counter += 1
         inputs = data["image"].to(device)
         real_fake_label = data["real_fake"].to(device) 
         emotion_label = data["emotion"].to(device)
-
         # Clear the gradients
         optimizer.zero_grad()
         # Forward pass
         real_fake_output, emotion_output = model(inputs)
+        
+        
+        # ------------------------------------------------------------ 
         # Calculate the Loss
         loss_1 = emotion_loss(emotion_output, emotion_label)
         loss_2 = real_fake_loss(real_fake_output, real_fake_label)
+        # ------------------------------------------------------------ 
+        # IDEA 1: TOTAL LOSS = SUM
         loss = loss_1 + loss_2
         total_training_loss += loss
-        
+        # ------------------------------------------------------------ 
 
+
+
+        # ------------------------------------------------------------ 
         # Calculate Accuracy for Emotions
         _, emo_preds = torch.max(emotion_output.data, 1)
         emotion_training_acc += (emo_preds == emotion_label).sum().item()
@@ -48,7 +48,25 @@ def train(model, trainloader, optimizer):
         # Calculate Overall Accuracy
         overall_training_acc += (rf_preds == real_fake_label).sum().item()
         overall_training_acc += (emo_preds == emotion_label).sum().item()
+        
+        # ------------------------------------------------------------ 
+        # IDEA 2: TOTAL LOSS = PRECISION_1 * LOSS_1 + PRECISION_2 * LOSS_2
 
+        # Calculate precision for emotions and real/fake 
+        # Calculate precision for emotions and real/fake
+        precision_emotions = emotion_training_acc / (i+1)  # Precision for emotions
+        precision_real_fake = real_fake_training_acc / (i+1)  # Precision for real/fake
+
+        # precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+        # precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+
+        # Calculate the Loss
+        loss_emotions = precision_emotions * loss_1
+        loss_real_fake = precision_real_fake * loss_2
+
+        loss = loss_emotions + loss_real_fake
+        total_validation_loss += loss
+        # ------------------------------------------------------------ 
         # Backpropagation
         loss.backward()
         # Update the weights
@@ -67,54 +85,42 @@ def train(model, trainloader, optimizer):
 def validate(model, testloader):
     model.eval()
     print("Validating model...")
-    
-    # Define the loss functions.
-    emotion_loss = nn.CrossEntropyLoss() # Includes Softmax
-    # real_fake_loss = nn.BCELoss() # Doesn't include Softmax
+    emotion_loss = nn.CrossEntropyLoss()
     real_fake_loss = nn.CrossEntropyLoss() 
-
-    # Sig = nn.Sigmoid()
     total_validation_loss = 0.0
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
     overall_validation_acc = 0
     counter = 0
-    
     with torch.no_grad():
         for i, data in tqdm(enumerate(testloader), total=len(testloader)):
             counter +=1
             inputs = data["image"].to(device)
-
             real_fake_label = data["real_fake"].to(device) 
             emotion_label = data["emotion"].to(device)
-
             # Forward pass
             real_fake_output, emotion_output = model(inputs)
-
             # ------------------------------------------------------------
-            # Calculate the Loss and Sum them together.
+            # Calculate Loss
             loss_1 = emotion_loss(emotion_output, emotion_label)
-            
-            # loss_2 = real_fake_loss(Sig(real_fake_output), real_fake_label.unsqueeze(1).float())
             loss_2 = real_fake_loss(real_fake_output, real_fake_label)
-            
-            loss = loss_1 + loss_2
-            total_validation_loss += loss
-
+            # ------------------------------------------------------------ 
+            # IDEA 1: TOTAL LOSS = SUM
+            # loss = loss_1 + loss_2
+            # total_validation_loss += loss
             # ------------------------------------------------------------
-            # Idea: to calculate the loss based on the precision scores.
+            # IDEA 2: TOTAL LOSS = PRECISION_1 * LOSS_1 + PRECISION_2 * LOSS_2
             # Calculate precision for emotions and real/fake 
-            '''
             precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
             precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
             
-            # Calculate the Loss
-            loss_emotions = precision_emotions * loss_1
-            loss_real_fake = precision_real_fake * loss_2
+            # # Calculate the Loss
+            # loss_emotions = precision_emotions * loss_1
+            # loss_real_fake = precision_real_fake * loss_2
 
-            loss = loss_emotions + loss_real_fake
-            total_validation_loss += loss
-            '''
+            # loss = loss_emotions + loss_real_fake
+            # total_validation_loss += loss
+
             # ------------------------------------------------------------ 
             # Calculate Accuracy for Emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
