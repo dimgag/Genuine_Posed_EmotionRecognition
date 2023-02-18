@@ -26,6 +26,7 @@ def evaluate(model, testloader):
     total_validation_loss = 0.0
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
+    overall_validation_acc = 0
     counter = 0
     
     with torch.no_grad():
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
 
     # Load the model.pth - change the path to the model you want to evaluate
-    path = 'model.pth'
+    path = 'experiments/exp1-chimeranet/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
