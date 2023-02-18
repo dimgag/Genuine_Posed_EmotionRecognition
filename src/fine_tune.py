@@ -9,10 +9,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from models.model1 import Net, EfficientNetV2M
-from models.vggface import VGGFace, VGGFace2
-from models.facenet import FaceNet_withClassifier, FaceNet
-from models.transformers import ViT
+from models import Net, EfficientNetV2M, FaceNet, FaceNet_withClassifier, VGGFace, VGGFace2, ViT
 
 
 def get_model(model_name):
