@@ -7,7 +7,8 @@ from torch.utils.data import DataLoader
 
 from models import HydraNet, ChimeraNet
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
-from utils import CM
+from utils import ConfusionMatrix_MT
+# from confusion_matrix import CM
 
 
 def evaluate(model, testloader):
@@ -47,19 +48,23 @@ def evaluate(model, testloader):
             loss = loss_1 + loss_2
             total_validation_loss += loss
 
-            # Calculate Accuracy
+            # Calculate Accuracy for Emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
-            
+            # Calculate Accuracy for Real / fake
             _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
-            
+            # Calculate Overall Accuracy
+            overall_validation_acc += (rf_preds == real_fake_label).sum().item()
+            overall_validation_acc += (emo_preds == emotion_label).sum().item()
+
 
         epoch_loss = total_validation_loss / counter
         epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
         epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
+        overall_validation_acc = 100. * (overall_validation_acc / (2*len(testloader.dataset)))
     
-    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake
+    return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc
 
 
 if __name__ == "__main__":
@@ -104,19 +109,19 @@ if __name__ == "__main__":
     test_dataloader = DataLoader(test_dataset, batch_size=128, shuffle=True)
 
     # Evaluate the model
-    epoch_loss, epoch_acc_emotion, epoch_acc_real_fake = evaluate(loaded_model, test_dataloader)
-    print(f"Test loss: {epoch_loss:.3f}, Test Emotion acc: {epoch_acc_emotion:.3f}, Test Real/Fake acc: {epoch_acc_real_fake:.3f}")
+    epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc = evaluate(loaded_model, test_dataloader)
+    print(f"Test loss: {epoch_loss:.3f}, Test Emotion acc: {epoch_acc_emotion:.3f}, Test Real/Fake acc: {epoch_acc_real_fake:.3f}, Overall Accuracy: {overall_validation_acc:.3f}")
     
     # Confussion matrix 
     # Get the classes of the dataset to generate the confusion matrix
-    # real_fake_classes = test_dataset.real_fakes
-    # real_fake_classes = np.unique(real_fake_classes)
-    # convert_dict = {0: 'fake', 1: 'real'}
-    # real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
+    real_fake_classes = test_dataset.real_fakes
+    real_fake_classes = np.unique(real_fake_classes)
+    convert_dict = {0: 'fake', 1: 'real'}
+    real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
 
-    # emotion_classes = test_dataset.emotions
-    # emotion_classes = np.unique(emotion_classes)
-    # convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
-    # emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
+    emotion_classes = test_dataset.emotions
+    emotion_classes = np.unique(emotion_classes)
+    convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
+    emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
 
-    # CM(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
+    ConfusionMatrix_MT(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
