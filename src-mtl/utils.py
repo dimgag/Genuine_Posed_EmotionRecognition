@@ -99,7 +99,7 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.savefig(f"loss.png")
 
 
-def CM(model, test_loader, real_fake_classes, emotion_classes):
+def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     y_pred_rf = []
     y_true_rf = []
