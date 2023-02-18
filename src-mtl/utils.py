@@ -17,13 +17,13 @@ def save_model(epochs, model, optimizer):
     }, 'model.pth')
 
 
-
 def get_model_params(model):
   """Get model parameters"""
   total_params = sum(p.numel() for p in model.parameters())
   print(f"Total parameters: {total_params:,}")
   total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
   print(f"Trainable parameters: {total_trainable_params:,}")
+
 
 def freeze_baseline(model):
 	print("-"*50)
@@ -44,7 +44,7 @@ def freeze_baseline(model):
 	return model
 
 
-def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss):
+def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss, total_train_acc, total_valid_acc):
     """
     Function to save the loss and accuracy plots to disk.
     """
@@ -98,6 +98,23 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.legend()
     plt.savefig(f"loss.png")
 
+    # Overall Accuracy Plot
+    plt.figure(figsize=(10, 7))
+    plt.plot(
+        total_train_acc, color='green', linestyle='-', 
+        label='train accuracy'
+    )
+    plt.plot(
+        total_valid_acc, color='blue', linestyle='-', 
+        label='validataion accuracy'
+    )
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.savefig(f"Overall_acc.png")
+
+
+
 
 def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -137,6 +154,3 @@ def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     sns.heatmap(df_cm_emo, annot=True)
     plt.savefig('cm_emotions.png')
     
-
-
-

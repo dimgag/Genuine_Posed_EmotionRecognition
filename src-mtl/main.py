@@ -105,25 +105,9 @@ def main():
         print('-'*50)
 
     print('Finished Training') 
-
     save_model(epochs, model, optimizer)
-    save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss)
+    save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss, total_train_acc, total_valid_acc)
     
-    # Plot the overall accuracy
-    import matplotlib.pyplot as plt
-    plt.figure(figsize=(10, 7))
-    plt.plot(
-        total_train_acc, color='green', linestyle='-', 
-        label='train accuracy'
-    )
-    plt.plot(
-        total_valid_acc, color='blue', linestyle='-', 
-        label='validataion accuracy'
-    )
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.legend()
-    plt.savefig(f"Overall_acc.png")
 
 
 if __name__ == "__main__":
