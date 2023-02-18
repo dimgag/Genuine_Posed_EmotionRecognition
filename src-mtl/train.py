@@ -32,8 +32,8 @@ def train(model, trainloader, optimizer):
         loss_2 = real_fake_loss(real_fake_output, real_fake_label)
         # ------------------------------------------------------------ 
         # IDEA 1: TOTAL LOSS = SUM
-        loss = loss_1 + loss_2
-        total_training_loss += loss
+        # loss = loss_1 + loss_2
+        # total_training_loss += loss
         # ------------------------------------------------------------ 
 
 
@@ -54,18 +54,30 @@ def train(model, trainloader, optimizer):
 
         # Calculate precision for emotions and real/fake 
         # Calculate precision for emotions and real/fake
-        precision_emotions = emotion_training_acc / (i+1)  # Precision for emotions
-        precision_real_fake = real_fake_training_acc / (i+1)  # Precision for real/fake
+        # precision_emotions = emotion_training_acc / (i+1)  # Precision for emotions
+        # precision_real_fake = real_fake_training_acc / (i+1)  # Precision for real/fake
 
         # precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
         # precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
-
+        
+        _, emo_preds = torch.max(emotion_output.data, 1)
+        emo_true_positives = (emo_preds == emotion_label).sum().item()
+        emo_total_predicted_positives = (emo_preds == emo_preds).sum().item()
+        precision_emotions = emo_true_positives / emo_total_predicted_positives
+        
+        _, rf_preds = torch.max(real_fake_output.data, 1)
+        rf_true_positives = (rf_preds == real_fake_label).sum().item()
+        rf_total_predicted_positives = (rf_preds == rf_preds).sum().item()
+        precision_real_fake = rf_true_positives / rf_total_predicted_positives
+        
+        # print('precision_emotions=', precision_emotions)
+        # print('precision_real_fake=', precision_real_fake)
         # Calculate the Loss
         loss_emotions = precision_emotions * loss_1
         loss_real_fake = precision_real_fake * loss_2
 
         loss = loss_emotions + loss_real_fake
-        total_validation_loss += loss
+        total_training_loss += loss
         # ------------------------------------------------------------ 
         # Backpropagation
         loss.backward()
@@ -111,8 +123,8 @@ def validate(model, testloader):
             # ------------------------------------------------------------
             # IDEA 2: TOTAL LOSS = PRECISION_1 * LOSS_1 + PRECISION_2 * LOSS_2
             # Calculate precision for emotions and real/fake 
-            precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
-            precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
+            # precision_emotions = emotion_output.data.max(1, keepdim=True)[1] == emotion_label.data.max(1, keepdim=True)[1]
+            # precision_real_fake = real_fake_output.data.max(1, keepdim=True)[1] == real_fake_label.data.max(1, keepdim=True)[1]
             
             # # Calculate the Loss
             # loss_emotions = precision_emotions * loss_1
@@ -131,6 +143,31 @@ def validate(model, testloader):
             # Calculate Overall Accuracy
             overall_validation_acc += (rf_preds == real_fake_label).sum().item()
             overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            
+            # ------------------------------------------------------------ 
+            # # IDEA 2: TOTAL LOSS = PRECISION_1 * LOSS_1 + PRECISION_2 * LOSS_2
+            # precision_emotions = emotion_validation_acc / (i+1)  # Precision for emotions
+            # precision_real_fake = real_fake_validation_acc / (i+1)  # Precision for real/fake
+            
+            _, emo_preds = torch.max(emotion_output.data, 1)
+            emo_true_positives = (emo_preds == emotion_label).sum().item()
+            emo_total_predicted_positives = (emo_preds == emo_preds).sum().item()
+            precision_emotions = emo_true_positives / emo_total_predicted_positives
+        
+            _, rf_preds = torch.max(real_fake_output.data, 1)
+            rf_true_positives = (rf_preds == real_fake_label).sum().item()
+            rf_total_predicted_positives = (rf_preds == rf_preds).sum().item()
+            precision_real_fake = rf_true_positives / rf_total_predicted_positives
+            
+            # print('precision_emotions=', precision_emotions)
+            # print('precision_real_fake=', precision_real_fake)
+            # Calculate the Loss
+            loss_emotions = precision_emotions * loss_1
+            loss_real_fake = precision_real_fake * loss_2
+
+            loss = loss_emotions + loss_real_fake
+            total_validation_loss += loss
+            # ------------------------------------------------------------ 
 
 
     epoch_loss = total_validation_loss / counter
