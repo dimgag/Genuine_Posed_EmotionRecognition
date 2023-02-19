@@ -85,7 +85,7 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
 
     # Load the model.pth - change the path to the model you want to evaluate
-    path = 'experiments/exp1-chimeranet/model.pth'
+    path = 'experiments/exp1_PrecLoss/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
