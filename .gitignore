@@ -2,6 +2,7 @@
 ############################
 /data/*
 /data_mtl/*
+/data_temporal/*
 /docs/*
 /experiments/*
 

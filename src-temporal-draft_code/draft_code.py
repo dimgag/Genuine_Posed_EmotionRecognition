@@ -54,7 +54,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class EmotionClassifier(nn.Module):
-	def __init__(self, num_frames, frame_height, frame_width, num_channels):
+    def __init__(self, num_frames, frame_height, frame_width, num_channels):
         super(EmotionClassifier, self).__init__()
         # Define the convolutional layers
         self.conv1 = nn.Conv2d(num_channels, 32, kernel_size=3, stride=1, padding=1)
@@ -84,10 +84,10 @@ class EmotionClassifier(nn.Module):
             return x
 
 
-model = EmotionClassifier(num_frames, frame_height, frame_width, num_channels)
-inputs = torch.tensor(frames, dtype=torch.float32)
-inputs = inputs.permute(0, 3, 1, 2)
-outputs = model(inputs)
+        model = EmotionClassifier(num_frames, frame_height, frame_width, num_channels)
+        inputs = torch.tensor(frames, dtype=torch.float32)
+        inputs = inputs.permute(0, 3, 1, 2)
+        outputs = model(inputs)
 
 # In this example, the **`EmotionClassifier`** class defines a simple deep learning model that consists of a series of convolutional layers, a single LSTM layer, and a fully connected layer. The input data is passed through the layers in the **`forward`** method, which returns the model's predictions.
 

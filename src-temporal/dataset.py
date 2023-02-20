@@ -1,59 +1,69 @@
-# Create a class for the video dataset
-
-# This class will be used to load the video frames and apply the transformations
-
-# NOT READY YET... THIS IS THE FIRST IDEA
-import cv2 
+# Create MultiTaskDataset class for the temporal data to work with TimeSformer model.
 import os
+import av
 import numpy as np
-from torch.utils.data import Dataset
+import torch
+import torch.utils.data as data
+from torch.utils.data import DataLoader
+from torchvision.datasets.folder import default_loader
 
-
-class VideoDataset(Dataset):
-    def __init__(self, video_path, transform=None):
-        self.video_path = video_path
+class MultiTaskDataset(data.Dataset):
+    def __init__(self, root_dir, transform=None, target_transform=None):
+        self.root_dir = root_dir
         self.transform = transform
-        self.video = self.load_video()
-        self.num_frames = len(self.video)
-        self.frame_indices = list(range(self.num_frames))
-        self.frame_indices = self.frame_indices[::2]
-        self.num_frames = len(self.frame_indices)
-        self.video = self.video[self.frame_indices]
-        self.video = self.video.astype(np.float32)
-        self.video = self.video / 255.0
+        self.target_transform = target_transform
+
+        # Define the list of emotions
+        self.emotions = ['Angry', 'Contempt', 'Disgust', 'Happy', 'Sad', 'Surprise']
+
+        # Create a dictionary to map the emotion labels to integers
+        self.emotion_to_int = {emotion: i for i, emotion in enumerate(self.emotions)}
+
+        # Define the list of video filenames
+        self.video_filenames = []
+        for participant in range(1, 51):
+            for real_fake in ['Real', 'Fake']:
+                for emotion in self.emotions:
+                    video_filename = f'Participant{participant}/{real_fake}/{emotion}.MP4'
+                    self.video_filenames.append(video_filename)
 
     def __len__(self):
-        return self.num_frames
+        return len(self.video_filenames)
 
-    def __getitem__(self, idx):
-        frame = self.video[idx]
-        if self.transform:
-            frame = self.transform(frame)
-        return frame
+    def __getitem__(self, index):
+        # Load the video file
+        video_filename = self.video_filenames[index]
+        video_path = os.path.join(self.root_dir, video_filename)
+        video_data = self._load_video(video_path)
 
-    def load_video(self):
-        cap = cv2.VideoCapture(self.video_path)
-        frames = []
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            frames.append(frame)
-        cap.release()
-        frames = np.array(frames)
-        return frames
+        # Get the emotion and real/fake labels from the video filename
+        real_fake, emotion = video_filename.split('/')[2:]
+        real_fake_target = 1 if real_fake == 'Real' else 0
+        emotion_target = self.emotion_to_int[emotion]
 
+        target = (real_fake_target, emotion_target)
 
-# Call the class:
-participants = 'data/SASE-FE/FakeTrue_DB'
+        if self.transform is not None:
+            video_data = self.transform(video_data)
 
-participants = list(os.listdir(participants))
+        if self.target_transform is not None:
+            target = self.target_transform(target)
 
-for participant in participants:
-    video_paths = 'data/SASE-FE/FakeTrue_DB/' + participant
-    dataset = VideoDataset(video_paths)
+        return video_data, target
 
+    def _load_video(self, video_path):
+        # Load the video file using PyAV
+        container = av.open(video_path)
+        video_data = []
 
-# Think about that... maybe I have to separate the videos in folders with emotions.
+        # Iterate over the frames of the video and convert to RGB format
+        for frame in container.decode(video=0):
+            image = frame.to_image()
+            image_data = np.array(image)[:, :, ::-1]  # Convert BGR to RGB
+            video_data.append(image_data)
 
+        # Convert the list of frames to a PyTorch tensor
+        video_data = torch.tensor(video_data)
+
+        return video_data
 
