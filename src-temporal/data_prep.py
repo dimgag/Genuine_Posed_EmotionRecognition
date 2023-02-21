@@ -35,3 +35,6 @@ os.makedirs(os.path.join(data_dir, 'test'), exist_ok=True)
 
 #               / yirri
 
+participants = os.listdir(os.path.join(data_dir, 'FakeTrue_DB'))
+
+for participant in len()

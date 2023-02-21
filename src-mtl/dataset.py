@@ -5,8 +5,6 @@ from PIL import Image
 
 class SASEFE_MTL(Dataset):
     def __init__(self, image_paths):
-        # a function defining the elements of a dataset (like inputs and labels)
-        # transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
         # Define Transforms
         self.transform = transforms.Compose([
             transforms.Resize((224, 224)),

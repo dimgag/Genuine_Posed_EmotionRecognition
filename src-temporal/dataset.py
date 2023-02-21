@@ -67,3 +67,35 @@ class MultiTaskDataset(data.Dataset):
 
         return video_data
 
+
+
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+from sklearn.model_selection import train_test_split
+
+if __name__ == '__main__':
+    transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                # transforms.RandomHorizontalFlip(p=0.5), #Data Augmentation
+                # transforms.RandomRotation(35), #Data Augmentation
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
+                ])
+
+    # Define the dataset
+    dataset = MultiTaskDataset(data_path='data_temporal', transform=transform)
+
+    # Split the dataset into train and test sets
+    train_set, test_set = train_test_split(dataset, test_size=0.2, random_state=42)
+
+    # Batch size
+    batch_size = 32
+
+    # create the data loaders for train and test sets
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
+
+    # Print the number of videos in the train and test sets
+    print(f'Train set size: {len(train_set)}')
+    print(f'Test set size: {len(test_set)}')
+
