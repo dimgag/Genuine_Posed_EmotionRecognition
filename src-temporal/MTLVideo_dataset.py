@@ -9,9 +9,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import random
 
-# Example videopath = 'data_temporal/FakeTrue_DB/Real/N2A.MP4'
 
-class MultiTaskDataset(Dataset):
+class MultiTaskDataset1111(Dataset):
     def __init__(self, video_paths, transform=None):
         self.video_paths = video_paths
         self.transform = transform
@@ -31,11 +30,10 @@ class MultiTaskDataset(Dataset):
                 self.emotion_labels.append(filename[1])
 
     def __len__(self):
-        return len(self.video_paths)
+        return sum([len(frames) - 9 for frames in self.frames_dict.values()])
 
-    # I want to create frame sequences of 20 frames from every video with the faces cropped out.
+
     def __getitem__(self, idx):
-
         # Get the video path
         video_path = self.videos[idx]
 
@@ -107,37 +105,115 @@ class MultiTaskDataset(Dataset):
                 cropped_faces[i] = frames[i][y:y+h, x:x+w]
 
         # Create an empty array to store the frame sequences
-        frame_sequences = np.empty((num_frames-19, 20, 224, 224, 3), np.dtype('uint8'))
+        frame_sequences = np.empty((num_frames-9, 10, 224, 224, 3), np.dtype('uint8'))
 
         # Create the frame sequences
-        for i in range(num_frames-19):
-            frame_sequences[i] = cropped_faces[i:i+20]
+        for i in range(num_frames-9):
+            frame_sequences[i] = cropped_faces[i:i+10]
 
         # Convert the frame sequences to a tensor
         frame_sequences = torch.from_numpy(frame_sequences)
 
         # Convert the real/fake label to a tensor
-        if real_fake_label == 'Real':
+        if real_fake_label == 1: # Real
             real_fake_label = torch.tensor([1, 0])
-        else:
+        elif real_fake_label == 0: # Fake
             real_fake_label = torch.tensor([0, 1])
 
         # Convert the emotion label to a tensor
-        if emotion_label == 'A':
+        if emotion_label == 0:
             emotion_label = torch.tensor([1, 0, 0, 0, 0, 0])
-        elif emotion_label == 'C':
+        elif emotion_label == 1:
             emotion_label = torch.tensor([0, 1, 0, 0, 0, 0])
-        elif emotion_label == 'D':
+        elif emotion_label == 2:
             emotion_label = torch.tensor([0, 0, 1, 0, 0, 0])
-        elif emotion_label == 'H':
+        elif emotion_label == 3:
             emotion_label = torch.tensor([0, 0, 0, 1, 0, 0])
-        elif emotion_label == 'S':
+        elif emotion_label == 4:
             emotion_label = torch.tensor([0, 0, 0, 0, 1, 0])
-        else:
+        elif emotion_label == 5:
             emotion_label = torch.tensor([0, 0, 0, 0, 0, 1])
 
         # Return the frame sequences, real/fake label, and emotion label
         return frame_sequences, real_fake_label, emotion_label
 
 
+# # # # # # # 2nd attempt with chat gpt 
 
+
+import os
+import cv2
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+
+class MultiTaskDataset(Dataset):
+    def __init__(self, video_paths, transform=None):
+        self.video_paths = video_paths
+        self.transform = transform
+
+        # Set Inputs and Labels
+        self.videos = []
+        self.real_fake_labels = []
+        self.emotion_labels = []
+
+        # Define frames_dict to store frames for each video
+        self.frames_dict = {}
+
+        for path in video_paths:
+            filename = os.path.splitext(os.path.basename(path))[0]
+            filename_parts = filename.split('_')
+            if len(filename_parts) == 2:
+                self.videos.append(path)
+                self.real_fake_labels.append(filename_parts[0])
+                self.emotion_labels.append(filename_parts[1])
+
+                # Get frames for the video
+                cap = cv2.VideoCapture(path)
+                frames = []
+                while True:
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    frames.append(frame)
+                cap.release()
+
+                # Add frames to frames_dict
+                self.frames_dict[path] = frames
+
+    def __len__(self):
+        return sum([len(frames) - 9 for frames in self.frames_dict.values()])
+
+    def __getitem__(self, idx):
+        # Determine which video and frame to retrieve based on idx
+        for video_path, frames in self.frames_dict.items():
+            if idx >= len(frames) - 9:
+                idx -= (len(frames) - 9)
+            else:
+                video_idx = self.videos.index(video_path)
+                start_frame_idx = idx
+                end_frame_idx = idx + 10
+                frames = frames[start_frame_idx:end_frame_idx]
+
+                # Apply transformations, if specified
+                if self.transform is not None:
+                    frames = [self.transform(frame) for frame in frames]
+
+                # Convert frames to tensor and return as input and labels
+                input_data = torch.stack(frames).permute(1, 0, 2, 3)
+                real_fake_label = torch.tensor(int(self.real_fake_labels[video_idx]))
+                emotion_label = torch.tensor(int(self.emotion_labels[video_idx]))
+                return input_data, {'real_fake': real_fake_label, 'emotion': emotion_label}
+
+
+
+# Example
+data = '/Users/dim__gag/Desktop/test_data'
+
+video_paths = os.listdir(data)
+
+print(video_paths)
+
+# Create the dataset
+dataset = MultiTaskDataset(video_paths)
