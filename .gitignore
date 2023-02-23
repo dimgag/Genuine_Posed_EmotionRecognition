@@ -2,7 +2,9 @@
 ############################
 /data/*
 /data_mtl/*
-/data_temporal/*
+/data_temporal/FakeTrue_DB/*
+/data_temporal/train_root/*
+/data_temporal/val_root/*
 /docs/*
 /experiments/*
 
