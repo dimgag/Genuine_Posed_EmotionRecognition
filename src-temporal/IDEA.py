@@ -1,6 +1,5 @@
-# https://github.com/fcakyon/video-transformers
-# Try this implemenation for the TimeSformer model
-# Install:
+# Source: https://github.com/fcakyon/video-transformers
+# Requirements:
 # conda install pytorch=1.11.0 torchvision=0.12.0 cudatoolkit=11.3 -c pytorch
 # pip install git+https://github.com/facebookresearch/pytorchvideo.git
 # pip install git+https://github.com/huggingface/transformers.git
@@ -41,8 +40,8 @@ backbone = TransformersBackbone("facebook/timesformer-base-finetuned-k400", num_
 
 download_ucf6("./")
 datamodule = VideoDataModule(
-    train_root="ucf6/train",
-    val_root="ucf6/val",
+    train_root="ucf6/train", # Replace with your own path
+    val_root="ucf6/val",     # Replace with your own path
     batch_size=4,
     num_workers=4,
     num_timesteps=8,
@@ -65,12 +64,5 @@ trainer = Trainer(datamodule, model, optimizer=optimizer, max_epochs=8)
 
 trainer.fit()
 
-# Perform prediction for a single file or folder of videos:
-from video_transformers import VideoModel
-
-model_name_or_path = 'facebook/timesformer-base-finetuned-k400' # this is an example, you can use any model from HuggingFace
-
-model = VideoModel.from_pretrained(model_name_or_path)
-
-model.predict(video_or_folder_path="video.mp4")
-# [{'filename': "video.mp4", 'predictions': {'class1': 0.98, 'class2': 0.02}}]
+# Save the model:
+# 

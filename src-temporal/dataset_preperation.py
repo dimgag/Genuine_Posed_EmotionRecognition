@@ -2,6 +2,7 @@
 import os
 import shutil
 import random
+import pandas as pd
 
 def remove_ds_store(directory):
     for dirpath, dirnames, filenames in os.walk(directory):
@@ -79,6 +80,47 @@ def rename_folders(directory):
             if new_dirname != dirname:
                 new_dirname = os.path.join(dirpath, new_dirname)
                 os.rename(old_dirname, new_dirname)
+
+
+
+
+
+
+# ###################################################
+def get_data_csvs(data_folder, filename):
+    ''' Extracts the video paths and labels from the dataset and saves them in a csv file'''
+    # Create a dataframe with video path and label
+    df = pd.DataFrame(columns=['Video_path', 'label'])
+    # avoid .DS_Store
+
+    def remove_ds_store(directory):
+        for dirpath, dirnames, filenames in os.walk(directory):
+            # Remove .DS_Store files in the current directory
+            if ".DS_Store" in filenames:
+                os.remove(os.path.join(dirpath, ".DS_Store"))
+                print(f"Removed .DS_Store file from {dirpath}")
+
+            # Recursively remove .DS_Store files in subdirectories
+            for dirname in dirnames:
+                subdir = os.path.join(dirpath, dirname)
+                remove_ds_store(subdir)
+
+    remove_ds_store(data_folder)
+
+    for folder in os.listdir(data_folder):
+        for video in os.listdir(os.path.join(data_folder, folder)):
+            # print(folder)
+            df = df.append({'Video_path':os.path.join(data_folder, folder, video), 'label':folder}, ignore_index=True)
+
+    # save the dataframe as a csv file
+    df.to_csv('data_temporal/' + filename + '.csv', index=False)
+
+# get_data_csvs('data_temporal/train_root', 'traincsv')
+get_data_csvs('data_temporal/val_root', 'valcsv')
+
+
+
+
 
 
 
