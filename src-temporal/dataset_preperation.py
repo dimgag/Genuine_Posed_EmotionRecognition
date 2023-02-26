@@ -4,12 +4,25 @@ import shutil
 import random
 import pandas as pd
 
+# !rm -rf `find -type d -name .ipynb_checkpoints`
+def rename_filenames(directory):
+    for dirpath, dirnames, filenames in os.walk(directory):
+        # Rename directories in the current directory
+        for filename in filenames:
+            old_filename = os.path.join(dirpath, filename)
+            new_filename = os.path.join(dirpath, filename.upper())
+            os.rename(old_filename, new_filename)
+
 def remove_ds_store(directory):
     for dirpath, dirnames, filenames in os.walk(directory):
         # Remove .DS_Store files in the current directory
         if ".DS_Store" in filenames:
             os.remove(os.path.join(dirpath, ".DS_Store"))
             print(f"Removed .DS_Store file from {dirpath}")
+            
+        if ".ipynb_checkpoints" in filenames:
+            os.remove(os.path.join(dirpath, ".ipynb_checkpoints"))
+            print(f"Removed .ipynb_checkpoints file from {dirpath}")
 
         # Recursively remove .DS_Store files in subdirectories
         for dirname in dirnames:
@@ -58,7 +71,7 @@ import os
 
 def rename_folders(directory):
     mapping = {
-        "D2N2Sur": "fake_surprise",
+        "D2N2SUR": "fake_surprise",
         "H2N2A": "fake_angry",
         "H2N2C": "fake_contempt",
         "H2N2D": "fake_disgust",
@@ -69,7 +82,7 @@ def rename_folders(directory):
         "N2D": "real_disgust",
         "N2H": "real_happy",
         "N2S": "real_sad",
-        "N2Sur": "real_surprise"
+        "N2SUR": "real_surprise"
     }
 
     for dirpath, dirnames, filenames in os.walk(directory):
@@ -116,19 +129,17 @@ def get_data_csvs(data_folder, filename):
     df.to_csv('data_temporal/' + filename + '.csv', index=False)
 
 # get_data_csvs('data_temporal/train_root', 'traincsv')
-get_data_csvs('data_temporal/val_root', 'valcsv')
+# get_data_csvs('data_temporal/val_root', 'valcsv')
 
 
 
 
-
-
-
-input_dir = 'data_temporal/FakeTrue_DB'
-output_dir = 'data_temporal'
-train_val_split = 0.8
-
-remove_ds_store(input_dir)
-convert_dataset(input_dir, output_dir, train_val_split)
-rename_folders('data_temporal/train_root')
-rename_folders('data_temporal/val_root')
+if __name__ == '__main__':    
+    input_dir = 'data_temporal/FakeTrue_DB'
+    output_dir = 'data_temporal'
+    train_val_split = 0.8
+    rename_filenames(input_dir)
+    remove_ds_store(input_dir)
+    convert_dataset(input_dir, output_dir, train_val_split)
+    rename_folders('data_temporal/train_root')
+    rename_folders('data_temporal/val_root')
