@@ -4,7 +4,9 @@ import shutil
 import random
 import pandas as pd
 
-# !rm -rf `find -type d -name .ipynb_checkpoints`
+# Run this in terminal to avoid .ipynb_checkpoints
+#!rm -rf `find -type d -name .ipynb_checkpoints`
+
 def rename_filenames(directory):
     for dirpath, dirnames, filenames in os.walk(directory):
         # Rename directories in the current directory
