@@ -45,5 +45,5 @@ optimizer = AdamW(model.parameters(), lr=1e-4)
 
 # Set trainer
 Trainer = trainer_factory("single_label_classification")
-trainer = Trainer(datamodule, model, optimizer=optimizer, max_epochs=8)
+trainer = Trainer(datamodule, model, optimizer=optimizer, max_epochs=30, gpus=1, )
 trainer.fit()
