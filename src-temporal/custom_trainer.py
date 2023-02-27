@@ -12,10 +12,13 @@ from tqdm.auto import tqdm
 import video_transformers.data
 from video_transformers.modeling import VideoModel
 from video_transformers.schedulers import get_linear_scheduler_with_warmup
-from video_transformers.tasks.single_label_classification import SingleLabelClassificationTaskMixin
 from video_transformers.tracking import TensorBoardTracker
 from video_transformers.utils.extra import scheduler_to_config
 from video_transformers.utils.file import increment_path
+
+# from video_transformers.tasks.single_label_classification import SingleLabelClassificationTaskMixin
+
+from custom_task import SingleLabelClassificationTaskMixin
 
 logger = get_logger(__name__)
 
