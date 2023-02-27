@@ -69,6 +69,7 @@ class BaseTrainer:
         self._set_scheduler(scheduler, max_epochs)
         self._set_loss_function(loss_function)
         self._set_trackers(trackers, experiment_name)
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.accelerator = Accelerator(
             cpu=cpu, mixed_precision=mixed_precision, log_with=self.trackers, logging_dir=self.experiment_dir
@@ -161,6 +162,18 @@ class BaseTrainer:
     @property
     def last_val_result(self):
         return None
+
+    def training_step_acc(self, datamodule):
+        _, inputs, targets = datamodule # Only unpack the first two values of the batch
+        inputs = inputs.to(self.device)
+        targets = targets.to(self.device)
+        with torch.no_grad():
+            outputs = self.model(inputs)
+            _, predicted = torch.max(outputs.data, 1)
+            total = targets.size(0)
+            correct = (predicted == targets).sum().item()
+            acc = correct / total
+        return acc
 
     def _set_optimizer(self, model, optimizer):
         if optimizer is None:
@@ -274,7 +287,9 @@ class BaseTrainer:
 
             batch = next(train_dataloader_iter)
             loss = self.training_step(batch)
-            train_loss += loss
+            # train_loss += loss
+            # FIX ERROR
+            train_loss += sum(loss)
 
             # add accuracy
             train_acc += self.training_step_acc(batch)

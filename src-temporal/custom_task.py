@@ -30,8 +30,8 @@ class Combine:
 class SingleLabelClassificationTaskMixin(TaskMixin):
     def __init__(self, *args, **kwargs):
         super(SingleLabelClassificationTaskMixin, self).__init__(*args, **kwargs)
-        self._train_metrics = Combine(["f1", "precision", "recall, loss, accuracy"])
-        self._val_metrics = Combine(["f1", "precision", "recall, loss, accuracy"])
+        self._train_metrics = Combine(["f1", "precision", "recall", "accuracy"])
+        self._val_metrics = Combine(["f1", "precision", "recall", "accuracy"])
         self._last_train_result = None
         self._last_val_result = None
         self.task = "single_label_classification"
