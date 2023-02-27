@@ -8,58 +8,45 @@ from dataset import SASEFE_MTL_TEST
 from tqdm.auto import tqdm
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 
 def visualize_model(model, prediction_text_fn, num_images=6):
-	was_training = model.training
-	model.eval()
-	images_so_far = 0
-	fig = plt.figure()
-	
-	counter = 0
+    was_training = model.training
+    model.eval()
+    images_so_far = 0
+    fig, axs = plt.subplots(2, num_images, figsize=(20, 6))
+    plt.subplots_adjust(hspace=0.4, wspace=0.4)
+    
+    counter = 0
+    
+    for i, data in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
+        counter +=1
+        inputs = data["image"].to(device)
+        real_fake_label = data["real_fake"].to(device) 
+        emotion_label = data["emotion"].to(device)
+        real_fake_output, emotion_output = model(inputs)
+        _, preds_real_fake = torch.max(real_fake_output.data, 1)
+        _, preds_emotion = torch.max(emotion_output.data, 1)
 
-	with torch.no_grad():
-		for i, data in tqdm(enumerate(test_dataloader), total=len(test_dataloader)): 
-			counter += 1
-			inputs = data["image"].to(device)
-
-			real_fake_label = data["real_fake"].to(device)
-			emotion_label = data["emotion"].to(device)
-			
-			real_fake_output, emotion_output = model(inputs)
-
-
-			# for j in range(inputs.size()[0]):
-			# 	images_so_far += 1 
-			# 	ax = plt.subplot(num_images//2, 2, images_so_far)
-			# 	ax.axis('off')
-			# 	ax.set_title('predicted: {}'.format(prediction_text_fn(real_fake_output, j)))
-			# 	plt.imshow(inputs.cpu().data[j])
-
-			# 	if images_so_far == num_images:
-			# 		model.train(mode=was_training)
-			# 		return
-				
-			# for j in range(inputs.size()[0]):
-			# 	images_so_far += 1 
-			# 	ax = plt.subplot(num_images//2, 2, images_so_far)
-			# 	ax.axis('off')
-			# 	ax.set_title('predicted: {}'.format(prediction_text_fn(emotion_output, j)))
-			# 	plt.imshow(inputs.cpu().data[j])
-			# 	plt.show()
-
-			# 	if images_so_far == num_images:
-			# 		model.train(mode=was_training)
-			# 		return
-
-		model.train(mode=was_training)
+        for j in range(inputs.size()[0]):
+            if images_so_far >= num_images:
+                model.train(mode=was_training)
+                return
+            ax = axs[0, images_so_far]
+            ax.axis('off')
+            ax.set_title('predicted: {}'.format(prediction_text_fn(emotion_output, real_fake_output, j)))
+            image = inputs.cpu().data[j].numpy().transpose((1, 2, 0))  # transpose the image data
+            ax.imshow(image)
+            images_so_far += 1
+    
+        model.train(mode=was_training)
 
 
-
-
-def multi_prediction_text_fn(emotion_output,real_fake_output,idx):
-	_, preds_real_fake = torch.max(real_fake_output.data, 1)
-	_, preds_emotion = torch.max(emotion_output.data, 1)
-	return '{}, {}'.format(preds_real_fake.item(), preds_emotion.item())
+def multi_prediction_text_fn(emotion_output, real_fake_output, idx):
+    _, preds_emotion = torch.max(emotion_output.data, 1)
+    _, preds_real_fake = torch.max(real_fake_output.data, 1)
+    return '{}, {}'.format(preds_real_fake[idx].item(), preds_emotion[idx].item())
 
 
 
@@ -90,13 +77,11 @@ if __name__ == '__main__':
 	# Load the data
     test_dir = "data_mtl/test"
     test_image_paths = os.listdir(test_dir)
-
     test_dataset = SASEFE_MTL_TEST(test_image_paths)
     test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=True)
-    
-	# Visualize the model
 
-    visualize_model(loaded_model, multi_prediction_text_fn)
+	# Visualize the model
+    visualize_model(loaded_model, multi_prediction_text_fn, num_images=6)
     
     
     
