@@ -39,35 +39,35 @@ optimizer = AdamW(model.parameters(), lr=1e-4)
 criterion = nn.CrossEntropyLoss()
 
 # Load the checkpoint
-checkpoint = torch.load('runs/exp/checkpoint/pytorch_model.bin')
+checkpoint = torch.load('runs/exp/checkpoint/pytorch_model.bin', map_location=torch.device('cpu'))
 model.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 epoch = checkpoint['epoch']
 loss = checkpoint['loss']
 
 # Number of epochs
-num_epochs = 10
+# num_epochs = 10
 
-# Continue training from the loaded checkpoint
-for epoch in range(epoch, num_epochs):
-    for i, (inputs, labels) in enumerate(train_loader):
-        # Forward pass
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
+# # Continue training from the loaded checkpoint
+# for epoch in range(epoch, num_epochs):
+#     for i, (inputs, labels) in enumerate(train_loader):
+#         # Forward pass
+#         outputs = model(inputs)
+#         loss = criterion(outputs, labels)
 
-        # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+#         # Backward and optimize
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
 
-        if (i+1) % 10 == 0:
-            print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
-                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+#         if (i+1) % 10 == 0:
+#             print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
+#                    .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
 
-    # Save checkpoint after each epoch
-    torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss,
-            }, 'runs/exp/checkpoint/pytorch_model_epoch{}.bin'.format(epoch+1))
+#     # Save checkpoint after each epoch
+#     torch.save({
+#             'epoch': epoch,
+#             'model_state_dict': model.state_dict(),
+#             'optimizer_state_dict': optimizer.state_dict(),
+#             'loss': loss,
+#             }, 'runs/exp/checkpoint/pytorch_model_epoch{}.bin'.format(epoch+1))
