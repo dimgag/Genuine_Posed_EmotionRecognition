@@ -12,7 +12,7 @@ from video_transformers.heads import LinearHead
 # from torchvision.transforms._transforms_video import CenterCropVideo, NormalizeVideo
 # from pytorchvideo.transforms import ApplyTransformToKey, ShortSideScale, UniformTemporalSubsample, UniformCropVideo
 
-from train import trainer
+from custom_trainer import trainer_factory
 
 # Define the device:
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -75,4 +75,8 @@ model = VideoModel(backbone, head)
 optimizer = AdamW(model.parameters(), lr=1e-4)
 
 # Train the model
-trainer(model, optimizer, datamodule, num_epochs=30, device=device)
+Trainer = trainer_factory("single_label_classification")
+trainer = Trainer(datamodule, model, optimizer=optimizer, max_epochs=30, gpus=1, )
+trainer.fit()
+
+
