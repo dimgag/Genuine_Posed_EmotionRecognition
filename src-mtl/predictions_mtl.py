@@ -11,16 +11,17 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
+
 def visualize_model(model, prediction_text_fn, num_images=6):
     was_training = model.training
     model.eval()
     images_so_far = 0
-    fig, axs = plt.subplots(2, num_images, figsize=(20, 6))
+    fig, axs = plt.subplots(2, num_images, figsize=(40, 16))
     plt.subplots_adjust(hspace=0.4, wspace=0.4)
     
     counter = 0
     
-    for i, data in tqdm(enumerate(test_dataloader), total=len(test_dataloader)):
+    for i, data in enumerate(test_dataloader):
         counter +=1
         inputs = data["image"].to(device)
         real_fake_label = data["real_fake"].to(device) 
@@ -34,10 +35,12 @@ def visualize_model(model, prediction_text_fn, num_images=6):
                 model.train(mode=was_training)
                 return
             ax = axs[0, images_so_far]
-            ax.axis('off')
-            ax.set_title('predicted: {}'.format(prediction_text_fn(emotion_output, real_fake_output, j)))
+            ax.axis('off')		
+            ax.set_title('predicted: {}, true_rf: {}, true_emo: {}'.format(prediction_text_fn(emotion_output, real_fake_output, j), real_fake_label[j], emotion_label[j]))
             image = inputs.cpu().data[j].numpy().transpose((1, 2, 0))  # transpose the image data
             ax.imshow(image)
+            filename = 'src-mtl/{}.png'.format(counter)
+            plt.savefig(filename)
             images_so_far += 1
     
         model.train(mode=was_training)
@@ -47,6 +50,9 @@ def multi_prediction_text_fn(emotion_output, real_fake_output, idx):
     _, preds_emotion = torch.max(emotion_output.data, 1)
     _, preds_real_fake = torch.max(real_fake_output.data, 1)
     return '{}, {}'.format(preds_real_fake[idx].item(), preds_emotion[idx].item())
+
+
+
 
 
 
@@ -85,4 +91,4 @@ if __name__ == '__main__':
     
     
     
-    
+# A small issue with the code is that the image includes also 6 empty boxes in axis 1.
