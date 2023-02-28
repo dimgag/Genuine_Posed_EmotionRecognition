@@ -1,0 +1,6 @@
+README.md
+timesformer.egg-info/PKG-INFO
+timesformer.egg-info/SOURCES.txt
+timesformer.egg-info/dependency_links.txt
+timesformer.egg-info/requires.txt
+timesformer.egg-info/top_level.txt
