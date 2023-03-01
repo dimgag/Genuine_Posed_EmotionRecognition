@@ -1,29 +1,50 @@
-# I want to generate frames from videos and then use them to train the model
-# The names of the frames should be in the following format:
-# [emotion]_[real/fake]_[frame_number].jpg
+'''
+I want to generate frames from videos and then use them to train the model
+The names of the frames should be in the following format:
+[emotion]_[real/fake]_[frame_number].jpg
+
+Also we want to rename the files in the test folder to 0 and 1
+A file name looks like this:
+real_angry_H2N2A.MP4age103.jpg
+
+fake = 0
+real = 1
+
+happy = 0
+sad = 1
+surprise = 2
+disgust = 3
+contempt = 4
+angry = 5
+
+Rename file should look like this:
+1_5_H2N2A.MP4age103.jpg
+'''
 
 import os 
 import cv2
 import shutil
+import numpy as np
+from tqdm.auto import tqdm
 
-## Create the forders for train and test
 
-# data_dir = "data/SASE-FE/FakeTrue_DB"
-# persons = os.listdir(data_dir)
-# for person in persons:
-#     if ".DS_Store" in person:
-#         persons.remove(".DS_Store")
-#     for person in persons[:40]:
-#         # copy persons folder to train
-#         if not os.path.exists("data_mtl/train/" + person):
-#             shutil.copytree(data_dir + "/" + person, "data_mtl/train/" + person)
-#     print("Copied train files done")
+# Create the forders for train and test
+data_dir = "data/SASE-FE/FakeTrue_DB"
+persons = os.listdir(data_dir)
+for person in persons:
+    if ".DS_Store" in person:
+        persons.remove(".DS_Store")
+    for person in persons[:40]:
+        # copy persons folder to train
+        if not os.path.exists("data_mtl/train/" + person):
+            shutil.copytree(data_dir + "/" + person, "data_mtl/train/" + person)
+    print("Copied train files done")
     
-#     for person in persons[40:50]:
-#         # copy persons folder to test
-#         if not os.path.exists("data/test/" + person):
-#             shutil.copytree(data_dir + "/" + person, "data_mtl/test/" + person)
-#     print("Copied test files done")
+    for person in persons[40:50]:
+        # copy persons folder to test
+        if not os.path.exists("data/test/" + person):
+            shutil.copytree(data_dir + "/" + person, "data_mtl/test/" + person)
+    print("Copied test files done")
 
 
 
@@ -163,13 +184,12 @@ def main():
     data_dir = "data/SASE-FE/FakeTrue_DB"
     persons = os.listdir(data_dir)
 
-
     # Train folder
     train_prep = "data_mtl/train"
-#     r, r_subdir, r_file = get_files_paths(train_prep)
+    r, r_subdir, r_file = get_files_paths(train_prep)
 
-#     for video, dirname, file in zip(r, r_subdir, r_file):
-#         video2frames(video, dirname, file, 'train')
+    for video, dirname, file in zip(r, r_subdir, r_file):
+        video2frames(video, dirname, file, 'train')
     if '.DS_Store' in os.listdir('data_mtl/train'):
         os.remove('data_mtl/train' + "/" + '.DS_Store')
         print("Removed .DS_Store")
@@ -179,22 +199,71 @@ def main():
     
     crop_faces(train_prep)
 
-    #######################################################
+
     # Test folder
-#     test_prep = "data_mtl/test"
-# #     r, r_subdir, r_file = get_files_paths(test_prep)
+    test_prep = "data_mtl/test"
+    r, r_subdir, r_file = get_files_paths(test_prep)
 
-# #     for video, dirname, file in zip(r, r_subdir, r_file):
-# #         video2frames(video, dirname, file, 'test')
-#     if '.DS_Store' in os.listdir('data_mtl/test'):
-#         os.remove('data_mtl/test' + "/" + '.DS_Store')
-#         print("Removed .DS_Store")
+    for video, dirname, file in zip(r, r_subdir, r_file):
+        video2frames(video, dirname, file, 'test')
+    if '.DS_Store' in os.listdir('data_mtl/test'):
+        os.remove('data_mtl/test' + "/" + '.DS_Store')
+        print("Removed .DS_Store")
     
-#     for file in os.listdir(test_prep):
-#         os.rename(os.path.join(test_prep, file), os.path.join(test_prep, file.replace(' ', '')))
-#     crop_faces(test_prep)
+    for file in os.listdir(test_prep):
+        os.rename(os.path.join(test_prep, file), os.path.join(test_prep, file.replace(' ', '')))
+    crop_faces(test_prep)
 
 
+def rename_real_fake(dir_image_paths):
+    # for file in dir_image_paths:
+    print("Rename the real fake started")
+    for file in tqdm(dir_image_paths):
+        # print("File name: ", file)
+        if file.split("_")[0] == "real":
+            real_fake_name = file.replace("real", "1")
+            os.rename(os.path.join(dir, file), os.path.join(dir, real_fake_name))
+
+        elif file.split("_")[0] == "fake":
+            real_fake_name = file.replace("fake", "0")
+            os.rename(os.path.join(dir, file), os.path.join(dir, real_fake_name))
+    print("Rename the real fake finished")
+
+
+# Rename the emotions:
+def rename_emotions(dir_image_paths):
+    print("Rename the emotions started")
+    for file in tqdm(dir_image_paths):
+        if file.split("_")[1] == "happy":
+            emotion_name = file.replace("happy", "0")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+
+        elif file.split("_")[1] == "sad":
+            emotion_name = file.replace("sad", "1")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+
+        elif file.split("_")[1] == "surprise":
+            emotion_name = file.replace("surprise", "2")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+
+        elif file.split("_")[1] == "disgust":
+            emotion_name = file.replace("disgust", "3")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+
+        elif file.split("_")[1] == "contempt":
+            emotion_name = file.replace("contempt", "4")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+
+        elif file.split("_")[1] == "angry":
+            emotion_name = file.replace("angry", "5")
+            os.rename(os.path.join(dir, file), os.path.join(dir, emotion_name))
+    print("Rename the emotions finished")
 
 if __name__ == '__main__':
     main()
+    train = 'data_mtl/train'
+    test = 'data_mtl/test'
+    train_dir_image_paths = os.listdir(train)
+    test_dir_image_paths = os.listdir(test)
+    rename_emotions(train_dir_image_paths)
+    rename_real_fake(test_dir_image_paths)
