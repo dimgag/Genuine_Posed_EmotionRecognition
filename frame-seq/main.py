@@ -81,3 +81,5 @@ if __name__ == "__main__":
     get_val_frames()
 
 # WHERE ARE THE FRAMES GOING?
+#Source: https://www.analyticsvidhya.com/blog/2019/09/step-by-step-deep-learning-tutorial-video-classification-python/
+# https://www.youtube.com/watch?v=TyM1F0fvwoI
