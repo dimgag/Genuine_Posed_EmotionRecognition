@@ -4,14 +4,10 @@ from video_transformers import VideoModel
 from video_transformers.backbones.transformers import TransformersBackbone
 from video_transformers.data import VideoDataModule
 from video_transformers.heads import LinearHead
-
 from video_transformers.trainer import trainer_factory
-
 from pytorchvideo.data.encoded_video import EncodedVideo
-
 from torchvision.transforms._transforms_video import CenterCropVideo, NormalizeVideo
 from pytorchvideo.transforms import ApplyTransformToKey, ShortSideScale, UniformTemporalSubsample, UniformCropVideo
-
 
 
 # Define the device:
@@ -39,8 +35,6 @@ head = LinearHead(hidden_size=backbone.num_features, num_classes=datamodule.num_
 
 # Compile the model
 model = VideoModel(backbone, head)
-
-
 optimizer = AdamW(model.parameters(), lr=1e-4)
 
 # Set trainer

@@ -3,9 +3,12 @@ import os
 import shutil
 import random
 import pandas as pd
+import subprocess
 
-# Run this in terminal to avoid .ipynb_checkpoints
-#!rm -rf `find -type d -name .ipynb_checkpoints`
+# Run this "rm -rf `find -type d -name .ipynb_checkpoints`" in terminal to avoid .ipynb_checkpoints
+
+subprocess.run(["rm", "-rf", "`find", "-type", "d", "-name", ".ipynb_checkpoints`"])
+
 
 def rename_filenames(directory):
     for dirpath, dirnames, filenames in os.walk(directory):
@@ -98,10 +101,6 @@ def rename_folders(directory):
 
 
 
-
-
-
-# ###################################################
 def get_data_csvs(data_folder, filename):
     ''' Extracts the video paths and labels from the dataset and saves them in a csv file'''
     # Create a dataframe with video path and label
@@ -130,8 +129,7 @@ def get_data_csvs(data_folder, filename):
     # save the dataframe as a csv file
     df.to_csv('data_temporal/' + filename + '.csv', index=False)
 
-# get_data_csvs('data_temporal/train_root', 'traincsv')
-# get_data_csvs('data_temporal/val_root', 'valcsv')
+
 
 
 
@@ -145,3 +143,5 @@ if __name__ == '__main__':
     convert_dataset(input_dir, output_dir, train_val_split)
     rename_folders('data_temporal/train_root')
     rename_folders('data_temporal/val_root')
+    # get_data_csvs('data_temporal/train_root', 'traincsv')
+    # get_data_csvs('data_temporal/val_root', 'valcsv')
