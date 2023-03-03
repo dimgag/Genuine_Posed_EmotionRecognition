@@ -53,8 +53,6 @@ def create_csv_files():
     get_data_csvs(data_val, 'valcsv')
 
 
-
-
 def get_val_frames():
     val = pd.read_csv('frame-seq/valcsv.csv')
     ''' Extracts frames from a video and returns a list of frames'''
