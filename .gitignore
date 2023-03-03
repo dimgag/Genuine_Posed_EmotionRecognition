@@ -65,3 +65,6 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+
+# Large files:
+shape_predictor_68_face_landmarks.dat

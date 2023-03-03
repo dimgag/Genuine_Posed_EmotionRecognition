@@ -145,3 +145,5 @@ if __name__ == '__main__':
     rename_folders('data_temporal/val_root')
     # get_data_csvs('data_temporal/train_root', 'traincsv')
     # get_data_csvs('data_temporal/val_root', 'valcsv')
+
+
