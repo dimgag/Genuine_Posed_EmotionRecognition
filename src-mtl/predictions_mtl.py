@@ -59,7 +59,7 @@ def multi_prediction_text_fn(emotion_output, real_fake_output, idx):
 
 if __name__ == '__main__':
 	# Load the model.pth - change the path to the model you want to evaluate
-    path = 'experiments/exp1-chimeranet/model.pth'
+    path = 'experiments/experiments_MTL/exp1-chimeranet/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -84,11 +84,12 @@ if __name__ == '__main__':
     test_dir = "data_mtl/test"
     test_image_paths = os.listdir(test_dir)
     test_dataset = SASEFE_MTL_TEST(test_image_paths)
+ 
+   
     test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=True)
 
 	# Visualize the model
-    visualize_model(loaded_model, multi_prediction_text_fn, num_images=6)
+    visualize_model(loaded_model, multi_prediction_text_fn, num_images=1)
     
     
     
-# A small issue with the code is that the image includes also 6 empty boxes in axis 1.
