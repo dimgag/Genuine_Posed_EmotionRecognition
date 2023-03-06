@@ -5,6 +5,7 @@
 /data/*
 /data/test/*
 /data_mtl/*
+/data_mtl_withfacialandmarks/*
 /data_temporal/FakeTrue_DB/*
 /data_temporal/train_root/*
 /data_temporal/val_root/*
@@ -12,7 +13,7 @@
 /docs/*
 /experiments/*
 /runs/*
-
+/dlib-19.9
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source
