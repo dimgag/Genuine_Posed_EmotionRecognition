@@ -104,7 +104,7 @@ def rename_folders(directory):
 def get_data_csvs(data_folder, filename):
     ''' Extracts the video paths and labels from the dataset and saves them in a csv file'''
     # Create a dataframe with video path and label
-    df = pd.DataFrame(columns=['Video_path', 'label'])
+    df = pd.DataFrame(columns=['Video_path', 'Label'])
     # avoid .DS_Store
 
     def remove_ds_store(directory):
@@ -124,7 +124,30 @@ def get_data_csvs(data_folder, filename):
     for folder in os.listdir(data_folder):
         for video in os.listdir(os.path.join(data_folder, folder)):
             # print(folder)
-            df = df.append({'Video_path':os.path.join(data_folder, folder, video), 'label':folder}, ignore_index=True)
+            df = df.append({'Video_path':os.path.join(data_folder, folder, video), 'Label':folder}, ignore_index=True)
+            # Add numbers to the labels to make them integers
+            mapping = {'fake_surprise':0,
+                        'fake_angry':1,
+                        'fake_contempt':2,
+                        'fake_disgust':3,
+                        'fake_sad':4,
+                        'fake_happy':5,
+                        'real_angry':6,
+                        'real_contempt':7,
+                        'real_disgust':8,
+                        'real_happy':9,
+                        'real_sad':10,
+                        'real_surprise':11}
+            # rename the labels
+            if folder in mapping:
+                df['Label'] = df['Label'].replace(folder, mapping[folder])
+
+            
+            
+
+
+
+                       
 
     # save the dataframe as a csv file
     df.to_csv('data_temporal/' + filename + '.csv', index=False)
@@ -135,15 +158,15 @@ def get_data_csvs(data_folder, filename):
 
 
 if __name__ == '__main__':    
-    input_dir = 'data_temporal/FakeTrue_DB'
-    output_dir = 'data_temporal'
-    train_val_split = 0.8
-    rename_filenames(input_dir)
-    remove_ds_store(input_dir)
-    convert_dataset(input_dir, output_dir, train_val_split)
-    rename_folders('data_temporal/train_root')
-    rename_folders('data_temporal/val_root')
-    # get_data_csvs('data_temporal/train_root', 'traincsv')
-    # get_data_csvs('data_temporal/val_root', 'valcsv')
+    # input_dir = 'data_temporal/FakeTrue_DB'
+    # output_dir = 'data_temporal'
+    # train_val_split = 0.8
+    # rename_filenames(input_dir)
+    # remove_ds_store(input_dir)
+    # convert_dataset(input_dir, output_dir, train_val_split)
+    # rename_folders('data_temporal/train_root')
+    # rename_folders('data_temporal/val_root')
+    get_data_csvs('data_temporal/train_root', 'train')
+    get_data_csvs('data_temporal/val_root', 'val')
 
 
