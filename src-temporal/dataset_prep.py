@@ -99,6 +99,13 @@ def rename_folders(directory):
                 new_dirname = os.path.join(dirpath, new_dirname)
                 os.rename(old_dirname, new_dirname)
 
+def rename_filenames(directory):
+    for dirpath, dirnames, filenames in os.walk(directory):
+        # remove spaces in filenames
+        for filename in filenames:
+            old_filename = os.path.join(dirpath, filename)
+            new_filename = os.path.join(dirpath, filename.replace(" ", ""))
+            os.rename(old_filename, new_filename)
 
 
 def get_data_csvs(data_folder, filename):
@@ -166,6 +173,9 @@ if __name__ == '__main__':
     # convert_dataset(input_dir, output_dir, train_val_split)
     # rename_folders('data_temporal/train_root')
     # rename_folders('data_temporal/val_root')
+    rename_filenames('data_temporal/train_root')
+    rename_filenames('data_temporal/val_root')
+    
     get_data_csvs('data_temporal/train_root', 'train')
     get_data_csvs('data_temporal/val_root', 'val')
 
