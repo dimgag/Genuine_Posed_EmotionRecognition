@@ -157,7 +157,7 @@ def get_data_csvs(data_folder, filename):
                        
 
     # save the dataframe as a csv file
-    df.to_csv('data_temporal/' + filename + '.csv', index=False)
+    df.to_csv('data_temporal/' + filename + '.csv', sep=' ', index=False)
 
 
 
@@ -173,9 +173,8 @@ if __name__ == '__main__':
     # convert_dataset(input_dir, output_dir, train_val_split)
     # rename_folders('data_temporal/train_root')
     # rename_folders('data_temporal/val_root')
-    rename_filenames('data_temporal/train_root')
-    rename_filenames('data_temporal/val_root')
-    
+    # rename_filenames('data_temporal/train_root')
+    # rename_filenames('data_temporal/val_root')
     get_data_csvs('data_temporal/train_root', 'train')
     get_data_csvs('data_temporal/val_root', 'val')
 
