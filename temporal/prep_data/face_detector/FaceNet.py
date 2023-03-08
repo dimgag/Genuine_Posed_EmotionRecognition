@@ -3,15 +3,22 @@ import numpy as np
 import glob
 import cv2
 from facenet_pytorch import MTCNN
+# from facenet_pytorch.models.mtcnn import detect_faces
 import math
 import pandas
 from PIL import Image
 import time
+import torch
 """
 reading all videos in given dir (including subdirs and subsubdirs)
 return the aligend face images of each video
 """
-detector = MTCNN()
+# detector = MTCNN()
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+detector = MTCNN(device=device, post_process=False)
+
+
 import argparse
 parser = argparse.ArgumentParser(description="MTCNN video face preprocessing")
 parser.add_argument('-i', '--input_dir', type= str, default = None)
@@ -21,6 +28,8 @@ parser.add_argument('--size', type=int, default = 256 , help='face size nxn')
 parser.add_argument('-q', '--quiet', action='store_true', help='whether to output face detection results')
 parser.add_argument('--save_fl', type=str, help='File path to save the output features')
 args = parser.parse_args()
+
+
 def video_parser(input_dir, output_dir):
     video_ext = ['.avi', '.mp4', '.MP4','.flv']
     video_input_paths = []
@@ -36,10 +45,11 @@ def video_parser(input_dir, output_dir):
             video_output_dirs.extend(output_video_dirs)
     return video_input_paths, video_output_dirs
 
+
 def crop_face(image, rotate = True, quiet_mode=True):
     height, width, channels = image.shape #cv2 image
     # detections = detector.detect_faces(image)
-    detections = detector.detect(image)
+    detections = detector.detect(image) # Fix bug: replace detect_faces -> detect
     image = PIL_image_convert(image)
 
     if detections==None or len(detections)==0:
@@ -49,6 +59,7 @@ def crop_face(image, rotate = True, quiet_mode=True):
     if len(detections) > 1:
         if not quiet_mode:
             print("*** Multi Faces ,get the face with largest confidence ***")
+            
     detection = sorted(detections, key=lambda x: x['confidence'], reverse=True)[0]
     bounding_box = detection['box']
     keypoints = detection['keypoints']
