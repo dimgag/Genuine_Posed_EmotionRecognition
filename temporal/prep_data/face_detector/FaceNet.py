@@ -19,6 +19,7 @@ parser.add_argument('-o', '--output_dir', type= str, default = None)
 parser.add_argument( '--alignment', action='store_false', help='default: face alignment')
 parser.add_argument('--size', type=int, default = 256 , help='face size nxn')
 parser.add_argument('-q', '--quiet', action='store_true', help='whether to output face detection results')
+parser.add_argument('--save_fl', type=str, help='File path to save the output features')
 args = parser.parse_args()
 def video_parser(input_dir, output_dir):
     video_ext = ['.avi', '.mp4', '.MP4','.flv']
@@ -37,7 +38,8 @@ def video_parser(input_dir, output_dir):
 
 def crop_face(image, rotate = True, quiet_mode=True):
     height, width, channels = image.shape #cv2 image
-    detections = detector.detect_faces(image)
+    # detections = detector.detect_faces(image)
+    detections = detector.detect(image)
     image = PIL_image_convert(image)
 
     if detections==None or len(detections)==0:

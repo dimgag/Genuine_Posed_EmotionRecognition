@@ -4,6 +4,7 @@ import peakutils
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import cv2
 
 '''
     Key frame extraction using absolute difference between the pixel values of current frame and previous frame
