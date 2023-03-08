@@ -173,9 +173,12 @@ if __name__ == '__main__':
     # convert_dataset(input_dir, output_dir, train_val_split)
     # rename_folders('data_temporal/train_root')
     # rename_folders('data_temporal/val_root')
-    # rename_filenames('data_temporal/train_root')
-    # rename_filenames('data_temporal/val_root')
-    get_data_csvs('data_temporal/train_root', 'train')
-    get_data_csvs('data_temporal/val_root', 'val')
+    rename_filenames('data_temporal/train_resized')
+    rename_filenames('data_temporal/val_resized')
+    get_data_csvs('data_temporal/train_resized', 'train')
+    get_data_csvs('data_temporal/val_resized', 'val')
 
 
+
+    
+    

@@ -1,11 +1,3 @@
-# After all the videos were downloaded, 
-# resize the video to the short edge size of 256, 
-# then prepare the csv files for training, validation, and testing set as train.csv, val.csv, test.csv. 
-# The format of the csv file is:
-
-# Resize the videos to the short edge size of 256
-# python resize_videos.py --source_dir videos --output_dir videos_resized
-
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import glob
@@ -131,35 +123,3 @@ if __name__ == '__main__':
     pool = Pool(args.num_worker)
     vid_items = zip(fullpath_list, vid_list)
     pool.map(run_with_args, [(item, args) for item in vid_items])
-
-
-
-
-
-
-
-'''
-This code is a Python script that can be used to generate resized video cache from a source video directory. To use this code, you will need to do the following steps:
-
-Install required packages: This code uses the argparse, glob, os, os.path, sys, and multiprocessing Python packages. If you do not have these packages installed, you will need to install them before running the script. 
-You can use the following command to install these packages:
-
-`pip install argparse glob2 os-sys multiprocessing`
-
-Set up the source and output video directories: 
-You will need to specify the source video directory and output video directory by providing their paths as command-line arguments when running the script. 
-The source video directory is the directory that contains the original videos that you want to resize, and the output video directory is the directory where the resized videos will be stored.
-
-Run the script: Once you have set up the source and output video directories, you can run the script by typing the following command in your terminal or command prompt:
-
-Copy code
-python resize_videos.py source_video_directory output_video_directory
-You can also provide various optional command-line arguments to customize the resizing process. For example, you can use the --dense flag to generate a faster cache, the --remove-dup flag to remove duplicated frames, and the --to-mp4 flag to output videos in mp4 format.
-
-Wait for the script to finish: The script will take some time to resize all the videos in the source video directory and store them in the output video directory. Once the script is finished, you can check the output video directory to make sure that all the resized videos are there.
-
-Note: It is recommended to use this script on a computer with multiple cores or CPUs to speed up the resizing process. You can adjust the --num-worker flag to specify the number of worker processes to use for parallel processing.
-
-Example: 
-python src-temporal/resize_videos.py /Users/dim__gag/Desktop/test /Users/dim__gag/Desktop/test --dense --level 1 --remove-dup --ext mp4 --to-mp4 --scale 256 --num-worker 8
-'''
