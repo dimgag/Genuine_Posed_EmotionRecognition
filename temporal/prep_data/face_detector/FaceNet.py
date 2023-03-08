@@ -23,11 +23,11 @@ detector = MTCNN(device=device, post_process=False)
 
 import argparse
 parser = argparse.ArgumentParser(description="MTCNN video face preprocessing")
-parser.add_argument('-i', '--input_dir', type=str, default = None)
-parser.add_argument('-o', '--output_dir', type=str, default = None)
-parser.add_argument( '--alignment', action='store_false', help='default: face alignment')
+parser.add_argument('--i', '--input_dir', type=str, default = None)
+parser.add_argument('--o', '--output_dir', type=str, default = None)
+parser.add_argument('--alignment', action='store_false', help='default: face alignment')
 parser.add_argument('--size', type=int, default = 256 , help='face size nxn')
-parser.add_argument('-q', '--quiet', action='store_true', help='whether to output face detection results')
+parser.add_argument('--q', '--quiet', action='store_true', help='whether to output face detection results')
 parser.add_argument('--save_fl', type=str, help='File path to save the output features')
 args = parser.parse_args()
 
