@@ -13,6 +13,8 @@ import torch
 reading all videos in given dir (including subdirs and subsubdirs)
 return the aligend face images of each video
 """
+
+
 # detector = MTCNN()
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -21,8 +23,8 @@ detector = MTCNN(device=device, post_process=False)
 
 import argparse
 parser = argparse.ArgumentParser(description="MTCNN video face preprocessing")
-parser.add_argument('-i', '--input_dir', type= str, default = None)
-parser.add_argument('-o', '--output_dir', type= str, default = None)
+parser.add_argument('-i', '--input_dir', type=str, default = None)
+parser.add_argument('-o', '--output_dir', type=str, default = None)
 parser.add_argument( '--alignment', action='store_false', help='default: face alignment')
 parser.add_argument('--size', type=int, default = 256 , help='face size nxn')
 parser.add_argument('-q', '--quiet', action='store_true', help='whether to output face detection results')
@@ -31,7 +33,7 @@ args = parser.parse_args()
 
 
 def video_parser(input_dir, output_dir):
-    video_ext = ['.avi', '.mp4', '.MP4','.flv']
+    video_ext = ['.avi', '.mp4', '.MP4','.flv', '.mov']
     video_input_paths = []
     video_output_dirs = []
     for dirpath, dirname, filenames in os.walk(input_dir):
@@ -40,27 +42,29 @@ def video_parser(input_dir, output_dir):
             video_names = [os.path.splitext(filename)[0] for filename in filenames]
             prefix = dirpath.replace(input_dir, output_dir)
             output_video_dirs = [os.path.join(prefix, video_n) for video_n in video_names]
-            
+
             video_input_paths.extend(video_path)
             video_output_dirs.extend(output_video_dirs)
     return video_input_paths, video_output_dirs
 
 
-def crop_face(image, rotate = True, quiet_mode=True):
-    height, width, channels = image.shape #cv2 image
+def crop_face(image, rotate=True, quiet_mode=True):
+    height, width, channels = image.shape  # cv2 image
     # detections = detector.detect_faces(image)
-    detections = detector.detect(image) # Fix bug: replace detect_faces -> detect
+    detections = detector.detect(image)  # Fix bug: replace detect_faces -> detect
+    
     image = PIL_image_convert(image)
 
-    if detections==None or len(detections)==0:
+    if detections == None or len(detections) == 0:
         if not quiet_mode:
-            print("***No Face detected. ***") 
+            print("***No Face detected. ***")
         return None, None
     if len(detections) > 1:
         if not quiet_mode:
             print("*** Multi Faces ,get the face with largest confidence ***")
-            
+        
     detection = sorted(detections, key=lambda x: x['confidence'], reverse=True)[0]
+    
     bounding_box = detection['box']
     keypoints = detection['keypoints']
     lex, ley = keypoints['left_eye']
@@ -202,9 +206,10 @@ def parse_video_frames():
             cap = cv2.VideoCapture(video_input_file)
             index = 0
             total_frames += int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            filename = video_input_file.replace('\\',' ').replace('.',' ').replace('/', ' ').split()[3]
+            filename = video_input_file.replace('/',' ').replace('.',' ').replace('/', ' ').split()[3]
             codec = cv2.VideoWriter_fourcc(*'FMP4')
-            savepath = f'{video_output_dir}\{filename}.mp4'
+            # savepath = f'{video_output_dir}\{filename}.mp4'
+            savepath = os.path.join(video_output_dir, f'{filename}.mp4')
             out = cv2.VideoWriter(savepath, codec, 30.0, (size,size))
             while cap.isOpened():
                 ret, frame = cap.read()
