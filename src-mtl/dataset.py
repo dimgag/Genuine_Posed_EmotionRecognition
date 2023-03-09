@@ -11,7 +11,7 @@ class SASEFE_MTL(Dataset):
             # transforms.RandomHorizontalFlip(p=0.5), #Data Augmentation
             # transforms.RandomRotation(35), #Data Augmentation
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
+            #transforms.Normalize(mean=[0.4270, 0.3508, 0.2971], std=[0.1844, 0.1809, 0.1545])
             ])
 
 
