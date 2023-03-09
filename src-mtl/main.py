@@ -29,8 +29,8 @@ def main():
     test_dataset = SASEFE_MTL_TEST(test_image_paths)
 
     # Get the dataloaders
-    train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
+    train_dataloader = DataLoader(train_dataset, batch_size=256, shuffle=True)
+    test_dataloader = DataLoader(test_dataset, batch_size=256, shuffle=True)
 
     print("Number of training images: ", len(train_dataset))
     print("Number of test images: ", len(test_dataset))
@@ -39,6 +39,11 @@ def main():
     print("Test dataloader: ", len(test_dataloader))
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(torch.cuda.is_available())
+    
+
+    
+    # print("Device:", device)
     
     # Define the model
     # net = HydraNet()
