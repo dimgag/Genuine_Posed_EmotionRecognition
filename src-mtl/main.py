@@ -14,12 +14,12 @@ from train import train, validate
 
 def main():
     # Data directory
-    # train_dir = "data_mtl/train"
-    # test_dir = "data_mtl/test"
+    train_dir = "data_mtl/train"
+    test_dir = "data_mtl/test"
     
     # With Facial Landmarks
-    train_dir = "data_mtl_withfacialandmarks/train"
-    test_dir = "data_mtl_withfacialandmarks/test"
+    # train_dir = "data_mtl_withfacialandmarks/train"
+    # test_dir = "data_mtl_withfacialandmarks/test"
     
     train_image_paths = os.listdir(train_dir)
     test_image_paths = os.listdir(test_dir)
@@ -42,8 +42,8 @@ def main():
     
     # Define the model
     # net = HydraNet()
-    model = HydraNet().to(device)
-    # model = ChimeraNet().to(device)
+    # model = HydraNet().to(device)
+    model = ChimeraNet().to(device)
 
     # get_model_params(model)
 

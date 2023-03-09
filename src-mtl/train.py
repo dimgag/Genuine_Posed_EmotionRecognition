@@ -2,14 +2,19 @@ from tqdm.auto import tqdm
 import torch
 import torch.nn as nn
 import numpy as np
+from utils import FocalLoss
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def train(model, trainloader, optimizer):
     model.train()
     print("Training model...")
-    emotion_loss = nn.CrossEntropyLoss()
-    real_fake_loss = nn.CrossEntropyLoss() 
+    # emotion_loss = nn.CrossEntropyLoss()
+    # real_fake_loss = nn.CrossEntropyLoss()
+
+    emotion_loss = FocalLoss()
+    real_fake_loss = FocalLoss()
+
     total_training_loss = 0.0
     emotion_training_acc = 0
     real_fake_training_acc = 0

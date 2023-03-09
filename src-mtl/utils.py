@@ -1,4 +1,6 @@
 import torch
+import torch.nn.functional as F
+import torch.nn as nn
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -154,3 +156,19 @@ def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     sns.heatmap(df_cm_emo, annot=True)
     plt.savefig('cm_emotions.png')
     
+
+
+class FocalLoss(nn.Module):
+    def __init__(self, alpha=1.0, gamma=2.0):
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+    def forward(self, inputs, targets):
+        '''
+        :param inputs: batch_size * dim
+        :param targets: (batch,)
+        :return:
+        '''
+        bce_loss = F.cross_entropy(inputs, targets)
+        loss = self.alpha * (1 - torch.exp(-bce_loss)) ** self.gamma * bce_loss
+        return loss
