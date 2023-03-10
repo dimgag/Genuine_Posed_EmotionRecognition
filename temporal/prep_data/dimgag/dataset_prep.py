@@ -6,9 +6,7 @@ import pandas as pd
 import subprocess
 
 # Run this "rm -rf `find -type d -name .ipynb_checkpoints`" in terminal to avoid .ipynb_checkpoints
-
 # subprocess.run(["rm", "-rf", "`find", "-type", "d", "-name", ".ipynb_checkpoints`"])
-
 
 def rename_filenames(directory):
     for dirpath, dirnames, filenames in os.walk(directory):
@@ -149,18 +147,9 @@ def get_data_csvs(data_folder, filename):
             if folder in mapping:
                 df['Label'] = df['Label'].replace(folder, mapping[folder])
 
-            
-            
-
-
-
-                       
 
     # save the dataframe as a csv file
     df.to_csv('data_temporal/' + filename + '.csv', sep=' ', index=False)
-
-
-
 
 
 
@@ -177,8 +166,3 @@ if __name__ == '__main__':
     rename_filenames('data_temporal/val_root_256')
     get_data_csvs('data_temporal/train_root_256', 'train')
     get_data_csvs('data_temporal/val_root_256', 'val')
-
-
-
-    
-    
