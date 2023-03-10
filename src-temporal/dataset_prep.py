@@ -7,7 +7,7 @@ import subprocess
 
 # Run this "rm -rf `find -type d -name .ipynb_checkpoints`" in terminal to avoid .ipynb_checkpoints
 
-subprocess.run(["rm", "-rf", "`find", "-type", "d", "-name", ".ipynb_checkpoints`"])
+# subprocess.run(["rm", "-rf", "`find", "-type", "d", "-name", ".ipynb_checkpoints`"])
 
 
 def rename_filenames(directory):
@@ -173,10 +173,10 @@ if __name__ == '__main__':
     # convert_dataset(input_dir, output_dir, train_val_split)
     # rename_folders('data_temporal/train_root')
     # rename_folders('data_temporal/val_root')
-    rename_filenames('data_temporal/train_resized')
-    rename_filenames('data_temporal/val_resized')
-    get_data_csvs('data_temporal/train_resized', 'train')
-    get_data_csvs('data_temporal/val_resized', 'val')
+    rename_filenames('data_temporal/train_root_256')
+    rename_filenames('data_temporal/val_root_256')
+    get_data_csvs('data_temporal/train_root_256', 'train')
+    get_data_csvs('data_temporal/val_root_256', 'val')
 
 
 
