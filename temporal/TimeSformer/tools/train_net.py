@@ -82,7 +82,7 @@ def train_epoch(
                label_smoothing=0.1, num_classes=cfg.MODEL.NUM_CLASSES)
            hard_labels = labels
            inputs, labels = mixup_fn(inputs, labels)
-           loss_fun = SoftTargetCrossEntropy()
+           loss_fun = SoftTargetCrossEntropy() 
 
         if cfg.DETECTION.ENABLE:
             preds = model(inputs, meta["boxes"])

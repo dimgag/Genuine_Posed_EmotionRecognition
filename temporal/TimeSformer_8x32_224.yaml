@@ -1,13 +1,13 @@
 TRAIN:
   ENABLE: True
   DATASET: kinetics
-  BATCH_SIZE: 64
+  BATCH_SIZE: 1
   EVAL_PERIOD: 5
   CHECKPOINT_PERIOD: 5
   AUTO_RESUME: True
 
 DATA:
-  PATH_TO_DATA_DIR: data_temporal/train.csv
+  PATH_TO_DATA_DIR: data_temporal
   NUM_FRAMES: 8
   SAMPLING_RATE: 32
   TRAIN_JITTER_SCALES: [256, 320]
@@ -37,8 +37,8 @@ MODEL:
 
 TEST:
   ENABLE: True
-  DATASET: data_temporal/val.csv
-  BATCH_SIZE: 64
+  DATASET: data_temporal
+  BATCH_SIZE: 1
   NUM_ENSEMBLE_VIEWS: 1
   NUM_SPATIAL_CROPS: 3
   CHECKPOINT_FILE_PATH: None
