@@ -4,10 +4,5 @@ Version: 1.0
 Summary: TimeSformer
 Home-page: unknown
 Author: FBAI
-License: UNKNOWN
 Keywords: artificial intelligence,attention mechanism,transformers,video classification
-Platform: UNKNOWN
 Provides-Extra: tensorboard_video_visualization
-
-UNKNOWN
-
