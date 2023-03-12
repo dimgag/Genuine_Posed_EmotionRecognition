@@ -56,15 +56,18 @@ class MTL_VideoDataset(Dataset):
                 frame = self.transform(frame)
                 
             frames.append(frame)
-            
-
 
         # Get the labels for the two tasks
         rf_label = self.rf_classes.index(video_folder.split("_")[0])
         emo_label = self.emo_classes.index(video_folder.split("_")[1])
 
         frames = [torch.from_numpy(frame) for frame in frames]
-        return torch.stack(frames), rf_label, emo_label
+
+        sample = {'frames': frames, 'rf_label': rf_label, 'emo_label': emo_label}
+        # return torch.stack(frames), rf_label, emo_label
+
+        
+        return sample
 
 
 
@@ -84,25 +87,51 @@ class MyTransform:
         frame = np.array(frame)
         return frame
 
+def load_mtl_dataset(data_dir, batch_size):
+    # define the transform
+    transform = MyTransform((256, 256))
+
+    # define the train and test datasets
+    train_dataset = MTL_VideoDataset(os.path.join(data_dir, 'train_root'), transform=transform)
+    test_dataset = MTL_VideoDataset(os.path.join(data_dir, 'val_root'), transform=transform)
+
+    # define the train and test dataloaders
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+
+    return train_dataloader, test_dataloader
+
 
 # test the code
 if __name__ == "__main__":
     # define the data directory
-    data_dir = 'data_temporal/train_root'
+    # data_dir = 'data_temporal/train_root'
 
     # define the transform
     transform = MyTransform((256, 256))
 
-    dataset = MTL_VideoDataset(data_dir, transform=transform)
+    train_dataset = MTL_VideoDataset('data_temporal/train_root', transform=transform)
+    test_dataset = MTL_VideoDataset('data_temporal/val_root', transform=transform)
+    
+    train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=0)
+    test_dataloader = DataLoader(test_dataset, batch_size=4, shuffle=True, num_workers=0)
+
+    print("---------------------------------------------------")
+    print("Number of training videos: ", len(train_dataset))
+    print("Number of test videos: ", len(test_dataset))
+    print("Number of training batches: ", len(train_dataloader))
+    print("Number of test batches: ", len(test_dataloader))
+    print("---------------------------------------------------")
 
     # print(dataset[0][0].shape)
-
+    print("---------------------------------------------------")
+    print("Example output: ")
     # Get an example output with labels
-    frames, label1, label2 = dataset[0]
+    frames, label1, label2 = train_dataset[0]
     # Print the labels
     print(f"Label 1: {label1}")
     print(f"Label 2: {label2}")
-
+    
 
     # plot the first 10 frames
     fig, ax = plt.subplots(2, 5)
