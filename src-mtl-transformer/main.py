@@ -52,7 +52,7 @@ from trainer import train
 
 
 
-class MultiTaskTransformer(nn.Module):
+class MultiTaskTransformer_V1(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim1, output_dim2, num_heads, num_layers):
         super(MultiTaskTransformer, self).__init__()
         self.d_model = input_dim
@@ -65,6 +65,44 @@ class MultiTaskTransformer(nn.Module):
         x1 = self.fc1(x)
         x2 = self.fc2(x)
         return x1, x2
+    
+
+class MultiTaskTransformer(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim1, output_dim2, num_heads, num_layers):
+        super(MultiTaskTransformer, self).__init__()
+        self.d_model = input_dim
+        self.transformer = nn.TransformerEncoder(nn.TransformerEncoderLayer(input_dim, num_heads, hidden_dim), num_layers)
+        self.fc1 = nn.Linear(input_dim, output_dim1)
+        self.fc2 = nn.Linear(input_dim, output_dim2)
+
+    # def forward(self, x):
+    #     # Reshape the input tensor to a 3D tensor of shape (batch_size * num_frames, num_channels, height, width)
+    #     batch_size, num_frames, num_channels, height, width = x.size()
+    #     x = x.reshape(batch_size*num_frames, num_channels, height, width)
+
+    #     # Pass the input tensor through the transformer
+    #     x = self.transformer(x)
+
+    #     # Reshape the output tensor to a 4D tensor of shape (batch_size, num_frames, output_dim1)
+    #     x1 = self.fc1(x)
+    #     x1 = x1.reshape(batch_size, num_frames, -1)
+
+    #     # Reshape the output tensor to a 4D tensor of shape (batch_size, num_frames, output_dim2)
+    #     x2 = self.fc2(x)
+    #     x2 = x2.reshape(batch_size, num_frames, -1)
+
+    #     return x1, x2
+    def forward(self, x):
+      # Remove extra dimension from input
+      x = x.squeeze(0)
+      # Pass input through transformer
+      x = self.transformer(x)
+      # Generate outputs
+      x1 = self.fc1(x)
+      x2 = self.fc2(x)
+      return x1, x2
+
+
 
 
 
@@ -91,7 +129,7 @@ if __name__ == '__main__':
   output_dim2 = 2 # 2 classes for task 2
   num_heads = 3
   num_layers = 4
-  batch_size = 3
+  batch_size = 1
   lr = 0.001
   num_epochs = 10
 

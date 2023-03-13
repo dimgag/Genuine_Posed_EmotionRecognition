@@ -10,19 +10,33 @@ from torch.utils.data import Dataset, DataLoader
 
 
 
-
-
 def collate_fn(batch):
-    # stack the tensors of variable lengths
-    frames = torch.nn.utils.rnn.pad_sequence(batch, batch_first=True)
+    frames = [sample['frames'] for sample in batch]
+    rf_labels = [sample['rf_label'] for sample in batch]
+    emo_labels = [sample['emo_label'] for sample in batch]
 
-    # get the labels for the two tasks
-    rf_labels = torch.tensor([sample['rf_label'] for sample in batch])
-    emo_labels = torch.tensor([sample['emo_label'] for sample in batch])
+    # Get the maximum size of the tensors in the batch
+    max_size = tuple(max(sample.size(i) for sample in frames) for i in range(1, len(frames[0].size())))
 
-    sample = {'frames': frames, 'rf_label': rf_labels, 'emo_label': emo_labels}
+    # Pad each tensor in the batch to the maximum size
+    padded_frames = []
+    for sample in frames:
+        # Compute the amount of padding needed
+        pad = [0] * (len(sample.shape) - 1) * 2  # Pad on all dimensions except the first (batch) dimension
+        for i in range(len(sample.shape) - 1):
+            pad[i * 2 + 1] = max_size[i] - sample.shape[i + 1]  # Pad on the second dimension
+        pad = tuple(pad)
 
-    return sample
+        # Pad the tensor
+        padded_frames.append(torch.nn.functional.pad(sample, pad))
+
+    # Stack the tensors
+    frames = torch.stack(padded_frames, dim=0)
+
+    rf_labels = torch.tensor(rf_labels)
+    emo_labels = torch.tensor(emo_labels)
+
+    return {'frames': frames, 'rf_label': rf_labels, 'emo_label': emo_labels}
 
 
 class MTL_VideoDataset(Dataset):
@@ -129,8 +143,8 @@ def load_mtl_dataset(data_dir, batch_size):
     test_dataset = MTL_VideoDataset(os.path.join(data_dir, 'val_root'), transform=transform)
 
     # define the train and test dataloaders
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, collate_fn=collate_fn)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
     return train_dataloader, test_dataloader
 
