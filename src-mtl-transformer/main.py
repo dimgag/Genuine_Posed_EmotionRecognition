@@ -35,7 +35,6 @@ data_temporal /
            /real_sad
            /real_surprise
 Where each folder contains videos.
-
 '''
 
 import torch
