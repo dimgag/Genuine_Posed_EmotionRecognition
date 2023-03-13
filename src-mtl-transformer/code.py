@@ -406,9 +406,12 @@ def main():
     criterion2 = nn.CrossEntropyLoss()
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
     # Train the model
+    print("---------------------------------------------------")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
-    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, criterion1, criterion2, optimizer, scheduler, num_epochs, device = device)
+    print("---------------------------------------------------")
+    # train the model
+    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device='cuda')
 
 
 
