@@ -20,6 +20,10 @@ def train(model, train_loader, val_loader, optimizer, epochs):
             optimizer.zero_grad()
             # how to make the inputs and labels into tensors?
             inputs = data["frames"].to(device)
+            # print the shape of inputs 
+            print("Shape of the inputs: ", inputs.shape)
+            # print(inputs.shape)
+
             real_fake_label = data["rf_label"].to(device)
             emotion_label = data["emo_label"].to(device)
             real_fake_output, emotion_output = model(inputs)
