@@ -181,6 +181,9 @@ if __name__ == "__main__":
     print(f"Label 1: {label1}")
     print(f"Label 2: {label2}")
 
+    print('shape of label1:', label1.shape)
+    print('shape of label2:', label2.shape)
+
     # Plot the frames
     fig, ax = plt.subplots(1, 16)
     for i in range(16):

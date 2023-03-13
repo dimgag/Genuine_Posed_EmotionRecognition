@@ -48,74 +48,43 @@ class TemporalTransformer(nn.Module):
         self.fc3 = nn.Linear(128, num_classes2)
 
     def forward(self, x):
-        print(f"x shape at start: {x.shape}")
-
         # Reshape to: torch.Size([3, 17, 256, 256])
         x = x.permute(4, 0, 1, 2, 3).reshape(-1, 17, 256, 256)
         x = x.unsqueeze(0)  # Add batch dimension
-    
         # Normalize and make them scalar type Byte 
         x = x.float()
 
-        print(f"x shape after reshape: {x.shape}")
-
         # Convolutional layers
         x = self.conv1(x)
-        print(f"x shape after conv1: {x.shape}")
-        
         x = self.bn1(x)
-        print(f"x shape after bn1: {x.shape}")
-
         x = self.relu1(x)
-        print(f"x shape after relu1: {x.shape}")
-
         x = self.pool1(x)
-        print(f"x shape after pool1: {x.shape}")
-
         x = self.conv2(x)
-        print(f"x shape after conv2: {x.shape}")
-
         x = self.bn2(x)
-        print(f"x shape after bn2: {x.shape}")
-        
         x = self.relu2(x)
-        print(f"x shape after relu2: {x.shape}")
-        
         x = self.pool2(x)
-        print(f"x shape after pool2: {x.shape}")
 
         # Reshape to: torch.Size([17, 128, 16, 16])
         x = x.view(x.size(0), -1, x.size(3), x.size(4))
-        print(f"x shape after view: {x.shape}")
 
         # Multi-head self-attention
-        # x = x.permute(1, 0, 2, 3)
-        print(f"x shape after permute: {x.shape}")
         #  reshape to (1, 2176, 16*16)
         x = x.view(1, x.size(0), x.size(1), -1).reshape(-1, 2176, 128)
 
-        # x = x.permute(1, 0, 2, 3)
-        print(f"x shape after reshape: {x.shape}")
-
         # Multi-head self-attention
         x, _ = self.attention(x, x, x) 
-        print(f"x shape after attention: {x.shape}") 
-                
-        # reshape the attention layer output to have shape [batch_size, num_channels*feature_size] by flattening the num_channels and feature_size dimensions.
         x = x.view(-1, 128 * 16 * 16)
-        print(f"x shape after view: {x.shape}")
-
         x = self.fc1(x)
-        print(f"x shape after fc1: {x.shape}")
-
         x = self.relu3(x)
-        print(f"x shape after relu3: {x.shape}")
-        
         x = self.dropout1(x)
-        print(f"x shape after dropout1: {x.shape}")
 
         rf_output = self.fc2(x)
         emo_output = self.fc3(x)
+
+        # rf_output = torch.mean(rf_output, dim=0, keepdim=False)
+        # emo_output = torch.mean(emo_output, dim=0, keepdim=False)
+        # print("real/fake shape:", rf_output.shape)
+        # print("emotions shape:", emo_output.shape)
 
         return rf_output, emo_output
 
@@ -146,11 +115,11 @@ def collate_fn(batch):
 
     # Stack the tensors
     frames = torch.stack(padded_frames, dim=0)
-
-    rf_labels = torch.tensor(rf_labels)
-    emo_labels = torch.tensor(emo_labels)
-
     return {'frames': frames, 'rf_label': rf_labels, 'emo_label': emo_labels}
+
+
+
+
 
 
 class MTL_VideoDataset(Dataset):
@@ -192,6 +161,9 @@ class MTL_VideoDataset(Dataset):
 
         step_size = total_frames // n_frames
         
+        rf_label = self.rf_classes.index(video_folder.split('_')[0])
+        emo_label = self.emo_classes.index(video_folder.split('_')[1])
+
         for i in range(0, total_frames, step_size):
             cap.set(cv2.CAP_PROP_POS_FRAMES, i)
             ret, frame = cap.read()
@@ -217,8 +189,13 @@ class MTL_VideoDataset(Dataset):
                 frames.append(frame)
 
         # Get the labels for the two tasks
-        rf_label = self.rf_classes.index(video_folder.split("_")[0])
-        emo_label = self.emo_classes.index(video_folder.split("_")[1])
+        # rf_label = self.rf_classes.index(video_folder.split("_")[0])
+        # emo_label = self.emo_classes.index(video_folder.split("_")[1])
+        
+        # Repear the labels for all the frames
+        rf_label = torch.tensor(rf_label).repeat(n_frames)
+        emo_label = torch.tensor(emo_label).repeat(n_frames)
+
 
         frames = [torch.from_numpy(frame) for frame in frames]
 
@@ -252,6 +229,9 @@ class MyTransform:
         frame = np.array(frame)
         return frame
 
+
+
+
 def load_mtl_dataset(data_dir, batch_size):
     # define the transform
     transform = MyTransform((256, 256))
@@ -261,8 +241,8 @@ def load_mtl_dataset(data_dir, batch_size):
     test_dataset = MTL_VideoDataset(os.path.join(data_dir, 'val_root'), transform=transform)
 
     # define the train and test dataloaders
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0, collate_fn=collate_fn)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=0, collate_fn=collate_fn)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
 
     return train_dataloader, test_dataloader
 
@@ -294,6 +274,8 @@ def train(model, train_loader, val_loader, optimizer, epochs):
             # Calculate the Losses
             loss_1 = emotion_loss(emotion_output, emotion_label)
             loss_2 = real_fake_loss(real_fake_output, real_fake_label)
+            loss = loss_1 + loss_2
+            print(loss)
             # ------------------------------------------------------------
             # Calculate Precision for emotions
             _, emo_preds = torch.max(emotion_output.data, 1)
@@ -343,7 +325,6 @@ def main():
     print("Number of test batches: ", len(test_dataloader))
     print("---------------------------------------------------")
     # Model, loss and optimizer
-    # model = MultiTaskTemporalTransformer(num_classes=6)
     model = TemporalTransformer(num_classes1=2, num_classes2=6)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
