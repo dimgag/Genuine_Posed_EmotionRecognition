@@ -249,7 +249,7 @@ def load_mtl_dataset(data_dir, batch_size):
 
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 '''def train(model, train_loader, val_loader, optimizer, epochs):
     print("Training model...")
@@ -320,7 +320,7 @@ def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, schedul
 
     # Create the data loader
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
-
+    train_dataloader = dataset
     # Initialize the losses and accuracies
     train_losses = []
     train_rf_accs = []
@@ -338,11 +338,15 @@ def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, schedul
         model.train()
 
         # Iterate over the batches
-        for batch in data_loader:
+        for batch in train_dataloader:
             # Get the inputs and labels
             inputs = batch['frames'].to(device)
-            rf_labels = torch.tensor(batch['rf_label'], dtype=torch.long).reshape(-1, 1).to(device)
-            emo_labels = torch.tensor(batch['emo_label'], dtype=torch.long).reshape(-1, 1).to(device)
+            # rf_labels = torch.tensor(batch['rf_label'], dtype=torch.long).reshape(-1, 1).to(device)
+            rf_labels = torch.cat(batch['rf_label'], dim=0).to(device)
+
+            # emo_labels = torch.tensor(batch['emo_label'], dtype=torch.long).reshape(-1, 1).to(device)
+            emo_labels = torch.cat(batch['emo_label'], dim=0).to(device)
+
 
             # Zero the parameter gradients
             optimizer.zero_grad()
@@ -403,7 +407,8 @@ def main():
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
     # Train the model
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, criterion1, criterion2, optimizer, scheduler, num_epochs, device)
+    print(device)
+    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, criterion1, criterion2, optimizer, scheduler, num_epochs, device = device)
 
 
 
