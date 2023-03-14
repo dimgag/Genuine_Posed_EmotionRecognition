@@ -34,30 +34,24 @@ def get_frames_sequence(folder_path, seq_length, img_size):
     return frame_sequence
 
 
-
-if __name__ == '__main__':
-    input_dir = '/Users/dim__gag/Desktop/frames'
-    output_dir = '/Users/dim__gag/Desktop/sequences'
-    seq_length = 20
-    img_size = (224, 224)
-
+def save_sequences(input_dir, output_dir, seq_length, img_size):
     for folder in os.listdir(input_dir):
         folder_path = os.path.join(input_dir, folder)
         if os.path.isdir(folder_path):
             for video_file in os.listdir(folder_path):
                 video_path = os.path.join(folder_path, video_file)
                 output_folder = os.path.join(output_dir, folder, video_file.split('.')[0])
-                frame_sequence = get_frames_sequence(output_folder, seq_length, img_size)
-                # do something with the frame sequence, like save it to disk or feed it into a model
-
-
-                
-
-
+                if not os.path.exists(output_folder):
+                    os.makedirs(output_folder)
+                frame_sequence = get_frames_sequence(video_path, seq_length, img_size)
+                np.save(os.path.join(output_folder, 'sequence.npy'), frame_sequence)
 
 
 
-                
+if __name__ == '__main__':
+    input_dir = '/Users/dim__gag/Desktop/frames/train_root'
+    output_dir = '/Users/dim__gag/Desktop/sequences'
+    seq_length = 20
+    img_size = (224, 224)
 
-
-
+    save_sequences(input_dir, output_dir, seq_length, img_size)
