@@ -97,8 +97,6 @@ class VideoClassifier(nn.Module):
 # Define the model
 model = CRNN(num_classes=12).to(device)
 
-# model = VideoClassifier()
-
 # Define the loss function and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
