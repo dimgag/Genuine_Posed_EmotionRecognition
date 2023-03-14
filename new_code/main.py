@@ -75,7 +75,7 @@ class CRNN(nn.Module):
         return x
     
 # Define the network
-class VideoClassifier(nn.Module):
+class VideoClassifier1(nn.Module):
     def __init__(self):
         super(VideoClassifier, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
@@ -94,9 +94,59 @@ class VideoClassifier(nn.Module):
         x = self.fc2(x)
         return x
 
-# Define the model
-model = CRNN(num_classes=12).to(device)
 
+
+import torch.nn as nn
+
+class VideoClassifier(nn.Module):
+    def __init__(self):
+        super(VideoClassifier, self).__init__()
+        self.conv1 = nn.Conv3d(3, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+        self.bn1 = nn.BatchNorm3d(32)
+        self.relu1 = nn.ReLU(inplace=True)
+        self.pool1 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
+        self.conv2 = nn.Conv3d(32, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+        self.bn2 = nn.BatchNorm3d(64)
+        self.relu2 = nn.ReLU(inplace=True)
+        self.pool2 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
+        self.conv3 = nn.Conv3d(64, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+        self.bn3 = nn.BatchNorm3d(128)
+        self.relu3 = nn.ReLU(inplace=True)
+        self.pool3 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
+        self.fc1 = nn.Linear(128 * 10 * 14 * 14, 512)
+        self.relu4 = nn.ReLU(inplace=True)
+        self.dropout1 = nn.Dropout(p=0.5)
+        self.fc2 = nn.Linear(512, 2)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu1(x)
+        x = self.pool1(x)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = self.relu2(x)
+        x = self.pool2(x)
+        x = self.conv3(x)
+        x = self.bn3(x)
+        x = self.relu3(x)
+        x = self.pool3(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc1(x)
+        x = self.relu4(x)
+        x = self.dropout1(x)
+        x = self.fc2(x)
+        return x
+
+
+# Define the model
+# model = CRNN(num_classes=12).to(device)
+
+<<<<<<< HEAD
+=======
+model = VideoClassifier()
+
+>>>>>>> e81c7e33dc9a644af1c016ac4390fe8bd142920f
 # Define the loss function and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
@@ -106,8 +156,8 @@ num_epochs = 10
 for epoch in range(num_epochs):
     running_loss = 0.0
     for i, data in enumerate(train_dataloader):
-        inputs = i
-        labels = data
+        inputs = i # torch.Size([1, 20, 224, 224, 3])
+        labels = data # torch.Size([1])
         inputs, labels = data
         inputs = inputs.to(device)
         labels = labels.to(device)
