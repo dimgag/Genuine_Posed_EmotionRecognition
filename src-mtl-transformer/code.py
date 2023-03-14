@@ -249,71 +249,7 @@ def load_mtl_dataset(data_dir, batch_size):
 
 
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-'''def train(model, train_loader, val_loader, optimizer, epochs):
-    print("Training model...")
-    for epoch in range(epochs):
-        model.train()
-        emotion_loss = nn.CrossEntropyLoss()
-        real_fake_loss = nn.CrossEntropyLoss()
-        total_training_loss = 0.0
-        emotion_training_acc = 0
-        real_fake_training_acc = 0
-        overall_training_acc = 0
-        counter = 0
-        for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
-            optimizer.zero_grad()
-            inputs = data["frames"].to(device)
-            real_fake_label = data["rf_label"].to(device)
-            emotion_label = data["emo_label"].to(device)
-            
-            real_fake_output, emotion_output = model(inputs)
-            
-            # ------------------------------------------------------------
-            # Calculate the Losses
-            loss_1 = emotion_loss(emotion_output, emotion_label)
-            loss_2 = real_fake_loss(real_fake_output, real_fake_label)
-            loss = loss_1 + loss_2
-            print(loss)
-            # ------------------------------------------------------------
-            # Calculate Precision for emotions
-            _, emo_preds = torch.max(emotion_output.data, 1)
-            emo_true_positives = (emo_preds == emotion_label).sum().item()
-            emo_total_predicted_positives = emotion_label.shape[0]
-            precision_emotions = emo_true_positives / emo_total_predicted_positives
-            # Calculate Precision for real/fake
-            _, rf_preds = torch.max(real_fake_output.data, 1)
-            rf_true_positives = (rf_preds == real_fake_label).sum().item()
-            rf_total_predicted_positives = real_fake_label.shape[0]
-            precision_real_fake = rf_true_positives / rf_total_predicted_positives
-            # Calculate the combined loss
-            loss_emotions = precision_emotions * loss_1
-            loss_real_fake = precision_real_fake * loss_2
-            loss = loss_emotions + loss_real_fake
-            total_training_loss += loss.item()
-            counter += 1
-            # ------------------------------------------------------------
-            # Calculate Accuracy for Emotions
-            _, emo_preds = torch.max(emotion_output.data, 1)
-            emotion_training_acc += (emo_preds == emotion_label).sum().item()
-            # Calculate Accuracy for Real/Fake
-            _, rf_preds = torch.max(real_fake_output.data, 1)
-            real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
-            # Calculate overall accuracy
-            overall_training_acc += (rf_preds == real_fake_label).sum().item()
-            overall_training_acc += (emo_preds == emotion_label).sum().item()
-            # Backpropagation
-            loss.backward()
-            # Update the weights
-            optimizer.step()
-        epoch_loss = total_training_loss / counter 
-        epoch_acc_emotion = 100. * (emotion_training_acc / len(train_loader.dataset))
-        epoch_acc_real_fake = 100. * (real_fake_training_acc / len(train_loader.dataset))
-        overall_training_acc = 100. * (overall_training_acc / (2*len(train_loader.dataset)))
-        print(f"Epoch {epoch+1} loss: {epoch_loss:.4f} | Emotion accuracy: {epoch_acc_emotion:.2f}% | Real/Fake accuracy: {epoch_acc_real_fake:.2f}% | Overall accuracy: {overall_training_acc:.2f}%")
-
-'''
 def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device='cuda'):
     # Set the device
     model = model.to(device)
@@ -406,11 +342,8 @@ def main():
     criterion2 = nn.CrossEntropyLoss()
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
     # Train the model
-    print("---------------------------------------------------")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
-    print("---------------------------------------------------")
-    # train the model
     model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device='cuda')
 
 
