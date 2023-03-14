@@ -81,11 +81,6 @@ class TemporalTransformer(nn.Module):
         rf_output = self.fc2(x)
         emo_output = self.fc3(x)
 
-        # rf_output = torch.mean(rf_output, dim=0, keepdim=False)
-        # emo_output = torch.mean(emo_output, dim=0, keepdim=False)
-        # print("real/fake shape:", rf_output.shape)
-        # print("emotions shape:", emo_output.shape)
-
         return rf_output, emo_output
 
 
@@ -250,7 +245,7 @@ def load_mtl_dataset(data_dir, batch_size):
 
 
 
-def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device='cuda'):
+def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device=None):
     # Set the device
     model = model.to(device)
 
@@ -344,7 +339,7 @@ def main():
     # Train the model
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
-    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device='cuda')
+    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device=device)
 
 
 
