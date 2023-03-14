@@ -148,7 +148,7 @@ class MTL_VideoDataset(Dataset):
 
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         
-        n_frames = 16 # Change this to the desired number of frames
+        n_frames = 17 # Change this to the desired number of frames
 
         if total_frames < n_frames:
             # Skip videos with fewer frames than the desired number
@@ -251,7 +251,7 @@ def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, schedul
 
     # Create the data loader
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
-    train_dataloader = dataset
+
     # Initialize the losses and accuracies
     train_losses = []
     train_rf_accs = []
@@ -269,7 +269,7 @@ def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, schedul
         model.train()
 
         # Iterate over the batches
-        for batch in train_dataloader:
+        for batch in dataset:
             # Get the inputs and labels
             inputs = batch['frames'].to(device)
             # rf_labels = torch.tensor(batch['rf_label'], dtype=torch.long).reshape(-1, 1).to(device)
