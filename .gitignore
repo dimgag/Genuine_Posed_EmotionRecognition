@@ -10,6 +10,7 @@
 /data_temporal/train_root/*
 /data_temporal/val_root/*
 /data_temporal/*
+/data_sequences/*
 /docs/*
 /experiments/*
 /runs/*
