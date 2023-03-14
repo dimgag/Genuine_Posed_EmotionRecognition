@@ -97,6 +97,8 @@ class VideoClassifier(nn.Module):
 # Define the model
 model = CRNN(num_classes=12).to(device)
 
+# model = VideoClassifier()
+
 # Define the loss function and optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
@@ -105,12 +107,15 @@ optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 num_epochs = 10
 for epoch in range(num_epochs):
     running_loss = 0.0
-    for i, (inputs, labels) in enumerate(train_dataloader):
+    for i, data in enumerate(train_dataloader):
+        inputs = i
+        labels = data
+        inputs, labels = data
         inputs = inputs.to(device)
         labels = labels.to(device)
 
         optimizer.zero_grad()
-
+        
         outputs = model(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
@@ -125,7 +130,7 @@ for epoch in range(num_epochs):
         for inputs, labels in val_dataloader:
             inputs = inputs.to(device)
             labels = labels.to(device)
-
+            
             outputs = model(inputs)
             _, predicted = torch.max(outputs.data, 1)
 

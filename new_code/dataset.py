@@ -40,7 +40,33 @@ class VideoDataset(Dataset):
         elif len(sequence) < self.seq_length:
             sequence = np.pad(sequence, ((0, self.seq_length - len(sequence)), (0, 0), (0, 0), (0, 0)), 'constant')
             
-        return torch.tensor(sequence), label
+        # Convert labels to integers to convert them to tensors later.
+        if label == 'fake_angry':
+            label = 0
+        if label == 'fake_contempt':
+            label = 1
+        if label == 'fake_disgust':
+            label = 2
+        if label == 'fake_happy':
+            label = 3
+        if label == 'fake_sad':
+            label = 4
+        if label == 'fake_surprise':
+            label = 5
+        if label == 'real_angry':
+            label = 6
+        if label == 'real_contempt':
+            label = 7
+        if label == 'real_disgust':
+            label = 8
+        if label == 'real_happy':
+            label = 9
+        if label == 'real_sad':
+            label = 10
+        if label == 'real_surprise':
+            label = 11
+
+        return torch.tensor(sequence), torch.tensor(label)
 
 
 
