@@ -353,7 +353,7 @@ if __name__ == '__main__':
   output_dim2 = 6 # 6 classes for task 2
   num_heads = 3
   num_layers = 4
-  batch_size = 1
+  batch_size = 16
   lr = 0.001
   num_epochs = 10
 
