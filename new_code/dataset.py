@@ -56,24 +56,54 @@ def remove_ds_store(directory):
             subdir = os.path.join(dirpath, dirname)
             remove_ds_store(subdir)
 
+            
+            
+def get_data_loaders(train_sequences_folder, val_sequences_folder, seq_length, batch_size, num_workers):
+    train_dataset = VideoDataset(train_sequences_folder, seq_length)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    
+    val_dataset = VideoDataset(val_sequences_folder, seq_length)
+    val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    return train_dataloader, val_dataloader
+    
+    
+
+    
+    
 
 if __name__ == '__main__':
     # Set the parameters
-    sequences_folder = '/Users/dim__gag/Desktop/sequences'
+    # sequences_folder = 'data_sequences/train_seq'
+    # remove_ds_store(sequences_folder)
 
-    remove_ds_store(sequences_folder)
-
-    seq_length = 20
-    batch_size = 1
-    num_workers = 1
+#     seq_length = 20
+#     batch_size = 1
+#     num_workers = 2
 
     # Create the dataset and dataloader
-    dataset = VideoDataset(sequences_folder, seq_length)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-
+    # dataset = VideoDataset(sequences_folder, seq_length)
+    # dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
     # print dataset labels
-    dataset_labels = dataset.labels
+    # unique_labels = list(set(dataset.labels))
+    # print(unique_labels)
+    
+    # print dataset length
+    # print(f"Dataset length: {len(dataset)}")
+    
+    # print dataloader length
+    # print(f"Dataloader length: {len(dataloader)}")
+    
+    
+    train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
+                                                        'data_sequences/val_seq',
+                                                        seq_length=20,
+                                                        batch_size=1,
+                                                        num_workers=2)
+    
+    print(f"Train Dataloader length: {len(train_dataloader)}")
+    print(f"Validatio Dataloader length: {len(val_dataloader)}")
+    
 
 
 

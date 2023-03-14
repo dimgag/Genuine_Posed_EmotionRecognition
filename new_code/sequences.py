@@ -49,8 +49,8 @@ def save_sequences(input_dir, output_dir, seq_length, img_size):
 
 
 if __name__ == '__main__':
-    input_dir = '/Users/dim__gag/Desktop/frames/train_root'
-    output_dir = '/Users/dim__gag/Desktop/sequences'
+    input_dir  = 'data_sequences/val_root'
+    output_dir = 'data_sequences/sequences'
     seq_length = 20
     img_size = (224, 224)
 
