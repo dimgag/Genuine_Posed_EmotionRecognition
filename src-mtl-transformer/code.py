@@ -158,31 +158,34 @@ class MTL_VideoDataset(Dataset):
         
         rf_label = self.rf_classes.index(video_folder.split('_')[0])
         emo_label = self.emo_classes.index(video_folder.split('_')[1])
+        
+        while True:
+            for i in range(0, total_frames, step_size):
+                cap.set(cv2.CAP_PROP_POS_FRAMES, i)
+                ret, frame = cap.read()
+                if not ret:
+                    break
 
-        for i in range(0, total_frames, step_size):
-            cap.set(cv2.CAP_PROP_POS_FRAMES, i)
-            ret, frame = cap.read()
-            if not ret:
-                break
+                face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
+                face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
+                
+                # if frame none empty do this:
+                if frame is not None:
+                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    gray = cv2.GaussianBlur(frame, (25,25), 0)
+                    face = face_cascade.detectMultiScale(gray, 1.1, 4)
+                    for (x,y,w,h) in face:
+                        frame = frame[y:y+h, x:x+w]
+                        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                        frame = cv2.resize(frame, (256, 256)) # Resize the frame
 
-            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
-            face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
+                    if self.transform:
+                        frame = self.transform(frame) # Convert the numpy array to tensor
+                    frames.append(frame)
             
-            # if frame none empty do this:
-            if frame is not None:
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                gray = cv2.GaussianBlur(frame, (25,25), 0)
-                face = face_cascade.detectMultiScale(gray, 1.1, 4)
-                for (x,y,w,h) in face:
-                    frame = frame[y:y+h, x:x+w]
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                    frame = cv2.resize(frame, (256, 256)) # Resize the frame
-
-                if self.transform:
-                    frame = self.transform(frame) # Convert the numpy array to tensor
-
-                frames.append(frame)
-
+            if cv2.waitKey(10) == 27:
+                break
+        cap.release()
         # Get the labels for the two tasks
         # rf_label = self.rf_classes.index(video_folder.split("_")[0])
         # emo_label = self.emo_classes.index(video_folder.split("_")[1])
@@ -201,8 +204,9 @@ class MTL_VideoDataset(Dataset):
         frames = torch.stack(padded_frames, dim=0)
 
         sample = {'frames': frames, 'rf_label': rf_label, 'emo_label': emo_label}
-
+    
         return sample
+
 
 
 
@@ -359,4 +363,12 @@ if __name__ == '__main__':
 
   main()
   
+
+
+
+
+
+
+
+
 
