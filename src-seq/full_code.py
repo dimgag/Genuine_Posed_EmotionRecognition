@@ -4,8 +4,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from dataset import VideoDataset
 from tqdm.auto import tqdm
-from dataset import VideoDataset, get_data_loaders
 
+from dataset import VideoDataset, get_data_loaders
+from utils import save_plots
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -127,8 +128,16 @@ optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, we
 
 # Train the model
 num_epochs = 10
+train_loss = []
+train_acc = []
+val_loss = []
+val_acc = []
 for epoch in range(num_epochs):
+    train_running_loss = 0.0
+    train_running_correct = 0
+    counter = 0
     running_loss = 0.0
+
     for i, data in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
         inputs, labels = data
         inputs = inputs.permute(0, 4, 1, 2, 3)
@@ -136,18 +145,32 @@ for epoch in range(num_epochs):
         inputs = inputs.to(device)
         labels = labels.to(device)
         optimizer.zero_grad()
-        
-
-        
         outputs = model(inputs)
+
+        # Calculate accuracy
+        _, predicted = torch.max(outputs.data, 1)
+        train_running_correct += (predicted == labels).sum().item()
+
+        # Calculate Loss
         loss = criterion(outputs, labels)
+        train_running_loss += loss.item()
+
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
+        counter += 1
+
+    epoch_loss = train_running_loss / counter
+    epoch_acc = 100. * (train_running_correct / len(train_dataloader.dataset))
+    train_loss.append(epoch_loss) # for plotting
+    train_acc.append(epoch_acc) # for plotting
+    print('Epoch [{}/{}], Training Loss: {:.4f}, Training Accuracy: {:.4f}%' % (epoch+1, num_epochs, epoch_loss, epoch_acc))
+    
 
     # Evaluate the model on the validation set
     correct = 0
     total = 0
+
     with torch.no_grad():
         for i, data in tqdm(enumerate(val_dataloader), total=len(val_dataloader)):
             inputs, labels = data
@@ -158,6 +181,18 @@ for epoch in range(num_epochs):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-    print('Epoch [%d], Loss: %.4f, Validation Accuracy: %.4f' %
-          (epoch+1, running_loss/len(train_dataloader), correct/total))
 
+    epoch_loss = running_loss / total
+    epoch_acc = 100. * (correct / len(val_dataloader.dataset))
+    
+    val_loss.append(epoch_loss) # for plotting
+    val_acc.append(epoch_acc) # for plotting
+    print('Epoch [{}/{}], Validation Loss: {:.4f}, Validation Accuracy: {:.4f}%' % (epoch+1, num_epochs, epoch_loss, epoch_acc))
+    
+    # print('Epoch [%d], Validation Loss: %.4f, Validation Accuracy: %.4f' %
+    #       (epoch+1, running_loss/len(train_dataloader), correct/total))
+
+
+# Plot the loss and accuracy curves
+
+save_plots(train_acc, val_acc, train_loss, val_loss)
