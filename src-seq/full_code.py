@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
+
 from dataset import VideoDataset
 from tqdm.auto import tqdm
 
@@ -118,21 +120,20 @@ criterion = nn.CrossEntropyLoss()
 
 ###### Define optimizer
 # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-# optimizer = optim.Adam(model.parameters(), lr=0.001)
-
+optimizer = optim.Adam(model.parameters(), lr=0.1)
 # optimizer = optim.Adagrad(model.parameters(), lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
-
-optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
-
+# optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
 
 # Train the model
-num_epochs = 10
+num_epochs = 100
 train_loss = []
 train_acc = []
 val_loss = []
 val_acc = []
 for epoch in range(num_epochs):
+    print("\nTraining...")
     train_running_loss = 0.0
     train_running_correct = 0
     counter = 0
@@ -164,13 +165,13 @@ for epoch in range(num_epochs):
     epoch_acc = 100. * (train_running_correct / len(train_dataloader.dataset))
     train_loss.append(epoch_loss) # for plotting
     train_acc.append(epoch_acc) # for plotting
-    print('Epoch [{}/{}], Training Loss: {:.4f}, Training Accuracy: {:.4f}%' % (epoch+1, num_epochs, epoch_loss, epoch_acc))
+    print('Epoch [%d], Training Loss: %.4f, Training Accuracy: %.4f' % (epoch+1, epoch_loss, epoch_acc))
     
 
     # Evaluate the model on the validation set
     correct = 0
     total = 0
-
+    print("Validating...")
     with torch.no_grad():
         for i, data in tqdm(enumerate(val_dataloader), total=len(val_dataloader)):
             inputs, labels = data
@@ -187,11 +188,8 @@ for epoch in range(num_epochs):
     
     val_loss.append(epoch_loss) # for plotting
     val_acc.append(epoch_acc) # for plotting
-    print('Epoch [{}/{}], Validation Loss: {:.4f}, Validation Accuracy: {:.4f}%' % (epoch+1, num_epochs, epoch_loss, epoch_acc))
-    
-    # print('Epoch [%d], Validation Loss: %.4f, Validation Accuracy: %.4f' %
-    #       (epoch+1, running_loss/len(train_dataloader), correct/total))
-
+    print('Epoch [%d], Validation Loss: %.4f, Validation Accuracy: %.4f' % (epoch+1, epoch_loss, epoch_acc))
+    scheduler.step(epoch_loss)
 
 # Plot the loss and accuracy curves
 
