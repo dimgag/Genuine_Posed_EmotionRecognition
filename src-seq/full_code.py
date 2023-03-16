@@ -8,6 +8,7 @@ from dataset import VideoDataset
 from tqdm.auto import tqdm
 
 from dataset import VideoDataset, get_data_loaders
+from models import MyNetwork, EmotionRecognitionModel2, InceptionResnetv1LSTM
 from utils import save_plots
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -15,7 +16,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
                                                     'data_sequences/val_seq',
                                                     seq_length=20,
-                                                    batch_size=32,
+                                                    batch_size=24,
                                                     num_workers=4)
 
 class EmotionRecognitionModel(nn.Module):
@@ -112,18 +113,30 @@ class EmotionRecognitionModel_Bigger(nn.Module):
     
 
 # Get the model
-model = EmotionRecognitionModel(num_classes=12).to(device)
+# model = EmotionRecognitionModel(num_classes=12).to(device)
+
+# model = MyNetwork(num_classes=12).to(device)
+# model = EmotionRecognitionModel2(num_classes=12).to(device)
+# model = Snowbaby(num_classes=12).to(device)
+model = InceptionResnetv1LSTM(num_classes=12, hidden_size=512, num_layers=2, bidirectional=True).to(device)
 
 
 # Define the loss function and optimizer
-criterion = nn.CrossEntropyLoss()
+# criterion = nn.CrossEntropyLoss()
+
+criterion = nn.MSELoss()
+
+optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
+
 
 ###### Define optimizer
 # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-optimizer = optim.Adam(model.parameters(), lr=0.1)
+# optimizer = optim.Adam(model.parameters(), lr=0.1)
 # optimizer = optim.Adagrad(model.parameters(), lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
 # optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+
+
 
 
 # Train the model

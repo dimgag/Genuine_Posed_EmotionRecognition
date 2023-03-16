@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from models import HydraNet, ChimeraNet
+from models import HydraNet, ChimeraNet, ChimeraNetV2 
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 from utils import ConfusionMatrix_MT
 # from confusion_matrix import CM
@@ -94,6 +94,7 @@ if __name__ == "__main__":
     # Define the model class
     # loaded_model = HydraNet().to(device)
     loaded_model = ChimeraNet().to(device)
+    # loaded_model = ChimeraNetV2().to(device)
 
     # Define the optimizer
     optimizer = torch.optim.SGD(loaded_model.parameters(), lr=1e-4, momentum=0.09)

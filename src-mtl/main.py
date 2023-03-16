@@ -8,7 +8,7 @@ from PIL import Image
 
 from dataset import SASEFE_MTL, SASEFE_MTL_TEST
 from utils import save_model, get_model_params, save_plots, freeze_baseline
-from models import HydraNet, ChimeraNet
+from models import HydraNet, ChimeraNet, ChimeraNetV2
 from train import train, validate
 
 
@@ -48,16 +48,17 @@ def main():
     # Define the model
     # net = HydraNet()
     # model = HydraNet().to(device)
-    model = ChimeraNet().to(device)
+    # model = ChimeraNet().to(device)
+    model = ChimeraNetV2().to(device)
 
-    # get_model_params(model)
+    get_model_params(model)
 
     # Fine Tuning the model
     # model = freeze_baseline(model) # Freeze the baseline model and train only the new layers
     
 
     # Define the optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0001)
     # optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 

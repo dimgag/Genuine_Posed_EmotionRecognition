@@ -12,6 +12,7 @@ def train(model, trainloader, optimizer):
     emotion_loss = nn.CrossEntropyLoss()
     real_fake_loss = nn.CrossEntropyLoss()
 
+
     # emotion_loss = FocalLoss()
     # real_fake_loss = FocalLoss()
 

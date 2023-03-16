@@ -273,7 +273,7 @@ def train(model, dataset, collate_fn, criterion1, criterion2, optimizer, schedul
         model.train()
 
         # Iterate over the batches
-        for batch in dataset:
+        for batch in tqdm(enumerate(dataset), total=len(dataset)):
             # Get the inputs and labels
             inputs = batch['frames'].to(device)
             # rf_labels = torch.tensor(batch['rf_label'], dtype=torch.long).reshape(-1, 1).to(device)
@@ -343,7 +343,7 @@ def main():
     # Train the model
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
-    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=8, device=device)
+    model, train_losses, train_rf_accs, train_emo_accs = train(model, train_dataloader, collate_fn, criterion1, criterion2, optimizer, scheduler=None, num_epochs=10, batch_size=batch_size, device=device)
 
 
 
@@ -357,9 +357,9 @@ if __name__ == '__main__':
   output_dim2 = 6 # 6 classes for task 2
   num_heads = 3
   num_layers = 4
-  batch_size = 16
+  batch_size = 1
   lr = 0.001
-  num_epochs = 10
+  num_epochs = 5
 
   main()
   
