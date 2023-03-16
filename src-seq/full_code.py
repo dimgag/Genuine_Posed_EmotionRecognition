@@ -9,7 +9,7 @@ from tqdm.auto import tqdm
 
 from dataset import VideoDataset, get_data_loaders
 from models import MyNetwork, EmotionRecognitionModel2, InceptionResnetv1LSTM
-from utils import save_plots
+from utils import save_plots, save_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -112,35 +112,34 @@ class EmotionRecognitionModel_Bigger(nn.Module):
 
     
 
-# Get the model
+## Define the Model
 # model = EmotionRecognitionModel(num_classes=12).to(device)
-
 # model = MyNetwork(num_classes=12).to(device)
 # model = EmotionRecognitionModel2(num_classes=12).to(device)
 # model = Snowbaby(num_classes=12).to(device)
 model = InceptionResnetv1LSTM(num_classes=12, hidden_size=512, num_layers=2, bidirectional=True).to(device)
 
 
-# Define the loss function and optimizer
+## Loss Function
 # criterion = nn.CrossEntropyLoss()
-
 criterion = nn.MSELoss()
 
-optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
 
-
-###### Define optimizer
+##Optimizer
 # optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 # optimizer = optim.Adam(model.parameters(), lr=0.1)
+optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
 # optimizer = optim.Adagrad(model.parameters(), lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
 # optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
+
+## LR-Scheduler
 scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
 
 
 
-# Train the model
-num_epochs = 100
+## Train the model
+num_epochs = 20
 train_loss = []
 train_acc = []
 val_loss = []
@@ -155,20 +154,16 @@ for epoch in range(num_epochs):
     for i, data in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
         inputs, labels = data
         inputs = inputs.permute(0, 4, 1, 2, 3)
-
         inputs = inputs.to(device)
         labels = labels.to(device)
         optimizer.zero_grad()
         outputs = model(inputs)
-
         # Calculate accuracy
         _, predicted = torch.max(outputs.data, 1)
         train_running_correct += (predicted == labels).sum().item()
-
         # Calculate Loss
         loss = criterion(outputs, labels)
         train_running_loss += loss.item()
-
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
@@ -195,15 +190,49 @@ for epoch in range(num_epochs):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-
     epoch_loss = running_loss / total
     epoch_acc = 100. * (correct / len(val_dataloader.dataset))
-    
     val_loss.append(epoch_loss) # for plotting
     val_acc.append(epoch_acc) # for plotting
     print('Epoch [%d], Validation Loss: %.4f, Validation Accuracy: %.4f' % (epoch+1, epoch_loss, epoch_acc))
     scheduler.step(epoch_loss)
 
 # Plot the loss and accuracy curves
-
 save_plots(train_acc, val_acc, train_loss, val_loss)
+# save the model
+save_model(num_epochs, model, optimizer)
+    
+
+
+######################################################################
+## Evaluate the model on validation set.
+path = 'model.pth'
+
+loaded_model = model
+
+loaded_checkpoint = torch.load(path)
+loaded_model.load_state_dict(loaded_checkpoint['model_state_dict'])
+optimizer.load_state_dict(loaded_checkpoint['optimizer_state_dict'])
+epoch = loaded_checkpoint['epoch']
+
+loaded_model.eval()
+correct = 0
+total = 0
+print("Evaluate the model.")
+with torch.no_grad():
+    for i, data in tqdm(enumerate(val_dataloader), total=len(val_dataloader)):
+        inputs, labels = data
+        inputs = inputs.permute(0, 4, 1, 2, 3)
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        outputs = model(inputs)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+epoch_loss = running_loss / total
+epoch_acc = 100. * (correct / len(val_dataloader.dataset))
+print(f"Test loss: {epoch_loss:.3f}, Test Emotion acc: {epoch_acc:.3f}")
+
+
+

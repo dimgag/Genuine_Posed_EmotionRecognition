@@ -13,12 +13,8 @@ from PIL import Image
 
 
 # define a multi-task temporal transformer model that gets as input torch.Size([1, 17, 256, 256, 3]), where 1 is the batch size, 17 is the number of frames, 256 is the height and width of the frames, and 3 is the number of channels (RGB)
-import torch
-import torch.nn as nn
-from torch.nn import TransformerEncoder, TransformerEncoderLayer
 
-import torch
-import torch.nn as nn
+from torch.nn import TransformerEncoder, TransformerEncoderLayer
 import torch.nn.functional as F
 
 
@@ -362,13 +358,3 @@ if __name__ == '__main__':
   num_epochs = 5
 
   main()
-  
-
-
-
-
-
-
-
-
-
