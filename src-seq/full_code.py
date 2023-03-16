@@ -8,10 +8,11 @@ from dataset import VideoDataset
 from tqdm.auto import tqdm
 
 from dataset import VideoDataset, get_data_loaders
-from models import MyNetwork, EmotionRecognitionModel2, InceptionResnetv1LSTM
+from models import MyNetwork, EmotionRecognitionModel, EmotionRecognitionModel2, EmotionRecognitionModel_Bigger
 from utils import save_plots, save_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Using device: ", device)
 
 train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
                                                     'data_sequences/val_seq',
@@ -19,117 +20,31 @@ train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
                                                     batch_size=24,
                                                     num_workers=4)
 
-class EmotionRecognitionModel(nn.Module):
-    def __init__(self, num_classes):
-        super(EmotionRecognitionModel, self).__init__()
-        self.conv1 = nn.Conv3d(3, 16, kernel_size=(3, 5, 5), stride=(1, 2, 2), padding=(1, 2, 2))
-        self.bn1 = nn.BatchNorm3d(16)
-        self.relu1 = nn.ReLU(inplace=True)
-        self.pool1 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
-        self.conv2 = nn.Conv3d(16, 32, kernel_size=(3, 5, 5), stride=(1, 1, 1), padding=(1, 2, 2))
-        self.bn2 = nn.BatchNorm3d(32)
-        self.relu2 = nn.ReLU(inplace=True)
-        self.pool2 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
-        self.conv3 = nn.Conv3d(32, 64, kernel_size=(3, 5, 5), stride=(1, 1, 1), padding=(1, 2, 2))
-        self.bn3 = nn.BatchNorm3d(64)
-        self.relu3 = nn.ReLU(inplace=True)
-        self.pool3 = nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2))
-        self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(125440, 512)
-        self.relu4 = nn.ReLU(inplace=True)
-        self.fc2 = nn.Linear(512, num_classes)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu1(x)
-        x = self.pool1(x)
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.relu2(x)
-        x = self.pool2(x)
-        x = self.conv3(x)
-        x = self.bn3(x)
-        x = self.relu3(x)
-        x = self.pool3(x)
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = self.relu4(x)
-        x = self.fc2(x)
-        return x
-
-
-
-class EmotionRecognitionModel_Bigger(nn.Module):
-    def __init__(self, num_classes):
-        super(EmotionRecognitionModel, self).__init__()
-        
-        # Convolutional layers
-        self.conv1 = nn.Conv3d(3, 32, kernel_size=(3, 5, 5), stride=(1, 2, 2), padding=(1, 2, 2))
-        self.bn1 = nn.BatchNorm3d(32)
-        self.relu1 = nn.ReLU(inplace=True)
-        self.pool1 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
-        
-        self.conv2 = nn.Conv3d(32, 64, kernel_size=(3, 5, 5), stride=(1, 1, 1), padding=(1, 2, 2))
-        self.bn2 = nn.BatchNorm3d(64)
-        self.relu2 = nn.ReLU(inplace=True)
-        self.pool2 = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2))
-        
-        self.conv3 = nn.Conv3d(64, 128, kernel_size=(3, 5, 5), stride=(1, 1, 1), padding=(1, 2, 2))
-        self.bn3 = nn.BatchNorm3d(128)
-        self.relu3 = nn.ReLU(inplace=True)
-        self.pool3 = nn.MaxPool3d(kernel_size=(2, 2, 2), stride=(2, 2, 2))
-        
-        # Fully connected layers
-        self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(250880, 1024)
-        self.relu4 = nn.ReLU(inplace=True)
-        self.fc2 = nn.Linear(1024, num_classes)
-
-    def forward(self, x):
-        # Convolutional layers
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu1(x)
-        x = self.pool1(x)
-        
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.relu2(x)
-        x = self.pool2(x)
-        
-        x = self.conv3(x)
-        x = self.bn3(x)
-        x = self.relu3(x)
-        x = self.pool3(x)
-        
-        # Fully connected layers
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = self.relu4(x)
-        x = self.fc2(x)
-        return x
-
-    
 
 ## Define the Model
-# model = EmotionRecognitionModel(num_classes=12).to(device)
-# model = MyNetwork(num_classes=12).to(device)
-# model = EmotionRecognitionModel2(num_classes=12).to(device)
-# model = Snowbaby(num_classes=12).to(device)
-model = InceptionResnetv1LSTM(num_classes=12, hidden_size=512, num_layers=2, bidirectional=True).to(device)
 
+# model = MyNetwork(num_classes=12).to(device)
+
+
+model = EmotionRecognitionModel(num_classes=12).to(device)
+
+
+# model = EmotionRecognitionModel2(num_classes=12).to(device)
+
+# model = EmotionRecognitionModel_Bigger(num_classes=12).to(device)
 
 ## Loss Function
-# criterion = nn.CrossEntropyLoss()
-criterion = nn.MSELoss()
+criterion = nn.CrossEntropyLoss()
+
 
 
 ##Optimizer
-# optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-# optimizer = optim.Adam(model.parameters(), lr=0.1)
-optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+
+# optimizer = optim.Adam(model.parameters(), lr=0.01)#, weight_decay=0.001)
+
 # optimizer = optim.Adagrad(model.parameters(), lr=0.01, lr_decay=0, weight_decay=0, initial_accumulator_value=0, eps=1e-10)
+
 # optimizer = optim.RMSprop(model.parameters(), lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
 
 ## LR-Scheduler
@@ -139,7 +54,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, ver
 
 
 ## Train the model
-num_epochs = 20
+num_epochs = 10000
 train_loss = []
 train_acc = []
 val_loss = []
@@ -166,7 +81,6 @@ for epoch in range(num_epochs):
         train_running_loss += loss.item()
         loss.backward()
         optimizer.step()
-        running_loss += loss.item()
         counter += 1
 
     epoch_loss = train_running_loss / counter
@@ -174,11 +88,12 @@ for epoch in range(num_epochs):
     train_loss.append(epoch_loss) # for plotting
     train_acc.append(epoch_acc) # for plotting
     print('Epoch [%d], Training Loss: %.4f, Training Accuracy: %.4f' % (epoch+1, epoch_loss, epoch_acc))
-    
+
 
     # Evaluate the model on the validation set
     correct = 0
     total = 0
+    running_loss = 0.0
     print("Validating...")
     with torch.no_grad():
         for i, data in tqdm(enumerate(val_dataloader), total=len(val_dataloader)):
@@ -189,7 +104,10 @@ for epoch in range(num_epochs):
             outputs = model(inputs)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
+            loss = criterion(outputs, labels)
+            running_loss += loss.item()
             correct += (predicted == labels).sum().item()
+            
     epoch_loss = running_loss / total
     epoch_acc = 100. * (correct / len(val_dataloader.dataset))
     val_loss.append(epoch_loss) # for plotting
@@ -200,8 +118,8 @@ for epoch in range(num_epochs):
 # Plot the loss and accuracy curves
 save_plots(train_acc, val_acc, train_loss, val_loss)
 # save the model
-save_model(num_epochs, model, optimizer)
-    
+save_model(num_epochs, model, optimizer, criterion)
+
 
 
 ######################################################################
@@ -220,6 +138,7 @@ correct = 0
 total = 0
 print("Evaluate the model.")
 with torch.no_grad():
+    running_loss = 0.0
     for i, data in tqdm(enumerate(val_dataloader), total=len(val_dataloader)):
         inputs, labels = data
         inputs = inputs.permute(0, 4, 1, 2, 3)
@@ -228,11 +147,13 @@ with torch.no_grad():
         outputs = model(inputs)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
+        loss = criterion(outputs, labels)
+        running_loss += loss.item()
         correct += (predicted == labels).sum().item()
 
-epoch_loss = running_loss / total
-epoch_acc = 100. * (correct / len(val_dataloader.dataset))
-print(f"Test loss: {epoch_loss:.3f}, Test Emotion acc: {epoch_acc:.3f}")
+    epoch_loss = running_loss / total
+    epoch_acc = 100. * (correct / len(val_dataloader.dataset))
+    print(f"Test loss: {epoch_loss:.3f}, Test acc: {epoch_acc:.3f}")
 
 
 
