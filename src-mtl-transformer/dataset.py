@@ -70,7 +70,7 @@ class MTL_VideoDataset(Dataset):
 
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         
-        n_frames = 16 # Change this to the desired number of frames
+        n_frames = 20 # Change this to the desired number of frames
 
         if total_frames < n_frames:
             # Skip videos with fewer frames than the desired number
@@ -181,14 +181,22 @@ if __name__ == "__main__":
     print(f"Label 1: {label1}")
     print(f"Label 2: {label2}")
 
-    print('shape of label1:', label1.shape)
-    print('shape of label2:', label2.shape)
+    # print('shape of label1:', label1.shape)
+    # print('shape of label2:', label2.shape)
 
     # Plot the frames
-    fig, ax = plt.subplots(1, 16)
-    for i in range(16):
-        ax[i].imshow(frames[i])
-        ax[i].axis('off')
+    # fig, ax = plt.subplots(1, 16)
+    # for i in range(16):
+    #     ax[i].imshow(frames[i])
+    #     ax[i].axis('off')
+    # plt.show()
+
+    # plot in two rows
+    fig, ax = plt.subplots(4, 5)
+    for i in range(20):
+        ax[i//5, i%5].imshow(frames[i])
+        ax[i//5, i%5].axis('off')
     plt.show()
+
 
 
