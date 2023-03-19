@@ -1,3 +1,5 @@
+# Show prediction on a single image
+# Usage: python single_prediction.py -img <image_path>
 import os
 import torch
 import torch.nn as nn
@@ -5,8 +7,14 @@ from torchvision.transforms.functional import resize, to_tensor, normalize
 from models import ChimeraNet
 from PIL import Image
 import cv2
-
+import argparse
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+parser = argparse.ArgumentParser(description='Predict real/fake and emotion on a single image')
+parser.add_argument('-img', '--image_path', type=str, default='Image.jpeg', help='path to image')
+args = parser.parse_args()
+
 
 
 
@@ -61,7 +69,9 @@ if __name__ == '__main__':
     # Make a prediction on a single image
     # image_path = '/Users/dim__gag/Desktop/Image.jpeg'
 
-    image_path = '/Users/dim__gag/Desktop/Image2.jpeg'
+    # image_path = '/Users/dim__gag/Desktop/Image2.jpeg'
+    image_path = args.image_path
+    
     real_fake_label, emotion_label = predict_single_image(loaded_model, image_path)
     
     # Print the predicted labels
