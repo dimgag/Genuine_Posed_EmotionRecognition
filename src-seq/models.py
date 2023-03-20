@@ -143,7 +143,7 @@ class EmotionRecognitionModel_Bigger(nn.Module):
 
 
 
-# GRU Model
+# GRU Model - simple GRU model
 
 class GRU(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
@@ -161,7 +161,7 @@ class GRU(nn.Module):
     
 
 
-# LSTM Model
+# LSTM Model - simple LSTM model
 
 class LSTM(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes):
@@ -179,7 +179,7 @@ class LSTM(nn.Module):
         return out
     
 
-# AKMNet-Micro-Expression
+# AKMNet-Micro-Expression Mirelas suggestion... I don't know if this is working.
 
 class AKMNet(nn.Module):
     def __init__(self, num_classes):
