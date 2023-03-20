@@ -8,7 +8,7 @@ from dataset import VideoDataset
 from tqdm.auto import tqdm
 
 from dataset import VideoDataset, get_data_loaders
-from models import MyNetwork, EmotionRecognitionModel, EmotionRecognitionModel2, EmotionRecognitionModel_Bigger
+from models import MODEL_3DCNN, EmotionRecognitionModel2, EmotionRecognitionModel_Bigger
 from utils import save_plots, save_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -26,7 +26,7 @@ train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
 # model = MyNetwork(num_classes=12).to(device)
 
 
-model = EmotionRecognitionModel(num_classes=12).to(device)
+model = MODEL_3DCNN(num_classes=12).to(device)
 
 
 # model = EmotionRecognitionModel2(num_classes=12).to(device)
