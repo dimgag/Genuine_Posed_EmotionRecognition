@@ -54,7 +54,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, ver
 
 
 ## Train the model
-num_epochs = 500
+num_epochs = 200
 train_loss = []
 train_acc = []
 val_loss = []
