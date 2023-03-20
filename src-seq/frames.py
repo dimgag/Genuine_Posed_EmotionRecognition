@@ -1,3 +1,6 @@
+'''Generate frames from video dataset
+Usage: python new_code/frames.py -i /Users/dim__gag/Desktop/videos_folder/train_root -o /Users/dim__gag/Desktop/frames -f 20 -s 224
+'''
 import cv2
 import os
 import argparse
@@ -73,5 +76,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#Example usage: python new_code/frames.py -i /Users/dim__gag/Desktop/videos_folder/train_root -o /Users/dim__gag/Desktop/frames -f 20 -s 224

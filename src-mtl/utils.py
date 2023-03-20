@@ -7,9 +7,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-
 matplotlib.style.use('ggplot')
-
 
 def save_model(epochs, model, optimizer):
     torch.save({
@@ -18,14 +16,12 @@ def save_model(epochs, model, optimizer):
         'optimizer_state_dict': optimizer.state_dict()
     }, 'model.pth')
 
-
 def get_model_params(model):
   """Get model parameters"""
   total_params = sum(p.numel() for p in model.parameters())
   print(f"Total parameters: {total_params:,}")
   total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
   print(f"Trainable parameters: {total_trainable_params:,}")
-
 
 def freeze_baseline(model):
 	print("-"*50)
@@ -44,7 +40,6 @@ def freeze_baseline(model):
 	print("\nModel parameters after freezing the baseline:", get_model_params(model))
     
 	return model
-
 
 def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fake_acc, train_loss, valid_loss, total_train_acc, total_valid_acc):
     """
@@ -116,8 +111,6 @@ def save_plots(train_emo_acc, valid_emo_acc, train_real_fake_acc, valid_real_fak
     plt.savefig(f"Overall_acc.png")
 
 
-
-
 def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     y_pred_rf = []
@@ -156,8 +149,6 @@ def ConfusionMatrix_MT(model, test_loader, real_fake_classes, emotion_classes):
     sns.heatmap(df_cm_emo, annot=True)
     plt.savefig('cm_emotions.png')
     
-
-
 class FocalLoss(nn.Module):
     def __init__(self, alpha=1.0, gamma=2.0):
         super(FocalLoss, self).__init__()

@@ -1,3 +1,4 @@
+'''Generates sequences of frames from the videos in the dataset.'''
 import os
 import glob
 import cv2
