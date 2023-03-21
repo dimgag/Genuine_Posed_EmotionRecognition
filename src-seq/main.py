@@ -8,7 +8,7 @@ from dataset import VideoDataset
 from tqdm.auto import tqdm
 
 from dataset import VideoDataset, get_data_loaders
-from models import MODEL_3DCNN, EmotionRecognitionModel2, EmotionRecognitionModel_Bigger
+from models import MODEL_3DCNN, MODEL_LSTM, MODEL_GRU, MODEL_X3D, MODEL_3D_RESNET
 from utils import save_plots, save_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -17,8 +17,8 @@ print("Using device: ", device)
 train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
                                                     'data_sequences/val_seq',
                                                     seq_length=20,
-                                                    batch_size=24,
-                                                    num_workers=4)
+                                                    batch_size=1,
+                                                    num_workers=2)
 
 
 ## Define the Model
@@ -26,12 +26,15 @@ train_dataloader, val_dataloader = get_data_loaders('data_sequences/train_seq',
 # model = MyNetwork(num_classes=12).to(device)
 
 
-model = MODEL_3DCNN(num_classes=12).to(device)
+# model = MODEL_3DCNN(num_classes=12).to(device)
 
+# model = MODEL_LSTM(num_classes=12).to(device)
 
-# model = EmotionRecognitionModel2(num_classes=12).to(device)
+# model = MODEL_GRU(num_classes=12).to(device)
 
-# model = EmotionRecognitionModel_Bigger(num_classes=12).to(device)
+# model = MODEL_X3D(num_classes=12).to(device)
+model = MODEL_3D_RESNET(num_classes=12).to(device)
+
 
 ## Loss Function
 criterion = nn.CrossEntropyLoss()
@@ -54,7 +57,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, ver
 
 
 ## Train the model
-num_epochs = 200
+num_epochs = 10
 train_loss = []
 train_acc = []
 val_loss = []
