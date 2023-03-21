@@ -109,7 +109,7 @@ def rename_filenames(directory):
 def get_data_csvs(data_folder, filename):
     ''' Extracts the video paths and labels from the dataset and saves them in a csv file'''
     # Create a dataframe with video path and label
-    df = pd.DataFrame(columns=['Video_path', 'Label'])
+    df = pd.DataFrame(columns=['file', 'label'])
     # avoid .DS_Store
 
     def remove_ds_store(directory):
@@ -129,7 +129,7 @@ def get_data_csvs(data_folder, filename):
     for folder in os.listdir(data_folder):
         for video in os.listdir(os.path.join(data_folder, folder)):
             # print(folder)
-            df = df.append({'Video_path':os.path.join(data_folder, folder, video), 'Label':folder}, ignore_index=True)
+            df = df.append({'file':os.path.join(data_folder, folder, video), 'label':folder}, ignore_index=True)
             # Add numbers to the labels to make them integers
             mapping = {'fake_surprise':0,
                         'fake_angry':1,
@@ -145,11 +145,11 @@ def get_data_csvs(data_folder, filename):
                         'real_surprise':11}
             # rename the labels
             if folder in mapping:
-                df['Label'] = df['Label'].replace(folder, mapping[folder])
+                df['label'] = df['label'].replace(folder, mapping[folder])
 
 
     # save the dataframe as a csv file
-    df.to_csv('data_temporal/' + filename + '.csv', sep=' ', index=False)
+    df.to_csv('data_temporal/' + filename + '.csv', sep=',', index=False)
 
 
 
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     # convert_dataset(input_dir, output_dir, train_val_split)
     # rename_folders('data_temporal/train_root')
     # rename_folders('data_temporal/val_root')
-    rename_filenames('data_temporal/train_root_256')
-    rename_filenames('data_temporal/val_root_256')
-    get_data_csvs('data_temporal/train_root_256', 'train')
-    get_data_csvs('data_temporal/val_root_256', 'val')
+    # rename_filenames('data_temporal/train_root_256')
+    # rename_filenames('data_temporal/val_root_256')
+    get_data_csvs('data_temporal/train_root', 'train')
+    get_data_csvs('data_temporal/val_root', 'val')
