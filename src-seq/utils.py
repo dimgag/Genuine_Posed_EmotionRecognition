@@ -15,6 +15,21 @@ def save_model(epochs, model, optimizer, criterion):
     }, 'model.pth')
 
 
+# print model trainable and not trainable parameters
+def print_model_parameters(model):
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    non_trainable_params = sum(p.numel() for p in model.parameters() if not p.requires_grad)
+
+    print(f"Trainable parameters: {trainable_params}")
+    print(f"Non-trainable parameters: {non_trainable_params}")
+    
+    
+     
+
+
+
+
+
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
     Function to save the loss and accuracy plots to disk.
