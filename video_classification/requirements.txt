@@ -6,3 +6,6 @@ pandas
 numpy
 matplotlib
 scikit-learn
+pytorch-lightning
+
+pip install --force-reinstall -v "lightning==1.9.3"   
