@@ -108,7 +108,7 @@ class OurModel(LightningModule):
         return {'loss': loss, 'metric': metric.detach()}
     
     
-    def on_train_epoch_end(slef, outputs):
+    def on_train_epoch_end(self, outputs):
         loss = torch.stack([x['loss'] for x in outputs]).mean().cpu().numpy().round(2)
         metric = torch.stack([x['metric'] for x in outputs]).mean().cpu().numpy().round(2)
         self.log('training_loss', loss)
@@ -131,7 +131,7 @@ class OurModel(LightningModule):
         metric = self.metric(out, label.to(torch.int64))
         return {'loss': loss, 'metric': metric.detach()}
     
-    def on_vaidation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self, outputs):
         loss = torch.stack([x['loss'] for x in outputs]).mean().cpu().numpy().round(2)
         metric = torch.stack([x['metric'] for x in outputs]).mean().cpu().numpy().round(2)
         self.log('val_loss', loss)
@@ -174,8 +174,8 @@ def main():
 	model = OurModel()
 	seed_everything(0)
 
-	trainer = Trainer(max_epochs = 1,
-	                  accelerator = 'cpu',
+	trainer = Trainer(max_epochs = 15,
+	                  accelerator = 'gpu', devices = -1,
 	                      precision = 16,
 	                  accumulate_grad_batches = 2,
 	                  enable_progress_bar = False,
