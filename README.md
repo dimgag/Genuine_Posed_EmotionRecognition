@@ -70,19 +70,32 @@ Dataset Labels Mapping:
 
 ---------------------
 ## 🚀 Approaches:
-### 1. Spatial Video Classification (frames - 12 labels)
+### 1. Single-Task Learning approach (frames - 12 labels)
 
 ### 2. Multi-Task Learning Approach (frames - 6xEmotions + 2xReal/Fake)
 
-### 3. Temporal Video Classification (video - 12 labels)
+### 3. Temporal Learning Approach (sequence of 20 frames - 12 labels)
+
+-----------
+
 
 
 ---------------------
 ## 📈 Model Results
 ### 1. Spatial Video Classification (frames - 12 labels)
-| Model | Accuracy | Loss |
-| :---: | :---: | :---: |
-| ... | ... | ... |
+| Model | Config | Optimizer | Weights | Loss | Accuracy |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| VGG16 | Train all | SGD | - | 9.029 | 15.922 |
+| VGG16 | Train all | SGD | ImageNet | 6.363 | 20.439 |
+| VGG16 | Train all | SGD + LR-Scheduler | ImageNet | 5.944 | 26.010 |
+| EfficientNetV2M | Train all | SGD | ImageNet | 5.373 | 26.644 |
+|VIT_B_16 | Train all | SGD | ImageNet | 6.104 | 21.810 |
+| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD | VGGFace2 | 2.315 | 19.892 |
+| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD | VGGFace2 | 2.315 | 19.892 |
+| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD + LR-Scheduler | VGGFace2 | 2.335 | 18.497 |
+| InceptionResNetV1 | Train all  | SGD | VGGFace2 | 4.569 | 27.817 |
+| InceptionResNetV1 | Train all  | SGD | VGGFace2 + LR-Scheduler | 4.655 | 29.062 |
+
 
 
 ### 2. Multi-Task Learning Approach (frames - 6xEmotions + 2xReal/Fake)
