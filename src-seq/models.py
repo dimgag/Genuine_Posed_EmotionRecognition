@@ -123,3 +123,15 @@ class MODEL_3D_RESNET(nn.Module):
         x = self.model(x)
         return x
 
+
+# Efficient X3D model pretrained on Kinetics dataset.
+
+class MODEL_efficient_x3d(nn.Module):
+    def __init__(self, num_classes):
+        super(MODEL_efficient_x3d, self).__init__()
+        self.model = torch.hub.load('facebookresearch/pytorchvideo', 'efficient_x3d_s', pretrained=True)
+        self.model.fc = nn.Linear(400, num_classes)
+
+    def forward(self, x):
+        x = self.model(x)
+        return x
