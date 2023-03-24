@@ -94,7 +94,7 @@ Dataset Labels Mapping:
 | InceptionResNetV1 | Freeze baseline + Train Classfier | SGD | VGGFace2 | 2.315 | 19.892 |
 | InceptionResNetV1 | Freeze baseline + Train Classfier | SGD + LR-Scheduler | VGGFace2 | 2.335 | 18.497 |
 | InceptionResNetV1 | Train all  | SGD | VGGFace2 | 4.569 | 27.817 |
-| InceptionResNetV1 | Train all  | SGD | VGGFace2 + LR-Scheduler | 4.655 | **29.062** |
+| InceptionResNetV1 | Train all  | SGD + LR-Scheduler | VGGFace2 | 4.655 | **29.062** |
 
 
 
