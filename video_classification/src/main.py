@@ -59,26 +59,24 @@ video_transform = Compose([
 
 # Define model:
 # model.py
-class OurModel(LightningModule):
+# model.py
+class VideoModel(LightningModule):
     def __init__(self):
-        super(OurModel, self).__init__()
+        super(VideoModel, self).__init__()
         # Model Architecture
         self.video_model = torch.hub.load('facebookresearch/pytorchvideo', 'efficient_x3d_xs', pretrained=True)
         self.relu = nn.ReLU()
         self.linear = nn.Linear(400, 12)
-        
         self.lr = 1e-3
-        
-        self.batch_size = 8
-        self.numworker=4 # If decrease it will be slower computation time
+        self.batch_size = 4
+        self.numworker= 2 
         
         # Evaluation Metric
         self.metric = torchmetrics.Accuracy(task='multiclass',   num_classes=12)
         
         # Loss Function
-        self.criterion = nn.BCEWithLogitsLoss()
+        self.criterion = nn.CrossEntropyLoss()
         
-
     def forward(self, x):
         x = self.video_model(x)
         x = self.relu(x)
@@ -90,13 +88,10 @@ class OurModel(LightningModule):
         scheduler = CosineAnnealingLR(opt, T_max=10, eta_min=1e-6, last_epoch=-1)
         return {'optimizer': opt, 'lr_scheduler': scheduler}
 
-
     def train_dataloader(self):
-        dataset = labeled_video_dataset('../data_temporal/train_root',
+        dataset = labeled_video_dataset('data_temporal/train_root',
                                       clip_sampler=make_clip_sampler('random', 2),
                                         transform = video_transform, decode_audio=False)
-
-
         loader = DataLoader(dataset, batch_size=self.batch_size, num_workers=self.numworker, pin_memory=True)
         return loader
     
@@ -116,11 +111,9 @@ class OurModel(LightningModule):
     
     
     def val_dataloader(self):
-        dataset = labeled_video_dataset('../data_temporal/val_root',
+        dataset = labeled_video_dataset('data_temporal/val_root',
                                       clip_sampler=make_clip_sampler('random', 2),
                                         transform = video_transform, decode_audio=False)
-
-
         loader = DataLoader(dataset, batch_size=self.batch_size, num_workers=self.numworker, pin_memory=True)
         return loader
     
@@ -130,19 +123,19 @@ class OurModel(LightningModule):
         loss = self.criterion(out, label)
         metric = self.metric(out, label.to(torch.int64))
         return {'loss': loss, 'metric': metric.detach()}
-    
-    def on_validation_epoch_end(self, outputs):
+
+
+
+    def on_validation_end(self, outputs):
         loss = torch.stack([x['loss'] for x in outputs]).mean().cpu().numpy().round(2)
         metric = torch.stack([x['metric'] for x in outputs]).mean().cpu().numpy().round(2)
         self.log('val_loss', loss)
         self.log('val_metric', metric)
         
     def test_dataloader(self):
-        dataset = labeled_video_dataset('../data_temporal/val_root',
+        dataset = labeled_video_dataset('data_temporal/val_root',
                                       clip_sampler=make_clip_sampler('random', 2),
                                         transform = video_transform, decode_audio=False)
-
-
         loader = DataLoader(dataset, batch_size=self.batch_size, num_workers=self.numworker, pin_memory=True)
         return loader
     
@@ -160,6 +153,11 @@ class OurModel(LightningModule):
     
     
     
+        
+        
+    
+    
+    
 
 
 def main():
@@ -171,7 +169,7 @@ def main():
 
 	# 10 (total), 5(no improved), 7(interupted), 7(resume)
 
-	model = OurModel()
+	model = VideoModel()
 	seed_everything(0)
 
 	trainer = Trainer(max_epochs = 15,
