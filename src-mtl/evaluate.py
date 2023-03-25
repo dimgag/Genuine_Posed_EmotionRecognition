@@ -71,11 +71,23 @@ def evaluate(model, testloader):
             # Calculate Overall Accuracy
             overall_validation_acc += (rf_preds == real_fake_label).sum().item()
             overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            # ------------------------------------------------------------
+            _, emo_preds = torch.max(emotion_output.data, 1)
+            _, rf_preds = torch.max(real_fake_output.data, 1)
+
+            # Count number of samples for which both tasks are correctly classified
+            both_correct = ((emo_preds == emotion_label) & (rf_preds == real_fake_label)).sum().item()
+
+        
+
+
 
         epoch_loss = total_validation_loss / counter
         epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
         epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
-        overall_validation_acc = 100. * (overall_validation_acc / (2*len(testloader.dataset)))
+        # overall_validation_acc = 100. * (overall_validation_acc / (2*len(testloader.dataset)))
+        # Calculate overall validation accuracy for both tasks
+        overall_validation_acc = both_correct / len(testloader.dataset)
     
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc
 
