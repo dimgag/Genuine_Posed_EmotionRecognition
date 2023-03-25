@@ -13,7 +13,7 @@ from utils import ConfusionMatrix_MT
 
 def evaluate(model, testloader):
     model.eval()
-    print("Validating model...")
+    print("Evaluating the model...")
     
     # Define the loss functions.
     emotion_loss = nn.CrossEntropyLoss()
@@ -23,6 +23,7 @@ def evaluate(model, testloader):
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
     overall_validation_acc = 0
+    both_correct = 0
     counter = 0
     
     with torch.no_grad():
@@ -63,20 +64,20 @@ def evaluate(model, testloader):
             total_validation_loss += loss
             # ------------------------------------------------------------
             # Calculate Accuracy for Emotions
-            _, emo_preds = torch.max(emotion_output.data, 1)
+            # _, emo_preds = torch.max(emotion_output.data, 1) # No Need
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
             # Calculate Accuracy for Real / fake
-            _, rf_preds = torch.max(real_fake_output.data, 1)
+            # _, rf_preds = torch.max(real_fake_output.data, 1) # No Need
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
             # Calculate Overall Accuracy
-            overall_validation_acc += (rf_preds == real_fake_label).sum().item()
-            overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            # overall_validation_acc += (rf_preds == real_fake_label).sum().item() # No Need
+            # overall_validation_acc += (emo_preds == emotion_label).sum().item() # No Need
             # ------------------------------------------------------------
-            _, emo_preds = torch.max(emotion_output.data, 1)
-            _, rf_preds = torch.max(real_fake_output.data, 1)
+            # _, emo_preds = torch.max(emotion_output.data, 1)
+            # _, rf_preds = torch.max(real_fake_output.data, 1)
 
             # Count number of samples for which both tasks are correctly classified
-            both_correct = ((emo_preds == emotion_label) & (rf_preds == real_fake_label)).sum().item()
+            both_correct += ((emo_preds == emotion_label) & (rf_preds == real_fake_label)).sum().item()
 
         
 
@@ -87,17 +88,16 @@ def evaluate(model, testloader):
         epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
         # overall_validation_acc = 100. * (overall_validation_acc / (2*len(testloader.dataset)))
         # Calculate overall validation accuracy for both tasks
-        overall_validation_acc = both_correct / len(testloader.dataset)
+        overall_validation_acc = 100. * (both_correct / len(testloader.dataset))
     
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc
 
 
 if __name__ == "__main__":
-    print("Evaluate model")
     torch.cuda.empty_cache()
 
     # Load the model.pth - change the path to the model you want to evaluate
-    path = 'model.pth'
+    path = 'experiments/exp1-chimeranet/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -105,8 +105,8 @@ if __name__ == "__main__":
     
     # Define the model class
     # loaded_model = HydraNet().to(device)
-    # loaded_model = ChimeraNet().to(device)
-    loaded_model = ChimeraNetV2().to(device)
+    loaded_model = ChimeraNet().to(device)
+    # loaded_model = ChimeraNetV2().to(device)
 
     # Define the optimizer
     optimizer = torch.optim.SGD(loaded_model.parameters(), lr=1e-4, momentum=0.09)
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     real_fake_loss = nn.CrossEntropyLoss()
 
     # Load the checkpoint
-    loaded_checkpoint = torch.load(path)
+    loaded_checkpoint = torch.load(path, map_location=torch.device('cpu'))
 
     # Load the model state
     loaded_model.load_state_dict(loaded_checkpoint['model_state_dict'])
@@ -140,14 +140,14 @@ if __name__ == "__main__":
     
     # Confussion matrix 
     # Get the classes of the dataset to generate the confusion matrix
-    real_fake_classes = test_dataset.real_fakes
-    real_fake_classes = np.unique(real_fake_classes)
-    convert_dict = {0: 'fake', 1: 'real'}
-    real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
+#     real_fake_classes = test_dataset.real_fakes
+#     real_fake_classes = np.unique(real_fake_classes)
+#     convert_dict = {0: 'fake', 1: 'real'}
+#     real_fake_classes = [convert_dict.get(i, i) for i in real_fake_classes]
 
-    emotion_classes = test_dataset.emotions
-    emotion_classes = np.unique(emotion_classes)
-    convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
-    emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
+#     emotion_classes = test_dataset.emotions
+#     emotion_classes = np.unique(emotion_classes)
+#     convert_dict = {0: 'happy', 1: 'sad', 2: 'surprise', 3: 'disgust', 4: 'contempt', 5: 'angry'}
+#     emotion_classes = [convert_dict.get(i, i) for i in emotion_classes]
 
-    ConfusionMatrix_MT(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
+    # ConfusionMatrix_MT(loaded_model, test_dataloader, real_fake_classes, emotion_classes)
