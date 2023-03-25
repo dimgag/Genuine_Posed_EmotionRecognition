@@ -20,6 +20,7 @@ def train(model, trainloader, optimizer):
     emotion_training_acc = 0
     real_fake_training_acc = 0
     overall_training_acc = 0
+    both_correct = 0
     counter = 0
     for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
         counter += 1
@@ -57,15 +58,12 @@ def train(model, trainloader, optimizer):
         total_training_loss += loss
         # ------------------------------------------------------------ 
         # Calculate Accuracy for Emotions
-        _, emo_preds = torch.max(emotion_output.data, 1)
         emotion_training_acc += (emo_preds == emotion_label).sum().item()
         # Calculate Accuracy for Real / fake
-        _, rf_preds = torch.max(real_fake_output.data, 1)
         real_fake_training_acc += (rf_preds == real_fake_label).sum().item()
-        # Calculate Overall Accuracy
-        overall_training_acc += (rf_preds == real_fake_label).sum().item()
-        overall_training_acc += (emo_preds == emotion_label).sum().item()        
-        # ------------------------------------------------------------ 
+        # Calculate Overall Accuracy Count number of samples for which both tasks are correctly classified
+        both_correct += ((emo_preds == emotion_label) & (rf_preds == real_fake_label)).sum().item()
+
         # Backpropagation
         loss.backward()
         # Update the weights
@@ -74,7 +72,7 @@ def train(model, trainloader, optimizer):
     epoch_loss = total_training_loss / counter
     epoch_acc_emotion = 100. * (emotion_training_acc / len(trainloader.dataset))
     epoch_acc_real_fake = 100. * (real_fake_training_acc / len(trainloader.dataset))
-    overall_training_acc = 100. * (overall_training_acc / (2*len(trainloader.dataset)))
+    overall_training_acc = 100. * (both_correct / len(trainloader.dataset))
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_training_acc
 
 
@@ -90,6 +88,7 @@ def validate(model, testloader):
     emotion_validation_acc = 0
     real_fake_validation_acc = 0 
     overall_validation_acc = 0
+    both_correct = 0
     counter = 0
     with torch.no_grad():
         for i, data in tqdm(enumerate(testloader), total=len(testloader)):
@@ -126,17 +125,16 @@ def validate(model, testloader):
             total_validation_loss += loss
             # ------------------------------------------------------------ 
             # Calculate Accuracy for Emotions
-            _, emo_preds = torch.max(emotion_output.data, 1)
             emotion_validation_acc += (emo_preds == emotion_label).sum().item()
             # Calculate Accuracy for Real / fake
-            _, rf_preds = torch.max(real_fake_output.data, 1)
             real_fake_validation_acc += (rf_preds == real_fake_label).sum().item()
-            # Calculate Overall Accuracy
-            overall_validation_acc += (rf_preds == real_fake_label).sum().item()
-            overall_validation_acc += (emo_preds == emotion_label).sum().item()
+            # Calculate Overall Accuracy Count number of samples for which both tasks are correctly classified
+            both_correct += ((emo_preds == emotion_label) & (rf_preds == real_fake_label)).sum().item()
+
 
     epoch_loss = total_validation_loss / counter
     epoch_acc_emotion = 100. * (emotion_validation_acc / len(testloader.dataset))
     epoch_acc_real_fake = 100. * (real_fake_validation_acc / len(testloader.dataset))
     overall_validation_acc = 100. * (overall_validation_acc / (2*len(testloader.dataset)))
+    overall_validation_acc = 100. * (both_correct / len(testloader.dataset))
     return epoch_loss, epoch_acc_emotion, epoch_acc_real_fake, overall_validation_acc
