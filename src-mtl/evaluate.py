@@ -97,15 +97,15 @@ if __name__ == "__main__":
     torch.cuda.empty_cache()
 
     # Load the model.pth - change the path to the model you want to evaluate
-    path = 'experiments/exp1-chimeranet/model.pth'
+    path = 'experiments/experiments_MTL/exp1-MTL/model.pth'
 
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # device = 'cpu'
     
     # Define the model class
-    # loaded_model = HydraNet().to(device)
-    loaded_model = ChimeraNet().to(device)
+    loaded_model = HydraNet().to(device)
+    # loaded_model = ChimeraNet().to(device)
     # loaded_model = ChimeraNetV2().to(device)
 
     # Define the optimizer
