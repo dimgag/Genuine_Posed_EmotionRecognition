@@ -1,1 +1,2 @@
-The SASE-FE dataset contains video set of 50 subjects. For each subject, there are 12 videos representing 6 basic emotions (Anger, Happiness, Sadness, Disgust, Contempt, Surprise) for real and fake expression. Each video was recorded with a high resolution camera with 100 frames per second and it's about 3-4 seconds
+Get access to the dataset: 
+https://drive.google.com/drive/folders/1rMy3q45_aMGmoJFlfU7iqY8H7-vL5DMc?usp=share_link 

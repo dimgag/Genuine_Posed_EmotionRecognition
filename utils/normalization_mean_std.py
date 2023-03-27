@@ -23,6 +23,5 @@ def get_mean_and_std(dataloader):
 # train_loader, test_loader = get_data_loaders(dataset_train, dataset_test)
 
 # mean, std = get_mean_and_std(train_loader)
-
 # print("Mean is: ", mean)
 # print("\nStd is: ", std)

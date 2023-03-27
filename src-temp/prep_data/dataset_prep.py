@@ -70,7 +70,6 @@ def convert_dataset(input_dir, output_dir, train_val_split):
             dst_path = os.path.join(dst_dir, f"{label}_{participant}.mp4")
             shutil.copy(src_path, dst_path)
 
-import os
 
 def rename_folders(directory):
     mapping = {
@@ -154,15 +153,15 @@ def get_data_csvs(data_folder, filename):
 
 
 if __name__ == '__main__':    
-    # input_dir = 'data_temporal/FakeTrue_DB'
-    # output_dir = 'data_temporal'
-    # train_val_split = 0.8
-    # rename_filenames(input_dir)
-    # remove_ds_store(input_dir)
-    # convert_dataset(input_dir, output_dir, train_val_split)
-    # rename_folders('data_temporal/train_root')
-    # rename_folders('data_temporal/val_root')
-    # rename_filenames('data_temporal/train_root_256')
-    # rename_filenames('data_temporal/val_root_256')
+    input_dir = 'data_temporal/FakeTrue_DB'
+    output_dir = 'data_temporal'
+    train_val_split = 0.8
+    rename_filenames(input_dir)
+    remove_ds_store(input_dir)
+    convert_dataset(input_dir, output_dir, train_val_split)
+    rename_folders('data_temporal/train_root')
+    rename_folders('data_temporal/val_root')
+    rename_filenames('data_temporal/train_root_256')
+    rename_filenames('data_temporal/val_root_256')
     get_data_csvs('data_temporal/train_root', 'train')
     get_data_csvs('data_temporal/val_root', 'val')
