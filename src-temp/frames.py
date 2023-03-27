@@ -69,10 +69,6 @@ def generate_frames(input_dir, output_dir, num_frames, size):
 
 def main():
     generate_frames(args.input_dir, args.output_dir, args.frames, args.size)
-    # # Define the input and output paths
-    # input_dir = '/Users/dim__gag/Desktop/videos_folder/train_root'
-    # output_dir = '/Users/dim__gag/Desktop/frames'
-    # 
 
 if __name__ == '__main__':
     main()
