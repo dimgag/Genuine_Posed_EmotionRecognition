@@ -1,79 +1,84 @@
 # Multi-Label, Multi-Task Deep Learning Approach Towards Detection The Differences Between Real And Fake Emotions
-## Table of Contents
-- [Repository Structure](#repository-structure)
-- [💾 Dataset](#dataset)
-- [🚀 Approaches](#approaches)
-- [📈 Model Results](#model-results)
-- [References](#references)
 
----------------------
-## 💾 Dataset:
-The SASE-FE Dataset (Kulkarni et al., 2018) created by the iCV Research Lab contains 643 different videos captured with high-resolution cameras recording 100 frames per second, containing video recordings of 54 participants of ages 19-36. The main reason behind the choice of such an age-range sample is that older adults have different, more positive responses than younger adults about feelings and emotions, and they are faster and more precise to regulate emotional states than younger adults (Dahling & Perez, 2010; Isaacowitz, 2012; Ready et al., 2017). More specifically, for each recording, participants were asked to act two facial expressions of emotions in a sequence, a genuine and a posed emotion. Genuine emotions are the six expressions happiness, sadness, anger, disgust, contempt, and surprise. For eliciting genuine and realistic emotions, proposed videos based on emotion science research (Gross & Levenson, 1995), were shown to the participants to increase the realism of their emotions. To increase the distinction between the two facial expressions presented in the sequence, the two emotions were chosen based on their visual and conceptual differences. Thus, the contrast was created by asking the participants to act happy after being Sad, Surprised after being Sad, Disgusted after being Happy, Sad after being Happy, Angry after being Happy, and Contemptuous after being Happy. Note that the participants were asked to start their video recordings from a neutral face and none of the participants were aware of the fact that they would be asked to act with a second facial expression.
 
-Dataset Labels Mapping:
-```JSON
-    mapping = {
-        "D2N2Sur.MP4": "fake_surprise",
-        "H2N2A.MP4": "fake_angry",
-        "H2N2C.MP4": "fake_contempt",
-        "H2N2D.MP4": "fake_disgust",
-        "H2N2S.MP4": "fake_sad",
-        "S2N2H.MP4": "fake_happy",
-        "N2A.MP4": "real_angry",
-        "N2C.MP4": "real_contempt",
-        "N2D.MP4": "real_disgust",
-        "N2H.MP4": "real_happy",
-        "N2S.MP4": "real_sad",
-        "N2Sur.MP4": "real_surprise"
-    }
+## Repository structure
+
+```
+data -> contains data for the Single-task learning approach (src-stl) and the original dataset.
+data_mtl -> contains data for the Multi-task learning approach (src-mtl).
+data_seq -> contains data for the temporal approach (src-temp).
+experiments -> experiments of all approaches.
+src-stl -> Single-task learning approach.
+src-mtl -> Multi-task learning approach.
+src-temp -> Temporal approach.
+utils -> data analysis and statistics from the dataset.
 ```
 
----------------------
-## 🚀 Approaches:
-### 1. Single-Task Learning approach (frames - 12 labels)
+## Requirements for this project
+```
+pip install -r requirements.txt
+```
 
-### 2. Multi-Task Learning Approach (frames - 6xEmotions + 2xReal/Fake)
+## src-stl
+________________________________________________________________________________
+| File name | Description |
+| --- | --- |
+| data.py | data utils related to the dataset, (dataloades, transformations, etc) |
+| dataset_prep.py | python file used for the creation of the dataset (frames) |
+| evaluate.py | python file for evaluation of models (need to define the path of the model) |
+| fine_tune.py | fine tuning of a selected model, freezes the baseline mode and adds classification head |
+| loss_functions.py | loss functions used in this approach |
+| models.py | models classes in this approach |
+| train.py | training and validation function |
+| utils.py | utilities function of this approach |
+| main.py | main python file to run (training + validation) |
 
-### 3. Temporal Learning Approach (sequence of 20 frames - 12 labels)
+## src-mtl
+________________________________________________________________________________
+| File name | Description |
+| --- | --- |
+| confusion_matrix.py | generates confussion matrix |
+| dataset_prep.py | python file used for the creation of the MTL dataset  |
+| evaluate.py | python file for evaluation of models (need to define the path of the model) |
+| models.py | models classes in this approach |
+| predictions_mtl.py | file that predicts classes on a given input image |
+| single_prediction.py | file that makes predictions in a single image |
+| train.py | training and validation function |
+| utils.py | utilities function of this approach |
+| main.py | main python file to run (training + validation) |
 
------------
-
-
-
----------------------
-## 📈 Model Results
-### 1. Spatial Video Classification (frames - 12 labels)
-| Model | Config | Optimizer | Weights | Loss | Accuracy |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| VGG16 | Train all | SGD | - | 9.029 | 15.922 |
-| VGG16 | Train all | SGD | ImageNet | 6.363 | 20.439 |
-| VGG16 | Train all | SGD + LR-Scheduler | ImageNet | 5.944 | 26.010 |
-| EfficientNetV2M | Train all | SGD | ImageNet | 5.373 | 26.644 |
-|VIT_B_16 | Train all | SGD | ImageNet | 6.104 | 21.810 |
-| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD | VGGFace2 | 2.315 | 19.892 |
-| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD | VGGFace2 | 2.315 | 19.892 |
-| InceptionResNetV1 | Freeze baseline + Train Classfier | SGD + LR-Scheduler | VGGFace2 | 2.335 | 18.497 |
-| InceptionResNetV1 | Train all  | SGD | VGGFace2 | 4.569 | 27.817 |
-| InceptionResNetV1 | Train all  | SGD + LR-Scheduler | VGGFace2 | 4.655 | **29.062** |
-
-
-
-### 2. Multi-Task Learning Approach (frames - 6xEmotions + 2xReal/Fake)
-| Model 	| Emo. Loss | R/F Loss | Combined Loss | Emo. Acc | R/F Acc | Overall Acc | Overall Loss |
-| :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| InceptionResnetV1 	| MFL | MFL | Precision Loss | 51.145 | 53.888  | 52.516  | 1.267  |
-| InceptionResnetV1 	| CE | CE | Precision Loss | 53.071  | 52.659  | 52.865  | 1.588  |
-| InceptionResnetV1 	| CE | MFL | Precision Loss | 51.145  | 54.411  | 52.778  | 1.778  |
-| InceptionResnetV1 	| MFL | CE | Precision Loss | 50.892  | 52.318  | 51.605  | 1.867  |
-| InceptionResnetV1 	| CE | CE | Sum Loss | 53.721 | 55.322 | **54.522** | 2.787 |
+## src-temp
+________________________________________________________________________________
+| File name | Description |
+| --- | --- |
+| frames.py | generate frames from each video |
+| sequences.py | generate the sequences of frames |
+| models.py | models classes in this approach |
+| dataset.py | dataset class |
+| utils.py | utilities function of this approach |
+| main.py | main python file to run (training + validation + evaluation) |
+| main_notebook.ipynb | Full code for training and eval model of temporal approach in jupyter notebook (used in google colab) |
 
 
+## Instructions
+* After installing the requirements for this project, you can access the data (find the link for data in data/README.md) and experiments via google drive (for experiments in experiments/README.md).
 
-### 3. Temporal Video Classification (video - 12 labels)
-| Model | Accuracy | Loss |
-| :---: | :---: | :---: |
-| ... | ... | ... |
+### Train models:
+* You can train the models by running the main.py file in each approach. For example, to train the model for the single-task learning approach you need to run the following command:
 
+```python src-stl/main.py```
+
+* For the multi-task learning approach you need to run the following command:
+
+```python src-mtl/main.py```
+
+* For the temporal approach you need to run the following command, or the main_notebook.py.
+```python src-temp/main.py```
+
+
+
+### Test models:
+* For testing models you need to define the path of the model in the evaluate.py file for both src-stl and src-mtl. For src-temp the main file can be used also for evaluation. The trained models can be found in experiments/README.md.
 
 
 
