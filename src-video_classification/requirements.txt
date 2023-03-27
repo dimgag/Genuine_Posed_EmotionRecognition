@@ -1,9 +1,0 @@
-pytorchvideo
-torch
-torchvision
-torchaudio
-pandas
-numpy
-matplotlib
-scikit-learn
-pytorch-lightning
