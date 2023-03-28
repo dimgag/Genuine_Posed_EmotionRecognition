@@ -23,12 +23,6 @@ def print_model_parameters(model):
     print(f"Trainable parameters: {trainable_params}")
     print(f"Non-trainable parameters: {non_trainable_params}")
     
-    
-     
-
-
-
-
 
 def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
